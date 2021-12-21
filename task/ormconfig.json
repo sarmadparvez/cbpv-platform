@@ -1,0 +1,10 @@
+{
+  "database": "task",
+  "entities": [],
+  "host": "localhost",
+  "password": "123",
+  "port": 5432,
+  "synchronize": true,
+  "type": "postgres",
+  "username": "sarmad"
+}
