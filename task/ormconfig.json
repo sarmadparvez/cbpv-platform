@@ -6,5 +6,5 @@
   "port": 5432,
   "synchronize": true,
   "type": "postgres",
-  "username": "sarmad"
+  "username": "sarmadparvez"
 }

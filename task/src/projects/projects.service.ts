@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
@@ -12,23 +12,27 @@ export class ProjectsService {
     private projectRepository: Repository<Project>,
   ) {}
 
-  create(createProjectDto: CreateProjectDto) {
-    return 'This action adds a new project';
+  async create(createProjectDto: CreateProjectDto) {
+    const project = createProjectDto.toEntity();
+    // ToDo: hardcoded for now, later use current user id
+    project.assignedUserId = '6e6ff5d0-1807-4929-bcc4-b0ae88d825f1';
+    console.log('project ', project);
+    return this.projectRepository.insert(project);
   }
 
   findAll() {
-    return `This action returns all projects`;
+    return this.projectRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} project`;
+  findOne(id: string) {
+    return this.projectRepository.findOne(id);
   }
 
-  update(id: number, updateProjectDto: UpdateProjectDto) {
+  update(id: string, updateProjectDto: UpdateProjectDto) {
     return `This action updates a #${id} project`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} project`;
   }
 }

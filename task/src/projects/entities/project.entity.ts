@@ -10,18 +10,18 @@ export class Project {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('varchar')
+  @Column({ type: 'varchar', length: 255 })
   title: string;
 
-  @Column('text')
+  @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column('timestamp')
-  date_created: Date;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  dateCreated: Date;
 
   @Column({ type: 'enum', enum: ProjectStatus, default: ProjectStatus.OPEN })
   status: ProjectStatus;
 
   @Column('uuid')
-  assigned_user_id: string;
+  assignedUserId: string;
 }
