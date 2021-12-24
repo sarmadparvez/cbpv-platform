@@ -13,11 +13,12 @@ import {
   QueryFailedError,
   EntityNotFoundError,
   CannotCreateEntityIdMapError,
+  UpdateValuesMissingError,
 } from 'typeorm';
 import { HttpAdapterHost } from '@nestjs/core';
 
 /**
- * Catch all unhandled and return proper Http response code
+ * Catch unhandled exceptions and return proper Http response code
  */
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -26,47 +27,52 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const { httpAdapter } = this.httpAdapterHost;
     const ctx = host.switchToHttp();
-    // const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     let message = (exception as any).message.message;
-    let code = 'HttpException';
 
     Logger.error(
       message,
       (exception as any).stack,
       `${request.method} ${request.url}`,
     );
-    // by default, it is an Internal Error
-    let httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-
+    let httpStatus;
+    let responseBody;
     switch (exception.constructor) {
-      case HttpException:
-        httpStatus = (exception as HttpException).getStatus();
-        break;
-      case QueryFailedError: // this is a TypeOrm error
+      case QueryFailedError: // TypeOrm error
         httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
         message = (exception as QueryFailedError).message;
-        code = (exception as any).code;
         break;
-      case EntityNotFoundError: // this is another TypeOrm error
-        httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
+      case EntityNotFoundError: // TypeOrm error
+        httpStatus = HttpStatus.NOT_FOUND;
         message = (exception as EntityNotFoundError).message;
-        code = (exception as any).code;
         break;
-      case CannotCreateEntityIdMapError: // and another
+      case CannotCreateEntityIdMapError: // TypeOrm error
         httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
         message = (exception as CannotCreateEntityIdMapError).message;
-        code = (exception as any).code;
+        break;
+      case UpdateValuesMissingError: // Typeorm error
+        httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
+        message = (exception as UpdateValuesMissingError).message;
         break;
       default:
-        message = 'Internal Server Error';
-        httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        const httpException = exception as HttpException;
+        if (httpException.getResponse) {
+          responseBody = (exception as HttpException).getResponse();
+        } else {
+          httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        if (!message) {
+          message = 'Internal Server Error';
+        }
     }
 
-    const responseBody = {
-      statusCode: httpStatus,
-      message,
-    };
+    if (!responseBody) {
+      responseBody = {
+        statusCode: httpStatus,
+        message,
+      };
+    }
+
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
   }
 }

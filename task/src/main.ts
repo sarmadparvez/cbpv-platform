@@ -19,7 +19,7 @@ async function bootstrap() {
     .setTitle('Task')
     .setDescription('Task service API description')
     .setVersion('1.0')
-    .addTag('task')
+    //    .addTag('task')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
@@ -29,7 +29,6 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       forbidUnknownValues: true,
-      skipMissingProperties: true,
     }),
   );
 

@@ -6,21 +6,19 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { classToPlain, plainToClass } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateProjectDto {
   @IsString()
   @IsNotEmpty()
   title: string;
   @IsString()
+  @IsOptional()
   description?: string;
   @IsEnum(ProjectStatus)
+  @IsOptional()
   status?: ProjectStatus;
   @IsUUID()
+  @IsOptional()
   assignedUserId?: string;
-
-  toEntity(): Project {
-    const data = classToPlain(this);
-    return plainToClass(Project, data);
-  }
 }
