@@ -1,4 +1,3 @@
-import { Project, ProjectStatus } from '../entities/project.entity';
 import {
   IsEnum,
   IsNotEmpty,
@@ -6,7 +5,6 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateProjectDto {
   @IsString()
@@ -15,10 +13,4 @@ export class CreateProjectDto {
   @IsString()
   @IsOptional()
   description?: string;
-  @IsEnum(ProjectStatus)
-  @IsOptional()
-  status?: ProjectStatus;
-  @IsUUID()
-  @IsOptional()
-  assignedUserId?: string;
 }

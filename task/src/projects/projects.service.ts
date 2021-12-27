@@ -14,9 +14,9 @@ export class ProjectsService {
   ) {}
 
   create(createProjectDto: CreateProjectDto) {
-    // ToDo: hardcoded for now, later use current user id
-    createProjectDto.assignedUserId = '6e6ff5d0-1807-4929-bcc4-b0ae88d825f1';
     const project = projectDtoEntity(createProjectDto);
+    // ToDo: hardcoded for now, later use current user id
+    project.userId = '6e6ff5d0-1807-4929-bcc4-b0ae88d825f1';
     return this.projectRepository.save(project);
   }
 
@@ -25,7 +25,7 @@ export class ProjectsService {
   }
 
   findOne(id: string) {
-    return this.projectRepository.findOne(id);
+    return this.projectRepository.findOneOrFail(id);
   }
 
   async update(id: string, updateProjectDto: UpdateProjectDto) {
@@ -38,9 +38,7 @@ export class ProjectsService {
     return this.projectRepository.delete(id);
   }
 }
-export function projectDtoEntity(
-  dto: CreateProjectDto | UpdateProjectDto,
-): Project {
+function projectDtoEntity(dto: CreateProjectDto | UpdateProjectDto): Project {
   const data = classToPlain(dto);
   return plainToClass(Project, data);
 }

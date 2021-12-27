@@ -1,5 +1,5 @@
 {
-  "database": "task",
+  "database": "admin",
   "entities": [],
   "host": "localhost",
   "password": "123",

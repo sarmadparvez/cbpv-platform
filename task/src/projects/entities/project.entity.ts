@@ -10,7 +10,7 @@ export class Project {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column()
   title: string;
 
   @Column({ type: 'text', nullable: true })
@@ -23,5 +23,5 @@ export class Project {
   status: ProjectStatus;
 
   @Column('uuid')
-  assignedUserId: string;
+  userId: string;
 }

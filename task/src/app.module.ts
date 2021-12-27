@@ -5,19 +5,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
 import { GlobalExceptionFilter } from './common/global-exception-filter';
 import { APP_FILTER } from '@nestjs/core';
+import { TasksModule } from './tasks/tasks.module';
+import { SkillsModule } from './skills/skills.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CountriesModule } from './countries/countries.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       useFactory: async () =>
         Object.assign(await getConnectionOptions(), {
           autoLoadEntities: true,
         }),
     }),
+    ScheduleModule.forRoot(),
     ProjectsModule,
+    TasksModule,
+    SkillsModule,
+    CountriesModule,
   ],
   providers: [
     {
