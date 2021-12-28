@@ -39,6 +39,14 @@ export class CreateTaskDto {
   @IsOptional()
   iframeUrl2?: string;
 
+  @IsString()
+  @IsOptional()
+  textualDescription1?: string;
+
+  @IsString()
+  @IsOptional()
+  textualDescription2?: string;
+
   @IsInt()
   @Min(14)
   @IsOptional()

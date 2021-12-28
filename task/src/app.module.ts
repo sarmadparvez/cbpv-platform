@@ -9,10 +9,12 @@ import { TasksModule } from './tasks/tasks.module';
 import { SkillsModule } from './skills/skills.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CountriesModule } from './countries/countries.module';
+import { FeedbacksModule } from './feedbacks/feedbacks.module';
+import cloudinary from './config/cloudinary';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ load: [cloudinary] }),
     TypeOrmModule.forRootAsync({
       useFactory: async () =>
         Object.assign(await getConnectionOptions(), {
@@ -24,6 +26,7 @@ import { CountriesModule } from './countries/countries.module';
     TasksModule,
     SkillsModule,
     CountriesModule,
+    FeedbacksModule,
   ],
   providers: [
     {

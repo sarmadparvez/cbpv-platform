@@ -12,10 +12,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
 import { Skill } from '../skills/entities/skill.entity';
 import { Country } from '../countries/entities/country.entity';
+import { FindAllTaskDto } from './dto/find-all-task-dto';
+import { v2 as cloudinary } from 'cloudinary';
+import { ConfigService } from '@nestjs/config';
+import { FileUploadSignatureResponseDto } from './dto/file-upload-signature-response.dto';
 
 @Injectable()
 export class TasksService {
   constructor(
+    private configService: ConfigService,
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
   ) {}
@@ -34,13 +39,13 @@ export class TasksService {
     return this.taskRepository.save(task);
   }
 
-  findAll(projectId?: string) {
+  findAll(query?: FindAllTaskDto) {
     const options: FindManyOptions = {
       relations: ['skills', 'countries'],
     };
-    if (projectId) {
+    if (query && query.projectId) {
       // order by dateCreated to return in the order of iterations
-      options.where = { projectId };
+      options.where = { projectId: query.projectId };
       options.order = { dateCreated: 'ASC' };
     }
     return this.taskRepository.find(options);
@@ -56,7 +61,20 @@ export class TasksService {
     // first check if the record exist in database because we use .save here and
     // save will create new if it not exists, but we don't want to create new here
     // as this is an update call.
-    await this.taskRepository.findOneOrFail(id, { select: ['id'] });
+    const existingTask = await this.taskRepository.findOneOrFail(id, {
+      select: ['id', 'status'],
+    });
+
+    // task can only be updated if it is draft state
+    if (existingTask.status !== TaskStatus.DRAFT) {
+      throw new HttpException(
+        {
+          status: HttpStatus.PRECONDITION_FAILED,
+          error: 'Task is not in draft state.',
+        },
+        HttpStatus.PRECONDITION_FAILED,
+      );
+    }
 
     const task = taskDtoEntity(updateTaskDto);
     if (updateTaskDto.skills) {
@@ -99,6 +117,14 @@ export class TasksService {
       } else if (this.isSplitTest(task) && task.images.length < 2) {
         messages.push('At-least two images are required for a split test');
       }
+    } else if (this.isTextFormat(task)) {
+      if (
+        (this.isBasicTest(task) && !task.textualDescription1) ||
+        (this.isSplitTest(task) &&
+          (!task.textualDescription1 || !task.textualDescription2))
+      ) {
+        messages.push('Task cannot be activated without textual description');
+      }
     }
     if (messages.length > 0) {
       throw new HttpException(
@@ -106,7 +132,7 @@ export class TasksService {
           status: HttpStatus.PRECONDITION_FAILED,
           error: messages,
         },
-        HttpStatus.FORBIDDEN,
+        HttpStatus.PRECONDITION_FAILED,
       );
     }
     // activate the task after validation
@@ -128,6 +154,28 @@ export class TasksService {
 
   private isIframeFormat(task: Task) {
     return task.prototypeFormat === PrototypeFormat.IFRAME;
+  }
+
+  private isTextFormat(task: Task) {
+    return task.prototypeFormat === PrototypeFormat.TEXT;
+  }
+
+  getImageUploadSignature(id: string) {
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    const cloudinaryConfig = this.configService.get('cloudinary');
+    const folder = `${cloudinaryConfig.imagesFolder}/${id}`;
+    const signature = cloudinary.utils.api_sign_request(
+      {
+        timestamp,
+        folder,
+      },
+      cloudinaryConfig.apiSecret,
+    );
+    return plainToClass(FileUploadSignatureResponseDto, {
+      signature,
+      timestamp,
+      folder,
+    });
   }
 }
 

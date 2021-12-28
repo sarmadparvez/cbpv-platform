@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Min } from 'class-validator';
+import { IsEnum, Min } from 'class-validator';
 import { Task } from './task.entity';
 
 export enum QuestionType {

@@ -23,6 +23,7 @@ export enum TestType {
 export enum PrototypeFormat {
   IMAGE = 'image',
   IFRAME = 'iframe',
+  TEXT = 'text',
 }
 
 export enum TaskStatus {
@@ -62,6 +63,12 @@ export class Task {
 
   @Column({ type: 'text', nullable: true })
   iframeUrl2: string;
+
+  @Column({ type: 'text', nullable: true })
+  textualDescription1: string;
+
+  @Column({ type: 'text', nullable: true })
+  textualDescription2: string;
 
   @Min(14)
   @Column({ default: 14 })

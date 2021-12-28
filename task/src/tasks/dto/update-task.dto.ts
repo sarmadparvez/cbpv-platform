@@ -4,7 +4,11 @@ import { IsEnum, IsOptional } from 'class-validator';
 import { TaskStatus } from '../entities/task.entity';
 
 export class UpdateTaskDto extends PartialType(
-  OmitType(CreateTaskDto, ['projectId'] as const),
+  OmitType(CreateTaskDto, [
+    'projectId',
+    'prototypeFormat',
+    'testType',
+  ] as const),
 ) {
   @IsEnum(TaskStatus)
   @IsOptional()

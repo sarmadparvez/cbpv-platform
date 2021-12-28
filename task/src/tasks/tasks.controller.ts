@@ -11,7 +11,8 @@ import {
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
+import { FindAllTaskDto } from './dto/find-all-task-dto';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -37,17 +38,10 @@ export class TasksController {
 
   /**
    * Returns the task list.
-   * @param projectId Filter by project id.
    */
-  @ApiQuery({
-    name: 'projectId',
-    required: false,
-    description:
-      'When this parameter is provided, the tasks are ordered by dateCreated in ascending to match the iteration order.',
-  })
   @Get()
-  findAll(@Query('projectId') projectId?: string) {
-    return this.tasksService.findAll(projectId);
+  findAll(@Query() query?: FindAllTaskDto) {
+    return this.tasksService.findAll(query);
   }
 
   @Get(':id')
@@ -63,5 +57,14 @@ export class TasksController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.tasksService.remove(id);
+  }
+
+  /**
+   * Images are uploaded to cloudinary.com. For uploading an image, a signature is required.
+   * This endpoint returns that signature which clients can use to upload images.
+   */
+  @Get(':id/imageUploadSignature')
+  imageUploadSignature(@Param('id') id: string) {
+    return this.tasksService.getImageUploadSignature(id);
   }
 }
