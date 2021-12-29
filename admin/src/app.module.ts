@@ -4,6 +4,7 @@ import { getConnectionOptions } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CountriesModule } from './countries/countries.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CountriesModule } from './countries/countries.module';
     }),
     SkillsModule,
     CountriesModule,
+    UsersModule,
   ],
 })
 export class AppModule {}

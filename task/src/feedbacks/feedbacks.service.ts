@@ -15,7 +15,7 @@ export class FeedbacksService {
   ) {}
 
   create(createFeedbackDto: CreateFeedbackDto) {
-    const feedback = feedbackDtoEntity(createFeedbackDto);
+    const feedback = feedbackDtoToEntity(createFeedbackDto);
     // ToDo: hardcoded for now, later use current user id
     feedback.userId = '6e6ff5d0-1807-4929-bcc4-b0ae88d825f1';
     return this.feedbackRepository.save(feedback);
@@ -42,7 +42,7 @@ export class FeedbacksService {
     await this.feedbackRepository.findOneOrFail(id, {
       select: ['id'],
     });
-    const feedback = feedbackDtoEntity(updateFeedbackDto);
+    const feedback = feedbackDtoToEntity(updateFeedbackDto);
     feedback.id = id;
     // using save instead of update here to also add/remove Answers relationship
     await this.feedbackRepository.save(feedback);
@@ -54,7 +54,7 @@ export class FeedbacksService {
   }
 }
 
-function feedbackDtoEntity(
+function feedbackDtoToEntity(
   dto: CreateFeedbackDto | UpdateFeedbackDto,
 ): Feedback {
   const data = classToPlain(dto);

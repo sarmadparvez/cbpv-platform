@@ -25,7 +25,7 @@ export class TasksService {
     private taskRepository: Repository<Task>,
   ) {}
   create(createTaskDto: CreateTaskDto) {
-    const task = taskDtoEntity(createTaskDto);
+    const task = taskDtoToEntity(createTaskDto);
     // ToDo: hardcoded for now, later use current user id
     task.userId = '6e6ff5d0-1807-4929-bcc4-b0ae88d825f1';
     if (createTaskDto.skills) {
@@ -76,7 +76,7 @@ export class TasksService {
       );
     }
 
-    const task = taskDtoEntity(updateTaskDto);
+    const task = taskDtoToEntity(updateTaskDto);
     if (updateTaskDto.skills) {
       // update skills relationship
       task.skills = updateTaskDto.skills.map((id) => <Skill>{ id });
@@ -179,7 +179,7 @@ export class TasksService {
   }
 }
 
-function taskDtoEntity(dto: CreateTaskDto | UpdateTaskDto): Task {
+function taskDtoToEntity(dto: CreateTaskDto | UpdateTaskDto): Task {
   const data = classToPlain(dto);
   return plainToClass(Task, data);
 }
