@@ -13,6 +13,7 @@ import {
 import { Country } from '../../countries/entities/country.entity';
 import { Skill } from '../../skills/entities/skill.entity';
 import { Gender } from '../entities/user.entity';
+import { Exclude } from 'class-transformer';
 
 /**
  * Password regex rules:
@@ -42,7 +43,7 @@ export class CreateUserDto {
   @Matches(PASSWORD_REGEX, { message: PASSWORD_REGX_MSG })
   password: string;
 
-  @IsDate()
+  @IsString()
   @IsNotEmpty()
   birthDate: string;
 

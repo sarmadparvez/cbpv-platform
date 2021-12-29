@@ -35,6 +35,10 @@ export class CountriesService {
         const response = await firstValueFrom(
           this.httpService.get<Country[]>(`${adminAPI}/${countriesEndpoint}`),
         );
+        if (response.data['statusCode']) {
+          console.log('Unable to fetch countries ', response.data);
+          return;
+        }
         const countries = response.data;
         this.countryRepository.save(countries);
         Logger.debug('Countries saved in database');

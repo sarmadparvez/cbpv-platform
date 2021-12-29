@@ -4,13 +4,15 @@ import { ProjectsModule } from './projects/projects.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
 import { GlobalExceptionFilter } from './common/global-exception-filter';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TasksModule } from './tasks/tasks.module';
 import { SkillsModule } from './skills/skills.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CountriesModule } from './countries/countries.module';
 import { FeedbacksModule } from './feedbacks/feedbacks.module';
 import cloudinary from './config/cloudinary';
+import { AuthModule } from './auth/auth.module';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import cloudinary from './config/cloudinary';
         }),
     }),
     ScheduleModule.forRoot(),
+    AuthModule,
     ProjectsModule,
     TasksModule,
     SkillsModule,
@@ -32,6 +35,10 @@ import cloudinary from './config/cloudinary';
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
     },
   ],
 })

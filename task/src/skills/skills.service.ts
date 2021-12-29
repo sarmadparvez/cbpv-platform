@@ -35,6 +35,10 @@ export class SkillsService {
         const response = await firstValueFrom(
           this.httpService.get<Skill[]>(`${adminAPI}/${skillsEndpoint}`),
         );
+        if (response.data['statusCode']) {
+          console.log('Unable to fetch skills ', response.data);
+          return;
+        }
         const skills = response.data;
         this.skillRepository.save(skills);
         Logger.debug('Skills saved in database');

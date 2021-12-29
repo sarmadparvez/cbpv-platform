@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { CountriesService } from './countries.service';
 import { ApiTags } from '@nestjs/swagger';
+import { Public } from '../auth/public.decorator';
 
 @ApiTags('countries')
 @Controller('countries')
@@ -11,6 +12,7 @@ export class CountriesController {
    * Get all countries.
    */
   @Get()
+  @Public()
   findAll() {
     return this.countriesService.findAll();
   }

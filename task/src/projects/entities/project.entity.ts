@@ -1,4 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export enum ProjectStatus {
   OPEN = 'open',
@@ -16,7 +21,7 @@ export class Project {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ type: 'timestamp with time zone' })
   dateCreated: Date;
 
   @Column({ type: 'enum', enum: ProjectStatus, default: ProjectStatus.OPEN })

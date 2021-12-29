@@ -20,7 +20,7 @@ export class CreateTaskDto {
   title: string;
 
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   description?: string;
 
   @IsEnum(TestType)

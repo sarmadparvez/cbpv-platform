@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('projects')
 @Controller('projects')
@@ -22,7 +24,6 @@ export class ProjectsController {
    */
   @Post()
   create(@Body() createProjectDto: CreateProjectDto) {
-    console.log('createProjectDto', createProjectDto);
     return this.projectsService.create(createProjectDto);
   }
 
