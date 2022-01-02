@@ -45,7 +45,7 @@ export class User {
   passwordHash: string;
 
   @Column({ type: 'date' })
-  birthDate: string;
+  birthDate: Date;
 
   @Column({ type: 'enum', enum: Gender })
   gender: Gender;

@@ -11,7 +11,7 @@ import {
 import { FeedbacksService } from './feedbacks.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { UpdateFeedbackDto } from './dto/update-feedback.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { FindAllFeedbackDto } from './dto/findAll-feedback.dto';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../iam/policy';
@@ -50,11 +50,23 @@ export class FeedbacksController {
   }
 
   /**
+   * Get all Feedbacks for a Task. The user must have Read permission on the Task.
+   */
+  @Get('tasks/:taskId')
+  @ApiParam({
+    name: 'taskId',
+    description: 'The task id to list Feedbacks for',
+  })
+  findFeedbacks(@Param('taskId') taskId: string) {
+    return this.feedbacksService.findFeedbacks(taskId);
+  }
+
+  /**
    * Get a Feedback.
    * The calling user must have Read permission on the Feedback.
    * The Read permission for the Feedback is granted if one of the following holds:
    * 1. The feedback is created by the User.
-   * 2. User have Read permission the Task to which this Feedback belongs.
+   * 2. User have Read permission on the Task to which this Feedback belongs.
    */
   @Get(':id')
   findOne(@Param('id') id: string) {

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { UpdateFeedbackDto } from './dto/update-feedback.dto';
 import { classToPlain, plainToClass } from 'class-transformer';
@@ -21,6 +21,23 @@ export class FeedbacksService {
   ) {}
 
   create(createFeedbackDto: CreateFeedbackDto) {
+    // Check if user have already provided feedback for this task, fail in that case.
+    // The feedback for a Task iteration can only be provided once.
+    const existingFeedback = this.feedbackRepository.findOne({
+      where: {
+        taskId: createFeedbackDto.taskId,
+      },
+    });
+    if (existingFeedback) {
+      // user have already provided feedback for this Task
+      throw new HttpException(
+        {
+          status: HttpStatus.PRECONDITION_FAILED,
+          error: 'You have already provided feedback on this task.',
+        },
+        HttpStatus.PRECONDITION_FAILED,
+      );
+    }
     const feedback = feedbackDtoToEntity(createFeedbackDto);
     feedback.userId = contextService.get('user').id;
     return this.feedbackRepository.save(feedback);
@@ -34,6 +51,16 @@ export class FeedbacksService {
       };
     }
     return this.feedbackRepository.find(options);
+  }
+
+  async findFeedbacks(taskId: string) {
+    // Check if user have Read permission for the Task
+    await findWithPermissionCheck(taskId, Action.Read, this.taskRepository);
+    return this.feedbackRepository.find({
+      where: {
+        taskId,
+      },
+    });
   }
 
   async findOne(id: string) {

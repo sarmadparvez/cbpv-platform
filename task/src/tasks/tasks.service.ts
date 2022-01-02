@@ -9,23 +9,26 @@ import {
   TestType,
 } from './entities/task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, In, Repository } from 'typeorm';
 import { Skill } from '../skills/entities/skill.entity';
 import { Country } from '../countries/entities/country.entity';
 import { FindAllTaskDto } from './dto/find-all-task-dto';
 import { v2 as cloudinary } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
 import { FileUploadSignatureResponseDto } from './dto/file-upload-signature-response.dto';
-import { Action } from '../iam/policy';
+import { Action, AppAbility } from '../iam/policy';
 import { findWithPermissionCheck } from '../iam/utils';
 import * as contextService from 'request-context';
 import { Project } from '../projects/entities/project.entity';
 import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
+import { Feedback } from '../feedbacks/entities/feedback.entity';
 
 @Injectable()
 export class TasksService {
   constructor(
     private configService: ConfigService,
+    private userService: UsersService,
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
     @InjectRepository(Project)
@@ -33,7 +36,7 @@ export class TasksService {
   ) {}
   async create(createTaskDto: CreateTaskDto) {
     // Check if Project of the Task belongs to user.
-    const user = contextService.get('user')?.id as User;
+    const user = contextService.get('user') as User;
     const project = await this.projectRepository.findOneOrFail(
       createTaskDto.projectId,
     );
@@ -79,15 +82,101 @@ export class TasksService {
       Action.Read,
       this.projectRepository,
     );
-    return this.findAll({
-      projectId,
+    return this.taskRepository.find({
+      relations: ['skills', 'countries', 'questions'],
+      where: {
+        projectId,
+      },
+      order: {
+        dateCreated: 'ASC',
+      },
     });
   }
 
-  findOne(id: string) {
-    return findWithPermissionCheck(id, Action.Read, this.taskRepository, {
+  async findOpenTasks() {
+    // get current user from the admin service to get details for matching the criteria (Task vs User)
+    const user = await this.userService.getUser(contextService.get('user').id);
+    const query = this.getTaskMatchingQuery(user);
+    // filter out those tasks on which user have already provided feedback
+    query.leftJoin('task.feedbacks', 'feedbacks');
+    query.andWhere('feedbacks.taskId IS NULL');
+    return query.getMany();
+  }
+
+  /**
+   * Given a user, find the matching Tasks for it
+   * @param user The user to find Tasks for
+   * @private
+   */
+  private getTaskMatchingQuery(user: User) {
+    const birthDate = new Date(user.birthDate);
+    const now = new Date();
+    let age = now.getFullYear() - birthDate.getFullYear();
+    const month = now.getMonth() - birthDate.getMonth();
+    if (month < 0 || (month == 0 && now.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return this.taskRepository
+      .createQueryBuilder('task')
+      .innerJoinAndSelect(
+        'task.skills',
+        'skills',
+        'skills.id IN (:...skills) ',
+        {
+          skills: user.skills.map((skill) => skill.id),
+        },
+      )
+      .innerJoinAndSelect(
+        'task.countries',
+        'countries',
+        'countries.id = :countryId',
+        {
+          countryId: user.country.id,
+        },
+      )
+      .where(
+        'task.maxExperience >= :userExperience AND task.minExperience <= :userExperience ' +
+          'AND task.maxAge >= :userAge AND task.minAge <= :userAge',
+        {
+          userExperience: user.experience,
+          userAge: age,
+        },
+      );
+  }
+
+  async findOne(id: string) {
+    const task = await this.taskRepository.findOneOrFail(id, {
       relations: ['skills', 'countries', 'questions'],
     });
+    const ability = contextService.get('userAbility') as AppAbility;
+    if (ability.can(Action.Read, task)) {
+      // user have explicit permission to Read the task
+      return task;
+    }
+    // Check if user implicitly have permission to Read the Task
+    // i.e if user have permission to create Feedback for this Task
+    // first fetch the user from admin service
+    if (ability.can(Action.Create, Feedback)) {
+      const user = await this.userService.getUser(
+        contextService.get('user').id,
+      );
+      const query = this.getTaskMatchingQuery(user);
+      query.andWhere('task.id = :taskId', {
+        taskId: id,
+      });
+      const taskMatchedCount = await query.getCount();
+      if (taskMatchedCount > 0) {
+        return task;
+      }
+    }
+    // User does not have access to this Task
+    throw new HttpException(
+      {
+        status: HttpStatus.FORBIDDEN,
+        error: 'You do not have permission for this Task.',
+      },
+      HttpStatus.FORBIDDEN,
+    );
   }
 
   async update(id: string, updateTaskDto: UpdateTaskDto) {
@@ -140,26 +229,44 @@ export class TasksService {
       Action.Update,
       this.taskRepository,
       {
-        relations: ['images'],
+        relations: ['images', 'skills', 'countries', 'questions'],
       },
     );
     const messages: string[] = [];
     // validate task first
     if (task.status !== TaskStatus.Draft) {
-      messages.push('Task can only be activated when in draft state');
+      messages.push('Task can only be activated when in draft state.');
+    }
+    if (task.countries.length === 0) {
+      messages.push(
+        'Please provide a country for matching the Task with Crowdworkers.',
+      );
+    }
+    if (task.skills.length === 0) {
+      messages.push(
+        'Please provide skills for matching the Task with Crowdworkers.',
+      );
+    }
+    if (task.questions.length === 0) {
+      messages.push('Please provide questions.');
+    }
+    if (task.minExperience) {
+      messages.push(
+        'Please provide a country for matching the Task with Crowdworkers.',
+      );
     }
     if (this.isIframeFormat(task)) {
       if (
         (this.isBasicTest(task) && !task.iframeUrl1) ||
         (this.isSplitTest(task) && (!task.iframeUrl1 || !task.iframeUrl2))
       ) {
-        messages.push('Task cannot be activated without iframe url');
+        messages.push('Task cannot be activated without iframe url.');
       }
     } else if (this.isImageFormat(task)) {
       if (this.isBasicTest(task) && task.images.length === 0) {
-        messages.push('At-least one image is required for the basic test');
+        messages.push('At-least one image is required for the basic test.');
       } else if (this.isSplitTest(task) && task.images.length < 2) {
-        messages.push('At-least two images are required for a split test');
+        messages.push('At-least two images are required for a split test.');
       }
     } else if (this.isTextFormat(task)) {
       if (
@@ -167,7 +274,7 @@ export class TasksService {
         (this.isSplitTest(task) &&
           (!task.textualDescription1 || !task.textualDescription2))
       ) {
-        messages.push('Task cannot be activated without textual description');
+        messages.push('Task cannot be activated without textual description.');
       }
     }
     if (messages.length > 0) {

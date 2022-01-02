@@ -5,7 +5,7 @@ export class FindAllFeedbackDto {
   @IsUUID()
   @IsOptional()
   @ApiProperty({
-    description: 'The task to which this feedback belongs.',
+    description: 'The task to which the feedbacks belong.',
     required: false,
   })
   taskId: string;

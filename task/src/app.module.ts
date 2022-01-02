@@ -13,6 +13,7 @@ import { FeedbacksModule } from './feedbacks/feedbacks.module';
 import cloudinary from './config/cloudinary';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     SkillsModule,
     CountriesModule,
     FeedbacksModule,
+    UsersModule,
   ],
   providers: [
     {

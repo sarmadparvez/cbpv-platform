@@ -63,6 +63,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         const httpException = exception as HttpException;
         if (httpException.getResponse) {
           responseBody = (exception as HttpException).getResponse();
+          httpStatus = httpException.getStatus();
         } else {
           httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }

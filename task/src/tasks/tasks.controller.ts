@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  Req,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -18,6 +19,7 @@ import { Action } from '../iam/policy';
 import * as contextService from 'request-context';
 import { Task } from './entities/task.entity';
 import { Project } from '../projects/entities/project.entity';
+import { Feedback } from '../feedbacks/entities/feedback.entity';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -41,6 +43,13 @@ export class TasksController {
   /**
    * By default, Task is created as draft. Use this endpoint to Activate the task.
    * Activating a task changes its status to open, and it can no longer be edited.
+   *
+   * There are certain pre-requisites for activating a Task.
+   *
+   * 1. The Task must contain Questions
+   * 2. The Task must contain crowd selection criteria (Skills and Countries)
+   * 3. The Task must be in Draft state
+   * 4. The task must contain Pictures, or Iframe Urls or textual description of Idea.
    */
   @Patch(':id/activate')
   activate(@Param('id') id: string) {
@@ -73,9 +82,24 @@ export class TasksController {
     // check if user have permission to read Tasks
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Read,
-      [Project, Task],
+      Task,
     );
     return this.tasksService.findIterations(projectId);
+  }
+
+  /**
+   * Get open tasks for Crowdworker to work on. The calling user must have Create permission for the Feedback,
+   * because only those users can see open tasks which have permission to create feedbacks.
+   * Only those Tasks will be returned where user have not provided Feedback yet.
+   */
+  @Get('open')
+  findOpenTasks() {
+    // Check if user have permission to create feedback
+    ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
+      Action.Create,
+      Feedback,
+    );
+    return this.tasksService.findOpenTasks();
   }
 
   /**

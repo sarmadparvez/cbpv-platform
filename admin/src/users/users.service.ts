@@ -56,7 +56,7 @@ export class UsersService {
     // first check if the record exist in database because we use .save here and
     // save will create new if it not exists, but we don't want to create new here
     // as this is an update call.
-    const existingUser = await this.userRepository.findOneOrFail(id, {
+    await this.userRepository.findOneOrFail(id, {
       select: ['id'],
     });
 
@@ -77,6 +77,7 @@ export class UsersService {
       );
     }
     // using save instead of update here to also add/remove the relationships
+    user.id = id;
     await this.userRepository.save(user);
     return this.userRepository.findOne(id);
   }

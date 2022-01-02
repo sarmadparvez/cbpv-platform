@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Skill } from './entities/skill.entity';
 import { Logger } from '@nestjs/common';
-import { Cron, Timeout } from '@nestjs/schedule';
+import { Timeout } from '@nestjs/schedule';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
@@ -35,10 +35,6 @@ export class SkillsService {
         const response = await firstValueFrom(
           this.httpService.get<Skill[]>(`${adminAPI}/${skillsEndpoint}`),
         );
-        if (response.data['statusCode']) {
-          console.log('Unable to fetch skills ', response.data);
-          return;
-        }
         const skills = response.data;
         this.skillRepository.save(skills);
         Logger.debug('Skills saved in database');

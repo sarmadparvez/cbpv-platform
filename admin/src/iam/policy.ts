@@ -12,7 +12,6 @@ import { Role, User } from '../users/entities/user.entity';
  * The policy includes the actions a User can perform on entities.
  */
 
-// const actions = ['manage', 'create', 'read', 'update', 'delete'] as const;
 export enum Action {
   Manage = 'manage',
   Create = 'create',

@@ -1,6 +1,8 @@
 import {
+  ArrayNotEmpty,
   IsArray,
   IsDate,
+  IsDateString,
   IsEnum,
   IsInt,
   IsNotEmpty,
@@ -10,10 +12,7 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import { Country } from '../../countries/entities/country.entity';
-import { Skill } from '../../skills/entities/skill.entity';
 import { Gender, Role } from '../entities/user.entity';
-import { Exclude } from 'class-transformer';
 
 /**
  * Password regex rules:
@@ -43,9 +42,9 @@ export class CreateUserDto {
   @Matches(PASSWORD_REGEX, { message: PASSWORD_REGX_MSG })
   password: string;
 
-  @IsString()
+  @IsDateString()
   @IsNotEmpty()
-  birthDate: string;
+  birthDate: Date;
 
   @IsEnum(Gender)
   @IsNotEmpty()
@@ -68,5 +67,6 @@ export class CreateUserDto {
   @IsArray()
   @IsUUID('all', { each: true })
   @IsNotEmpty()
+  @ArrayNotEmpty()
   skills: string[];
 }

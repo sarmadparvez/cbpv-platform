@@ -15,6 +15,7 @@ import { Image } from './image.entity';
 import { Skill } from '../../skills/entities/skill.entity';
 import { Country } from '../../countries/entities/country.entity';
 import { Question } from './question.entity';
+import { Feedback } from '../../feedbacks/entities/feedback.entity';
 
 export enum TestType {
   Basic = 'basic',
@@ -131,6 +132,9 @@ export class Task {
     onUpdate: 'CASCADE',
   })
   questions: Question[];
+
+  @OneToMany(() => Feedback, (feedback) => feedback.taskId)
+  feedbacks: Feedback[];
 
   public constructor(init?: Partial<Task>) {
     Object.assign(this, init);
