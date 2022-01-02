@@ -11,8 +11,8 @@ import { Task } from '../../tasks/entities/task.entity';
 import { Answer } from './answer.entity';
 
 export enum PaymentStatus {
-  PENDING = 'pending',
-  COMPLETED = 'completed',
+  Pending = 'pending',
+  Completed = 'completed',
 }
 
 @Entity()
@@ -26,7 +26,7 @@ export class Feedback {
   @Column({ type: 'text', nullable: true })
   comment: string;
 
-  @Column({ type: 'enum', enum: PaymentStatus, default: PaymentStatus.PENDING })
+  @Column({ type: 'enum', enum: PaymentStatus, default: PaymentStatus.Pending })
   paymentStatus: PaymentStatus;
 
   @Column('uuid')

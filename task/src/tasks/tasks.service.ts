@@ -16,6 +16,11 @@ import { FindAllTaskDto } from './dto/find-all-task-dto';
 import { v2 as cloudinary } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
 import { FileUploadSignatureResponseDto } from './dto/file-upload-signature-response.dto';
+import { Action } from '../iam/policy';
+import { findWithPermissionCheck } from '../iam/utils';
+import * as contextService from 'request-context';
+import { Project } from '../projects/entities/project.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class TasksService {
@@ -23,11 +28,27 @@ export class TasksService {
     private configService: ConfigService,
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
+    @InjectRepository(Project)
+    private projectRepository: Repository<Project>,
   ) {}
-  create(createTaskDto: CreateTaskDto) {
+  async create(createTaskDto: CreateTaskDto) {
+    // Check if Project of the Task belongs to user.
+    const user = contextService.get('user')?.id as User;
+    const project = await this.projectRepository.findOneOrFail(
+      createTaskDto.projectId,
+    );
+    if (project.userId !== user.id) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'The project does not belongs to the user.',
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     const task = taskDtoToEntity(createTaskDto);
-    // ToDo: hardcoded for now, later use current user id
-    task.userId = '6e6ff5d0-1807-4929-bcc4-b0ae88d825f1';
+    task.userId = user.id;
     if (createTaskDto.skills) {
       // add skills relationship
       task.skills = createTaskDto.skills.map((id) => <Skill>{ id });
@@ -51,22 +72,35 @@ export class TasksService {
     return this.taskRepository.find(options);
   }
 
+  async findIterations(projectId: string) {
+    // check if user has read permission on the project
+    await findWithPermissionCheck(
+      projectId,
+      Action.Read,
+      this.projectRepository,
+    );
+    return this.findAll({
+      projectId,
+    });
+  }
+
   findOne(id: string) {
-    return this.taskRepository.findOneOrFail(id, {
+    return findWithPermissionCheck(id, Action.Read, this.taskRepository, {
       relations: ['skills', 'countries', 'questions'],
     });
   }
 
   async update(id: string, updateTaskDto: UpdateTaskDto) {
-    // first check if the record exist in database because we use .save here and
-    // save will create new if it not exists, but we don't want to create new here
-    // as this is an update call.
-    const existingTask = await this.taskRepository.findOneOrFail(id, {
-      select: ['id', 'status'],
-    });
+    // check if user have permission to update Task
+    // a user can only update task which belongs to him (task.userId = user.id)
+    const existingTask = await findWithPermissionCheck(
+      id,
+      Action.Update,
+      this.taskRepository,
+    );
 
     // task can only be updated if it is draft state
-    if (existingTask.status !== TaskStatus.DRAFT) {
+    if (existingTask.status !== TaskStatus.Draft) {
       throw new HttpException(
         {
           status: HttpStatus.PRECONDITION_FAILED,
@@ -91,17 +125,27 @@ export class TasksService {
     return this.taskRepository.findOne(id);
   }
 
-  remove(id: string) {
+  async remove(id: string) {
+    // check if user have permission to delete Task
+    // a user can only delete task which belongs to him (task.userId = user.id)
+    await findWithPermissionCheck(id, Action.Delete, this.taskRepository);
     return this.taskRepository.delete(id);
   }
 
   async activate(id: string) {
-    const task = await this.taskRepository.findOneOrFail(id, {
-      relations: ['images'],
-    });
+    // check if user have permission to update Task
+    // a user can only update/activate task which belongs to him (task.userId = user.id)
+    const task = await findWithPermissionCheck(
+      id,
+      Action.Update,
+      this.taskRepository,
+      {
+        relations: ['images'],
+      },
+    );
     const messages: string[] = [];
     // validate task first
-    if (task.status !== TaskStatus.DRAFT) {
+    if (task.status !== TaskStatus.Draft) {
       messages.push('Task can only be activated when in draft state');
     }
     if (this.isIframeFormat(task)) {
@@ -136,28 +180,28 @@ export class TasksService {
       );
     }
     // activate the task after validation
-    task.status = TaskStatus.OPEN;
+    task.status = TaskStatus.Open;
     return this.taskRepository.save(task);
   }
 
   private isBasicTest(task: Task) {
-    return task.testType === TestType.BASIC;
+    return task.testType === TestType.Basic;
   }
 
   private isSplitTest(task: Task) {
-    return task.testType === TestType.SPLIT;
+    return task.testType === TestType.Split;
   }
 
   private isImageFormat(task: Task) {
-    return task.prototypeFormat === PrototypeFormat.IMAGE;
+    return task.prototypeFormat === PrototypeFormat.Image;
   }
 
   private isIframeFormat(task: Task) {
-    return task.prototypeFormat === PrototypeFormat.IFRAME;
+    return task.prototypeFormat === PrototypeFormat.Iframe;
   }
 
   private isTextFormat(task: Task) {
-    return task.prototypeFormat === PrototypeFormat.TEXT;
+    return task.prototypeFormat === PrototypeFormat.Text;
   }
 
   getImageUploadSignature(id: string) {

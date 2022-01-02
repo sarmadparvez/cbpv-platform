@@ -17,19 +17,19 @@ import { Country } from '../../countries/entities/country.entity';
 import { Question } from './question.entity';
 
 export enum TestType {
-  BASIC = 'basic',
-  SPLIT = 'split',
+  Basic = 'basic',
+  Split = 'split',
 }
 
 export enum PrototypeFormat {
-  IMAGE = 'image',
-  IFRAME = 'iframe',
-  TEXT = 'text',
+  Image = 'image',
+  Iframe = 'iframe',
+  Text = 'text',
 }
 
 export enum TaskStatus {
-  DRAFT = 'draft',
-  OPEN = 'open',
+  Draft = 'draft',
+  Open = 'open',
   Closed = 'closed',
 }
 
@@ -56,7 +56,7 @@ export class Task {
   })
   prototypeFormat: PrototypeFormat;
 
-  @Column({ type: 'enum', enum: TaskStatus, default: TaskStatus.DRAFT })
+  @Column({ type: 'enum', enum: TaskStatus, default: TaskStatus.Draft })
   status: TaskStatus;
 
   @Column({ type: 'text', nullable: true })
@@ -131,4 +131,8 @@ export class Task {
     onUpdate: 'CASCADE',
   })
   questions: Question[];
+
+  public constructor(init?: Partial<Task>) {
+    Object.assign(this, init);
+  }
 }

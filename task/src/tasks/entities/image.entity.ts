@@ -2,8 +2,8 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Task, TestType } from './task.entity';
 
 export enum SplitNumber {
-  ONE = 1,
-  TWO = 2,
+  One = 1,
+  Two = 2,
 }
 
 @Entity()

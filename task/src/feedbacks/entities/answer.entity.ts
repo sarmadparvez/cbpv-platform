@@ -8,11 +8,10 @@ import {
 import { Max, Min } from 'class-validator';
 import { Feedback } from './feedback.entity';
 import { Question } from '../../tasks/entities/question.entity';
-import { Exclude } from 'class-transformer';
 
 export enum ThumbsRating {
-  UP = 'up',
-  DOWN = 'down',
+  Up = 'up',
+  Down = 'down',
 }
 
 /**

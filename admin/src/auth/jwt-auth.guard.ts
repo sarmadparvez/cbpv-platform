@@ -10,7 +10,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   /**
-   * Override to return true for isPublic (public routes which don't need authentication) routes
+   * Override to return true for public routes which don't need authentication
    */
   canActivate(context: ExecutionContext) {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [

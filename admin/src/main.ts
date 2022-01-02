@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import * as fs from 'fs';
 import { ValidationPipe } from '@nestjs/common';
+import * as contextService from 'request-context';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,7 +27,9 @@ async function bootstrap() {
       forbidUnknownValues: true,
     }),
   );
-
+  // wrap requests in a middleware namespace 'request'.
+  // thi is done to attach data to request context e.g currently logged in user
+  app.use(contextService.middleware('request'));
   await app.listen(3001);
 }
 

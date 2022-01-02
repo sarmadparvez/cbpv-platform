@@ -12,7 +12,7 @@ import {
 } from 'class-validator';
 import { Country } from '../../countries/entities/country.entity';
 import { Skill } from '../../skills/entities/skill.entity';
-import { Gender } from '../entities/user.entity';
+import { Gender, Role } from '../entities/user.entity';
 import { Exclude } from 'class-transformer';
 
 /**
@@ -55,6 +55,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   @Min(0)
   experience: number;
+
+  @IsArray()
+  @IsEnum(Role, { each: true })
+  @IsNotEmpty()
+  roles: Role[];
 
   @IsUUID()
   @IsNotEmpty()

@@ -12,9 +12,15 @@ import { Country } from '../../countries/entities/country.entity';
 import { Min } from 'class-validator';
 import { Exclude } from 'class-transformer';
 
+export enum Role {
+  Admin = 'admin',
+  Developer = 'developer',
+  Crowdworker = 'crowdworker',
+}
+
 export enum Gender {
-  MALE = 'male',
-  FEMALE = 'female',
+  Male = 'male',
+  Female = 'female',
 }
 
 @Entity()
@@ -48,6 +54,13 @@ export class User {
   @Column()
   experience: number;
 
+  @Column({
+    type: 'enum',
+    enum: Role,
+    array: true,
+  })
+  roles: Role[];
+
   @ManyToOne(() => Country, { eager: true })
   country: Country;
 
@@ -59,4 +72,8 @@ export class User {
   })
   @JoinTable()
   skills: Skill[];
+
+  public constructor(init?: Partial<User>) {
+    Object.assign(this, init);
+  }
 }

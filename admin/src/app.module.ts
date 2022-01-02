@@ -1,4 +1,4 @@
-import { Module, SetMetadata } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { SkillsModule } from './skills/skills.module';
 import { getConnectionOptions } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';

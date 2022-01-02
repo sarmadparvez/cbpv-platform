@@ -3,10 +3,10 @@ import { IsEnum, Min } from 'class-validator';
 import { Task } from './task.entity';
 
 export enum QuestionType {
-  TEXT = 'text',
-  RADIO = 'radio',
-  STAR_RATING = 'star-rating',
-  THUMBS_RATING = 'thumbs-rating',
+  Text = 'text',
+  Radio = 'radio',
+  StarRating = 'star-rating',
+  ThumbsRating = 'thumbs-rating',
 }
 
 /**

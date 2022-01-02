@@ -6,18 +6,23 @@ import { Feedback } from './entities/feedback.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
 import { FindAllFeedbackDto } from './dto/findAll-feedback.dto';
+import { findWithPermissionCheck } from '../iam/utils';
+import { Action, AppAbility } from '../iam/policy';
+import * as contextService from 'request-context';
+import { Task } from '../tasks/entities/task.entity';
 
 @Injectable()
 export class FeedbacksService {
   constructor(
     @InjectRepository(Feedback)
     private feedbackRepository: Repository<Feedback>,
+    @InjectRepository(Task)
+    private taskRepository: Repository<Task>,
   ) {}
 
   create(createFeedbackDto: CreateFeedbackDto) {
     const feedback = feedbackDtoToEntity(createFeedbackDto);
-    // ToDo: hardcoded for now, later use current user id
-    feedback.userId = '6e6ff5d0-1807-4929-bcc4-b0ae88d825f1';
+    feedback.userId = contextService.get('user').id;
     return this.feedbackRepository.save(feedback);
   }
 
@@ -31,17 +36,30 @@ export class FeedbacksService {
     return this.feedbackRepository.find(options);
   }
 
-  findOne(id: string) {
-    return this.feedbackRepository.findOne(id, { relations: ['answers'] });
+  async findOne(id: string) {
+    const feedback = await this.feedbackRepository.findOneOrFail(id, {
+      relations: ['answers'],
+    });
+
+    const ability = contextService.get('userAbility') as AppAbility;
+    if (ability.can(Action.Read, feedback)) {
+      return feedback;
+    } else {
+      // User implicitly have Read permission on Feedback if the user have Read permission on the Task to which this feedback belongs.
+      await findWithPermissionCheck(
+        feedback.taskId,
+        Action.Read,
+        this.taskRepository,
+      );
+      return feedback;
+    }
   }
 
   async update(id: string, updateFeedbackDto: UpdateFeedbackDto) {
     // first check if the record exist in database because we use .save here and
     // save will create new if it not exists, but we don't want to create new here
     // as this is an update call.
-    await this.feedbackRepository.findOneOrFail(id, {
-      select: ['id'],
-    });
+    await findWithPermissionCheck(id, Action.Update, this.feedbackRepository);
     const feedback = feedbackDtoToEntity(updateFeedbackDto);
     feedback.id = id;
     // using save instead of update here to also add/remove Answers relationship
@@ -49,7 +67,8 @@ export class FeedbacksService {
     return this.feedbackRepository.findOne(id);
   }
 
-  remove(id: string) {
+  async remove(id: string) {
+    await findWithPermissionCheck(id, Action.Delete, this.feedbackRepository);
     return this.feedbackRepository.delete(id);
   }
 }

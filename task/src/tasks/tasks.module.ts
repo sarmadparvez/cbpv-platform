@@ -6,9 +6,13 @@ import { Task } from './entities/task.entity';
 import { Image } from './entities/image.entity';
 import { Question } from './entities/question.entity';
 import { ConfigModule } from '@nestjs/config';
+import { Project } from '../projects/entities/project.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Task, Image, Question]), ConfigModule],
+  imports: [
+    TypeOrmModule.forFeature([Task, Image, Question, Project]),
+    ConfigModule,
+  ],
   controllers: [TasksController],
   providers: [TasksService],
 })

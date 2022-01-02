@@ -16,6 +16,7 @@ import {
   UpdateValuesMissingError,
 } from 'typeorm';
 import { HttpAdapterHost } from '@nestjs/core';
+import { ForbiddenError } from '@casl/ability';
 
 /**
  * Catch unhandled exceptions and return proper Http response code
@@ -38,6 +39,10 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     let httpStatus;
     let responseBody;
     switch (exception.constructor) {
+      case ForbiddenError:
+        httpStatus = HttpStatus.FORBIDDEN;
+        message = (exception as HttpException).message;
+        break;
       case QueryFailedError: // TypeOrm error
         httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
         message = (exception as QueryFailedError).message;
