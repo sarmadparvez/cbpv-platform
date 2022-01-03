@@ -99,7 +99,9 @@ export class Task {
   userId: string;
 
   @Column('uuid')
-  @ManyToOne(() => Project)
+  @ManyToOne(() => Project, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'projectId' })
   projectId: string;
 

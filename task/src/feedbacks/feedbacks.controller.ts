@@ -11,7 +11,7 @@ import {
 import { FeedbacksService } from './feedbacks.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { UpdateFeedbackDto } from './dto/update-feedback.dto';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { FindAllFeedbackDto } from './dto/findAll-feedback.dto';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../iam/policy';
@@ -26,6 +26,7 @@ export class FeedbacksController {
   /**
    * Create a new Feedback. The user must have Create permission for Feedback.
    */
+  @ApiBearerAuth()
   @Post()
   create(@Body() createFeedbackDto: CreateFeedbackDto) {
     // check if user have permission to create Feedback
@@ -39,6 +40,7 @@ export class FeedbacksController {
   /**
    * Get a list of all Feedbacks. The user must have permission to Read all Feedbacks.
    */
+  @ApiBearerAuth()
   @Get()
   findAll(@Query() query?: FindAllFeedbackDto) {
     // check if user have permission to list Feedback
@@ -52,6 +54,7 @@ export class FeedbacksController {
   /**
    * Get all Feedbacks for a Task. The user must have Read permission on the Task.
    */
+  @ApiBearerAuth()
   @Get('tasks/:taskId')
   @ApiParam({
     name: 'taskId',
@@ -68,6 +71,7 @@ export class FeedbacksController {
    * 1. The feedback is created by the User.
    * 2. User have Read permission on the Task to which this Feedback belongs.
    */
+  @ApiBearerAuth()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.feedbacksService.findOne(id);
@@ -76,6 +80,7 @@ export class FeedbacksController {
   /**
    * Update a Feedback. The calling user must have Update permission on the Feedback.
    */
+  @ApiBearerAuth()
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -87,6 +92,7 @@ export class FeedbacksController {
   /**
    * Delete a Feedback. The calling user must have Delete permission on the Feedback.
    */
+  @ApiBearerAuth()
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.feedbacksService.remove(id);

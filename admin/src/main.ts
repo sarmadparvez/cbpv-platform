@@ -11,8 +11,17 @@ async function bootstrap() {
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('Admin')
-    .setDescription('Admin service API description')
+    .setDescription(
+      'Admin service is responsible for User management and authentication. Also it provides static data i.e list of Skills and Countries ',
+    )
     .setVersion('1.0')
+    .addBearerAuth({
+      description: 'Authentication is done by a signed JWT',
+      name: 'Authorization',
+      bearerFormat: 'Bearer',
+      type: 'http',
+      in: 'Header',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

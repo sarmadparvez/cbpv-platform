@@ -98,8 +98,17 @@ export class TasksService {
     const user = await this.userService.getUser(contextService.get('user').id);
     const query = this.getTaskMatchingQuery(user);
     // filter out those tasks on which user have already provided feedback
-    query.leftJoin('task.feedbacks', 'feedbacks');
-    query.andWhere('feedbacks.taskId IS NULL');
+    query.leftJoin(
+      'task.feedbacks',
+      'feedbacks',
+      'feedbacks.userId = :userId',
+      {
+        userId: user.id,
+      },
+    );
+    query.andWhere('feedbacks.taskId IS NULL AND task.status = :taskStatus', {
+      taskStatus: TaskStatus.Open,
+    });
     return query.getMany();
   }
 

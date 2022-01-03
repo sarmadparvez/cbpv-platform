@@ -8,11 +8,12 @@ import {
   Delete,
   Query,
   Req,
+  Put,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { FindAllTaskDto } from './dto/find-all-task-dto';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../iam/policy';
@@ -30,6 +31,7 @@ export class TasksController {
    * Create a new Task. The user must have Create permission for Tasks.
    * User can only create Tasks for its own Projects.
    */
+  @ApiBearerAuth()
   @Post()
   create(@Body() createTaskDto: CreateTaskDto) {
     // check if user have permission to create Task
@@ -51,7 +53,8 @@ export class TasksController {
    * 3. The Task must be in Draft state
    * 4. The task must contain Pictures, or Iframe Urls or textual description of Idea.
    */
-  @Patch(':id/activate')
+  @ApiBearerAuth()
+  @Put(':id/activate')
   activate(@Param('id') id: string) {
     return this.tasksService.activate(id);
   }
@@ -59,6 +62,7 @@ export class TasksController {
   /**
    * Get a list of all Tasks. The user must have permission to Read all Tasks.
    */
+  @ApiBearerAuth()
   @Get()
   findAll(@Query() query?: FindAllTaskDto) {
     // check if user have permission to list Tasks
@@ -77,6 +81,7 @@ export class TasksController {
     name: 'projectId',
     description: 'The project id to list iterations for',
   })
+  @ApiBearerAuth()
   @Get('iterations/:projectId')
   findIterations(@Param('projectId') projectId: string) {
     // check if user have permission to read Tasks
@@ -92,6 +97,7 @@ export class TasksController {
    * because only those users can see open tasks which have permission to create feedbacks.
    * Only those Tasks will be returned where user have not provided Feedback yet.
    */
+  @ApiBearerAuth()
   @Get('open')
   findOpenTasks() {
     // Check if user have permission to create feedback
@@ -113,6 +119,7 @@ export class TasksController {
   /**
    * Update a Task. The calling user must have Update permission the Task.
    */
+  @ApiBearerAuth()
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
     return this.tasksService.update(id, updateTaskDto);
@@ -121,6 +128,7 @@ export class TasksController {
   /**
    * Delete a Task. The calling user must have Delete permission the Task.
    */
+  @ApiBearerAuth()
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.tasksService.remove(id);
@@ -130,6 +138,7 @@ export class TasksController {
    * Images are uploaded to cloudinary.com. For uploading an image, a signature is required.
    * This endpoint returns that signature which clients can use to upload images.
    */
+  @ApiBearerAuth()
   @Get(':id/imageUploadSignature')
   imageUploadSignature(@Param('id') id: string) {
     return this.tasksService.getImageUploadSignature(id);

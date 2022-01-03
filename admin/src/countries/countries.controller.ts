@@ -9,7 +9,7 @@ export class CountriesController {
   constructor(private readonly countriesService: CountriesService) {}
 
   /**
-   * Get all countries.
+   * Get a list of all possible Countries in the System.
    */
   @Get()
   @Public()

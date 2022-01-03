@@ -19,6 +19,9 @@ import { AuthGuard } from '@nestjs/passport';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  /**
+   * Login with username and password. A JWT is returned in response which can be used to make further API calls.
+   */
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -26,11 +29,19 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  /**
+   * This endpoint is just to enable Single Sign on with Google.
+   */
   @Public()
   @Get('google')
   @UseGuards(AuthGuard('google'))
   async googleAuth(@Request() req) {}
 
+  /**
+   * After signing in with Google, the Google redirects to this endpoint along with user profile details (Google id, firstName, lastName etc).
+   * If the User is already available in the system (matched by its Google id, it is logged in by issuing a JWT).
+   * If the User is not available in the system (matched by its Google id), it is redirected to the registration page.
+   */
   @Public()
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))

@@ -9,7 +9,7 @@ export class SkillsController {
   constructor(private readonly skillsService: SkillsService) {}
 
   /**
-   * Get all skills.
+   * Get a list of all possible skills in the System.
    */
   @Get()
   @Public()

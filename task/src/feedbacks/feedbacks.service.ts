@@ -20,10 +20,10 @@ export class FeedbacksService {
     private taskRepository: Repository<Task>,
   ) {}
 
-  create(createFeedbackDto: CreateFeedbackDto) {
+  async create(createFeedbackDto: CreateFeedbackDto) {
     // Check if user have already provided feedback for this task, fail in that case.
     // The feedback for a Task iteration can only be provided once.
-    const existingFeedback = this.feedbackRepository.findOne({
+    const existingFeedback = await this.feedbackRepository.findOne({
       where: {
         taskId: createFeedbackDto.taskId,
       },
@@ -38,6 +38,31 @@ export class FeedbacksService {
         HttpStatus.PRECONDITION_FAILED,
       );
     }
+    // check if Answers belong to the questions of the Task
+    const task = await this.taskRepository.findOneOrFail(
+      createFeedbackDto.taskId,
+      {
+        select: ['id'],
+        relations: ['questions'],
+      },
+    );
+    console.log('task ', task);
+    const taskQuestionIds = task.questions.map((question) => question.id);
+    const allAnswersBelongToTaskQuesitons = createFeedbackDto.answers.every(
+      (answer) => taskQuestionIds.includes(answer.questionId),
+    );
+
+    if (!allAnswersBelongToTaskQuesitons) {
+      // There exist atleast one answer which does not belong to the Task Questions
+      throw new HttpException(
+        {
+          status: HttpStatus.PRECONDITION_FAILED,
+          error: 'The answers does not belong to task questions.',
+        },
+        HttpStatus.PRECONDITION_FAILED,
+      );
+    }
+
     const feedback = feedbackDtoToEntity(createFeedbackDto);
     feedback.userId = contextService.get('user').id;
     return this.feedbackRepository.save(feedback);

@@ -57,7 +57,7 @@ export class AuthService {
     }
     // User does not exist in the database, it needs to proceed with completing registration
     res.redirect(
-      `${webAppUrl}?googleId=${req.user.googleId}&firstName=${req.user.firstName}&lastName=${req.user.lastName}`,
+      `${webAppUrl}/register?googleId=${req.user.googleId}&firstName=${req.user.firstName}&lastName=${req.user.lastName}`,
     );
   }
 }

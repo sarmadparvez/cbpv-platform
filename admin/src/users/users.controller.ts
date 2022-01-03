@@ -12,7 +12,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from '../auth/public.decorator';
 import { Action, defineAbilityFor } from '../iam/policy';
 import { ForbiddenError, subject } from '@casl/ability';
@@ -26,18 +26,28 @@ import { CreateWithSSODto } from './dto/create-with-sso.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  /**
+   * Create a new user with username and password.
+   */
   @Public()
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
+  /**
+   * Create a new user with single sign on provider profile id. In this case username and password is not required.
+   */
   @Public()
   @Post('createWithSSO')
   createWithSSO(@Body() createWithSSODto: CreateWithSSODto) {
     return this.usersService.createWithSSO(createWithSSODto);
   }
 
+  /**
+   * Get all the Users in the System. The calling user must have Read permission for all Users.
+   */
+  @ApiBearerAuth()
   @Get()
   findAll() {
     // check permissions first
@@ -49,6 +59,10 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  /**
+   * Get a User by ID. The calling user must have Read permission for the User.
+   */
+  @ApiBearerAuth()
   @Get(':id')
   findOne(@Param('id') id: string) {
     // check permissions
@@ -59,6 +73,10 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
+  /**
+   * Update a user. The calling user must have Update permission for the User.
+   */
+  @ApiBearerAuth()
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     // check permissions
@@ -69,6 +87,10 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
+  /**
+   * Delete a user. The calling user must have Delete permission for the User.
+   */
+  @ApiBearerAuth()
   @Delete(':id')
   remove(@Param('id') id: string) {
     // check permissions

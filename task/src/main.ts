@@ -18,9 +18,17 @@ async function bootstrap() {
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('Task')
-    .setDescription('Task service API description')
+    .setDescription(
+      'Task service is responsible for iterative validation of Prototypes. Tasks are created and Feedback is provided through this service.',
+    )
     .setVersion('1.0')
-    //    .addTag('task')
+    .addBearerAuth({
+      description: 'Authentication is done by a signed JWT',
+      name: 'Authorization',
+      bearerFormat: 'Bearer',
+      type: 'http',
+      in: 'Header',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
