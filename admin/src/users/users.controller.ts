@@ -18,6 +18,7 @@ import { Action, defineAbilityFor } from '../iam/policy';
 import { ForbiddenError, subject } from '@casl/ability';
 import * as contextService from 'request-context';
 import { User } from './entities/user.entity';
+import { CreateWithSSODto } from './dto/create-with-sso.dto';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('users')
@@ -29,6 +30,12 @@ export class UsersController {
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+  }
+
+  @Public()
+  @Post('createWithSSO')
+  createWithSSO(@Body() createWithSSODto: CreateWithSSODto) {
+    return this.usersService.createWithSSO(createWithSSODto);
   }
 
   @Get()

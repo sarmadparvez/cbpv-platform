@@ -11,6 +11,7 @@ import { Skill } from '../../skills/entities/skill.entity';
 import { Country } from '../../countries/entities/country.entity';
 import { Min } from 'class-validator';
 import { Exclude } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 export enum Role {
   Admin = 'admin',
@@ -28,6 +29,9 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ unique: true, nullable: true })
+  googleId: string;
+
   @CreateDateColumn({ type: 'timestamp with time zone' })
   dateCreated: Date;
 
@@ -37,10 +41,16 @@ export class User {
   @Column()
   lastName: string;
 
-  @Column({ unique: true })
+  @ApiProperty({
+    required: false,
+  })
+  @Column({ unique: true, nullable: true })
   username: string;
 
-  @Column()
+  @Column({ nullable: true })
+  @ApiProperty({
+    required: false,
+  })
   @Exclude()
   passwordHash: string;
 

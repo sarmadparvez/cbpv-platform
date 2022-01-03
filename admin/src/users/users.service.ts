@@ -6,8 +6,9 @@ import { User } from './entities/user.entity';
 import { Skill } from '../skills/entities/skill.entity';
 import { Country } from '../countries/entities/country.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { CreateWithSSODto, SSOProvider } from './dto/create-with-sso.dto';
 
 @Injectable()
 export class UsersService {
@@ -36,6 +37,23 @@ export class UsersService {
     return this.userRepository.findOne(savedUser.id);
   }
 
+  async createWithSSO(createWithSSODto: CreateWithSSODto) {
+    const user = userDtoToEntity(createWithSSODto);
+    if (createWithSSODto.skills) {
+      // add skills relationship
+      user.skills = createWithSSODto.skills.map((id) => <Skill>{ id });
+    }
+    if (createWithSSODto.country) {
+      // add country relationship
+      user.country = <Country>{ id: createWithSSODto.country };
+    }
+    if (createWithSSODto.ssoProvider === SSOProvider.Google) {
+      user.googleId = createWithSSODto.ssoProfileId;
+    }
+    const savedUser = await this.userRepository.save(user);
+    return this.userRepository.findOne(savedUser.id);
+  }
+
   findAll() {
     return this.userRepository.find();
   }
@@ -50,6 +68,10 @@ export class UsersService {
         username,
       },
     });
+  }
+
+  findOneBy(options: FindOneOptions<User>) {
+    return this.userRepository.findOne(options);
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
@@ -87,7 +109,9 @@ export class UsersService {
   }
 }
 
-function userDtoToEntity(dto: CreateUserDto | UpdateUserDto): User {
+function userDtoToEntity(
+  dto: CreateUserDto | UpdateUserDto | CreateWithSSODto,
+): User {
   const data = classToPlain(dto);
   return plainToClass(User, data);
 }

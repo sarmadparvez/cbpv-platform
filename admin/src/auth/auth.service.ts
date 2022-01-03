@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
-import { User } from '../users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private configService: ConfigService,
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
@@ -23,14 +24,40 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
+  async login(user: any) {
     const payload = {
-      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
       sub: user.id,
       roles: user.roles,
     };
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
     };
+  }
+
+  async googleLogin(req: any, res: any) {
+    if (!req.user) {
+      throw new BadRequestException();
+    }
+    // check if user already exist in database
+    const user = await this.usersService.findOneBy({
+      where: {
+        googleId: req.user.googleId,
+      },
+    });
+    const webAppUrl = this.configService.get<string>('WEB_APP_URL');
+    if (user) {
+      // user is already registered
+      const login = await this.login(user);
+      res.redirect(
+        `${webAppUrl}?userId=${user.id}&accessToken=${login.accessToken}`,
+      );
+      return;
+    }
+    // User does not exist in the database, it needs to proceed with completing registration
+    res.redirect(
+      `${webAppUrl}?googleId=${req.user.googleId}&firstName=${req.user.firstName}&lastName=${req.user.lastName}`,
+    );
   }
 }
