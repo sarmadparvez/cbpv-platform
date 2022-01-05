@@ -1,0 +1,10 @@
+<a
+  mat-list-item
+  class="sidenav-item"
+  [ngClass]="active ? 'selected' : ''"
+  disableRipple
+>
+  <div class="item-selector"></div>
+  <div fxFlex="100%">{{ text }}</div>
+  <mat-icon>{{ icon }}</mat-icon>
+</a>

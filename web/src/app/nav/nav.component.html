@@ -1,0 +1,35 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav mode="side" [opened]="isOpen">
+    <div class="sidenav-logo-container">
+      <app-logo></app-logo>
+    </div>
+    <!--Items in the main sidebar-->
+    <mat-nav-list>
+      <!--Home-->
+      <app-nav-menu-item
+        text="Home"
+        icon="home"
+        routerLink="/home"
+        selectionTriggerRoute="home"
+      >
+      </app-nav-menu-item>
+      <!--Projects-->
+      <app-nav-menu-item
+        text="Projects"
+        icon="account_tree"
+        routerLink="/projects"
+        selectionTriggerRoute="projects"
+      >
+      </app-nav-menu-item>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-nav-toolbar
+      [activePage]="getActivePage()"
+      (toggleSideNav)="toggleSideNav()"
+      (logout)="logout()"
+      [previousUrl]="getPreviousUrl()"
+    ></app-nav-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
