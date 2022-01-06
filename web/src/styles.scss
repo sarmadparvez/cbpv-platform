@@ -1,5 +1,22 @@
-@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 body {
-    margin: 0 !important;
+  margin: 0 !important;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.float-right {
+  float: right;
+}
+
+.margin-left-auto {
+  margin-left: auto;
+}
+
+.mat-raised-button.mat-black {
+  background-color: black;
+  color: white;
 }

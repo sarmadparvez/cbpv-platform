@@ -1,0 +1,6 @@
+{
+  "error": {
+    "required": "This field is required",
+    "passwordMismatch": "The passwords do not match"
+  }
+}

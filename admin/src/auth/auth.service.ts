@@ -3,6 +3,7 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { LoginResponseDto } from './dto/login-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -31,9 +32,9 @@ export class AuthService {
       sub: user.id,
       roles: user.roles,
     };
-    return {
-      accessToken: this.jwtService.sign(payload),
-    };
+    const response = new LoginResponseDto();
+    response.accessToken = this.jwtService.sign(payload);
+    return response;
   }
 
   async googleLogin(req: any, res: any) {
@@ -57,7 +58,7 @@ export class AuthService {
     }
     // User does not exist in the database, it needs to proceed with completing registration
     res.redirect(
-      `${webAppUrl}/register?googleId=${req.user.googleId}&firstName=${req.user.firstName}&lastName=${req.user.lastName}`,
+      `${webAppUrl}/access/register?googleId=${req.user.googleId}&firstName=${req.user.firstName}&lastName=${req.user.lastName}`,
     );
   }
 }

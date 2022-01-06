@@ -4,18 +4,18 @@
       Login to CBPV Platform
     </mat-card-title>
     <mat-card-content>
-      <form (keyup.enter)="login(email, password)">
-        <mat-form-field class="login-field">
+      <form (keyup.enter)="login(username, password)">
+        <mat-form-field class="login-field" appearance="outline">
           <input
             matInput
             placeholder="Email"
             name="email"
-            [(ngModel)]="email"
+            [(ngModel)]="username"
             type="email"
-            autocomplete="username email"
+            autocomplete="username"
           />
         </mat-form-field>
-        <mat-form-field class="login-field">
+        <mat-form-field class="login-field" appearance="outline">
           <input
             matInput
             placeholder="Password"
@@ -29,15 +29,30 @@
       <mat-error [textContent]="errorMessage"></mat-error>
     </mat-card-content>
     <mat-card-actions>
-      <button
-        mat-raised-button
-        color="primary"
-        class="login-field"
-        (click)="login(email, password)"
-        type="submit"
-      >
-        Login
-      </button>
+      <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="centre center">
+        <!--Login button-->
+        <button
+            mat-raised-button
+            color="black"
+            class="login-field"
+            (click)="login(username, password)"
+            type="submit"
+        >
+          Login
+        </button>
+        <mat-label class="half-opacity">OR</mat-label>
+        <!--Google sso button-->
+        <button
+            mat-raised-button
+            class="login-field"
+            (click)="googleSSORedirect()"
+        >
+          <mat-icon svgIcon="google_logo"></mat-icon>
+          &nbsp; Sign in with Google
+        </button>
+      </div>
+
+
     </mat-card-actions>
   </mat-card>
 </app-access-container>

@@ -1,0 +1,120 @@
+<app-access-container>
+  <mat-card fxFlexAlign="center" class="register-card">
+    <mat-card-title>
+      Registration
+    </mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="registerForm">
+        <div fxLayout fxLayoutGap="10px">
+          <!--First name-->
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>First name</mat-label>
+            <input formControlName="firstName" matInput>
+            <mat-error *ngIf="registerForm.get('firstName').hasError('required')">
+             {{ 'error.required' | translate }}
+            </mat-error>
+          </mat-form-field>
+          <!--Last Name-->
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Last name</mat-label>
+            <input formControlName="lastName" matInput>
+            <mat-error *ngIf="registerForm.get('lastName').hasError('required')">
+              {{ 'error.required' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout fxLayoutGap="10px" *ngIf="!this.googleId">
+          <!--Username -->
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Username</mat-label>
+            <input formControlName="username" matInput >
+            <mat-error *ngIf="registerForm.get('username').hasError('required')">
+              {{ 'error.required' | translate }}
+            </mat-error>
+          </mat-form-field>
+          <ng-container formGroupName="passwords">
+            <!--Password-->
+            <mat-form-field class="full-width" appearance="outline">
+              <mat-label>Password</mat-label>
+              <input formControlName="password" matInput>
+              <mat-error *ngIf="registerForm.get('passwords').hasError('required')">
+                {{ 'error.required' | translate }}
+              </mat-error>
+            </mat-form-field>
+            <!--Repeat password-->
+            <mat-form-field class="full-width" appearance="outline">
+              <mat-label>Confirm password</mat-label>
+              <input formControlName="repeatPassword" [errorStateMatcher]="customMatcher" matInput>
+              <mat-error *ngIf="registerForm.get('passwords').get('repeatPassword').hasError('required')">
+                {{ 'error.required' | translate }}
+              </mat-error>
+              <mat-error *ngIf="registerForm.get('passwords').hasError('matchPassword')">
+                {{ 'error.passwordMismatch' | translate }}
+              </mat-error>
+            </mat-form-field>
+          </ng-container>
+        </div>
+        <div fxLayout fxLayoutGap="10px">
+          <!--Birthdate-->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Birthdate</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="birthDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="registerForm.get('birthDate').hasError('required')">
+              {{ 'error.required' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <!--Gender-->
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender" >
+              <mat-option [value]="GenderEnum.Male">
+                {{GenderEnum.Male}}
+              </mat-option>
+              <mat-option [value]="GenderEnum.Female">
+                {{GenderEnum.Female}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="registerForm.get('gender').hasError('required')">
+              {{ 'error.required' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout fxLayoutGap="10px">
+          <!--Roles-->
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Role(s)</mat-label>
+            <mat-select formControlName="roles" multiple>
+              <mat-option [value]="RolesEnum.Developer">
+                {{RolesEnum.Developer}}
+              </mat-option>
+              <mat-option [value]="RolesEnum.Crowdworker">
+                {{RolesEnum.Crowdworker}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="registerForm.get('roles').hasError('required')">
+              {{ 'error.required' | translate }}
+            </mat-error>
+          </mat-form-field>
+          <!-- Country -->
+
+        </div>
+
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+        <!--Register button-->
+        <button
+            mat-raised-button
+            color="black"
+            (click)="register()"
+            class="float-right"
+        >
+          Register
+        </button>
+
+    </mat-card-actions>
+  </mat-card>
+</app-access-container>

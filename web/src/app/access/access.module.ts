@@ -2,6 +2,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { LoginGuard } from './login/login.guard';
 import { LoginComponent } from './login/login.component';
+import {
+  RegisterComponent,
+  RegisterModule,
+} from './register/register.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -16,6 +21,10 @@ const routes: Routes = [
         path: 'login',
         canActivate: [LoginGuard],
         component: LoginComponent,
+      },
+      {
+        path: 'register',
+        component: RegisterComponent,
       },
     ],
   },

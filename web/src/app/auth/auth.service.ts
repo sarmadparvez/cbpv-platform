@@ -3,6 +3,11 @@ import { CrudService } from '../http/crud.service';
 import { HttpClient } from '@angular/common/http';
 import { StorageService } from '../storage/storage.service';
 import { StorageKey } from '../storage/storage.model';
+import {
+  AuthService as AdminAuthService,
+  LoginDto,
+} from '../../../gen/api/admin';
+import { firstValueFrom } from 'rxjs';
 const { AUTH_TOKEN } = StorageKey;
 
 @Injectable({
@@ -16,7 +21,11 @@ export class AuthService extends CrudService {
   token: string;
   redirectUrl: string;
 
-  constructor(http: HttpClient, private storage: StorageService) {
+  constructor(
+    http: HttpClient,
+    private storage: StorageService,
+    private readonly authService: AdminAuthService,
+  ) {
     super(http);
     this.token = this.storage.read(AUTH_TOKEN) || '';
   }
@@ -39,6 +48,26 @@ export class AuthService extends CrudService {
           'When using mockLogin, login with credentials: \nemail: user\npassword:user',
         );
       }
+      this.token = 'user';
+      this.storage.save(StorageKey.AUTH_TOKEN, this.token);
+      return this.redirectUrl;
+    } catch (e) {
+      return Promise.reject(e.message);
+    }
+  }
+
+  public async loginWithUsernameAndPassword(
+    username: string,
+    password: string,
+  ) {
+    try {
+      const response = await firstValueFrom(
+        this.authService.login(<LoginDto>{
+          username,
+          password,
+        }),
+      );
+      console.log('login response ', response);
       this.token = 'user';
       this.storage.save(StorageKey.AUTH_TOKEN, this.token);
       return this.redirectUrl;
