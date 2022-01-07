@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavModule } from './nav/nav.module';
+import { NavModule } from './navigation/nav.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   HTTP_INTERCEPTORS,
@@ -30,6 +30,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AvatarModule } from 'ngx-avatars';
 
 export function adminServiceConfigFactory(): AdminConfiguration {
   const params: AdminConfigurationParameters = {

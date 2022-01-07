@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavigationService } from '../../../nav/navigation.service';
 
 @Component({
   selector: 'app-nav-menu-item',
@@ -14,15 +13,9 @@ export class NavMenuItemComponent {
   @Input()
   set selectionTriggerRoute(value: string) {
     this.active = this.currentRoute === value;
-    if (this.active) {
-      this.navigationService.setActivePage(this.text);
-    }
   }
   private readonly currentRoute: string;
-  constructor(
-    private readonly route: ActivatedRoute,
-    private navigationService: NavigationService,
-  ) {
+  constructor(private readonly route: ActivatedRoute) {
     this.currentRoute = route.snapshot.routeConfig?.path ?? '';
   }
 }

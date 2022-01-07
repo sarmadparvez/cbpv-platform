@@ -3,6 +3,9 @@
 body {
   margin: 0 !important;
 }
+.clickable {
+  cursor: pointer;
+}
 
 .full-width {
   width: 100%;
@@ -20,3 +23,4 @@ body {
   background-color: black;
   color: white;
 }
+

@@ -1,0 +1,25 @@
+@import 'src/variables';
+
+.sidenav-container {
+  height: 100%;
+}
+
+.app-sidenav {
+  overflow: hidden;
+  position: fixed !important;
+  background: $app-grey-white;
+  box-shadow: 12px 0 12px $app-grey-shadow;
+  color: $app-dark-navy;
+  border-right: none !important;
+  width: 93px;
+}
+
+.sidenav-logo-container {
+  box-shadow: 0 10px 15px -10px #bbb;
+  background: #2196f3;
+  text-align: center;
+}
+
+.logo {
+  height: 60px;
+}

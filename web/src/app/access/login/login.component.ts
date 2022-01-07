@@ -2,7 +2,6 @@ import { Component, NgModule, OnInit } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { LogoModule } from '../../logo/logo.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -81,7 +80,6 @@ export class LoginComponent implements OnInit {
   declarations: [LoginComponent],
   imports: [
     CommonModule,
-    LogoModule,
     MatCardModule,
     MatInputModule,
     MatButtonModule,

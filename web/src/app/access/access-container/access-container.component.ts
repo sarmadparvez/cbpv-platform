@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, NgModule } from '@angular/core';
-import { LogoModule } from '../../logo/logo.module';
-import { FlexModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 /**
  * This component acts as a layout for access components
@@ -18,6 +17,6 @@ export class AccessContainerComponent {
 @NgModule({
   declarations: [AccessContainerComponent],
   exports: [AccessContainerComponent],
-  imports: [CommonModule, LogoModule, FlexModule],
+  imports: [CommonModule, FlexLayoutModule],
 })
 export class AccessContainerModule {}

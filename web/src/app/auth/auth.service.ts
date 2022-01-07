@@ -1,21 +1,20 @@
 import { Injectable } from '@angular/core';
-import { CrudService } from '../http/crud.service';
 import { HttpClient } from '@angular/common/http';
 import { StorageService } from '../storage/storage.service';
 import { StorageKey } from '../storage/storage.model';
 import {
   AuthService as AdminAuthService,
   LoginDto,
+  User,
+  UsersService,
 } from '../../../gen/api/admin';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 const { AUTH_TOKEN } = StorageKey;
+import jwt_decode from 'jwt-decode';
 
-@Injectable({
-  providedIn: 'root',
-})
 @Injectable({
   providedIn: 'root',
 })
@@ -23,6 +22,7 @@ export class AuthService {
   endpoint = 'auth';
   token: string;
   redirectUrl: string;
+  user: User;
 
   constructor(
     http: HttpClient,
@@ -32,6 +32,7 @@ export class AuthService {
     private readonly translateService: TranslateService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly userService: UsersService,
   ) {
     this.token = this.storage.read(AUTH_TOKEN) || '';
   }
@@ -82,12 +83,26 @@ export class AuthService {
     throw new Error('Cannot login without a token');
   }
 
+  async getCurrentUser(forceFetch?: false) {
+    if (!forceFetch && this.user) {
+      // return from cache
+      return this.user;
+    }
+    const token: any = jwt_decode(this.getToken());
+    if (token.sub) {
+      this.user = await firstValueFrom(this.userService.findOne(token.sub));
+      return this.user;
+    }
+    throw new Error('unable to get user');
+  }
+
   public getToken(): string {
     return this.token;
   }
 
   public logout() {
     this.token = '';
+    this.user = null;
     this.storage.remove(AUTH_TOKEN);
   }
 

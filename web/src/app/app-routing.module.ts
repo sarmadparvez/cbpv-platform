@@ -5,7 +5,7 @@ import {
   PreloadAllModules,
   RouteReuseStrategy,
 } from '@angular/router';
-import { NavComponent } from './nav/nav.component';
+import { NavComponent } from './navigation/nav.component';
 
 const routes: Routes = [
   {

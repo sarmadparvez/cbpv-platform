@@ -1,0 +1,53 @@
+<mat-toolbar color="primary" class="mat-elevation-z6" fxLayout fxLayoutGap="16px">
+    <button mat-icon-button (click)="onToggleSideNav()">
+        <mat-icon>menu</mat-icon>
+    </button>
+
+    <div fxFlex="100%" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+        <!--Roles dropdown-->
+        <mat-select
+            *ngIf="user | async as user"
+            [formControl]="roleControl"
+            (selectionChange)="setRole($event.value)"
+            class="role-select"
+        >
+            <mat-select-trigger>
+                {{ 'roles.'+roleControl.value | translate  }}
+            </mat-select-trigger>
+            <mat-option *ngFor="let role of user.roles" [value]="role">
+
+                {{ 'roles.'+role | translate}}
+
+            </mat-option>
+        </mat-select>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+        <!--Full name-->
+        <div class="full-name" *ngIf="user | async as user">
+            {{ user.firstName + ' ' + user.lastName }}
+        </div>
+
+        <!--User account button-->
+        <button
+            mat-icon-button
+            [matMenuTriggerFor]="userMenu"
+            class="mat-elevation-z1"
+        >
+            <ngx-avatars
+                *ngIf="(user | async) as user"
+                size="40"
+                [name]="user.firstName + ' ' + user.lastName"
+            ></ngx-avatars>
+        </button>
+        <mat-menu #userMenu="matMenu" class="">
+            <button mat-menu-item (click)="onLogout()">
+                <mat-icon> exit_to_app </mat-icon>
+                <span>
+            logout
+          </span>
+            </button>
+        </mat-menu>
+    </div>
+
+</mat-toolbar>

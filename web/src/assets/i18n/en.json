@@ -7,5 +7,11 @@
     "passwordMismatch": "The passwords do not match",
     "passwordPattern": "Password should be at-least 8 characters long, must contain one lower case and one upper case letter, and one digit.",
     "login": "Unable to login. Please make sure the credentials are correct!"
+  },
+
+  "roles": {
+    "admin": "Administrator",
+    "developer": "Developer",
+    "crowdworker": "Crowdworker"
   }
 }

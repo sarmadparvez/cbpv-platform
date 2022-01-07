@@ -1,18 +1,12 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav mode="side" [opened]="isOpen">
+  <mat-sidenav mode="side" [opened]="isOpen" class="app-sidenav">
     <div class="sidenav-logo-container">
-      <app-logo></app-logo>
+      <img class="logo clickable" src="assets/images/logo.png" alt="logo"
+           routerLink="/home"
+      />
     </div>
     <!--Items in the main sidebar-->
     <mat-nav-list>
-      <!--Home-->
-      <app-nav-menu-item
-        text="Home"
-        icon="home"
-        routerLink="/home"
-        selectionTriggerRoute="home"
-      >
-      </app-nav-menu-item>
       <!--Projects-->
       <app-nav-menu-item
         text="Projects"
@@ -25,10 +19,8 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <app-nav-toolbar
-      [activePage]="getActivePage()"
       (toggleSideNav)="toggleSideNav()"
       (logout)="logout()"
-      [previousUrl]="getPreviousUrl()"
     ></app-nav-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>

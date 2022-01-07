@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NavigationService, Page } from '../../nav/navigation.service';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
 
@@ -11,26 +10,14 @@ import { Router } from '@angular/router';
 export class NavComponent {
   isOpen = true;
 
-  constructor(
-    private navigationService: NavigationService,
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   public toggleSideNav() {
     this.isOpen = !this.isOpen;
   }
 
-  public getActivePage(): Page {
-    return this.navigationService.getActivePage();
-  }
-
   public logout() {
     this.authService.logout();
     this.router.navigate(['login'], { replaceUrl: true });
-  }
-
-  public getPreviousUrl(): string[] {
-    return this.navigationService.getPreviousUrl();
   }
 }
