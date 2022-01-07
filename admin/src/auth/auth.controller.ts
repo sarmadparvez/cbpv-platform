@@ -7,7 +7,7 @@ import {
   Response,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { LocalAuthGuard } from './local-auth-guard';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -28,6 +28,13 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto, @Request() req) {
     return this.authService.login(req.user);
   }
+
+  /**
+   * Login with a token. Token must be set as authorization header. If the request succeeds, the token is valid.
+   */
+  @ApiBearerAuth()
+  @Post('loginWithToken')
+  async loginWithToken() {}
 
   /**
    * This endpoint is just to enable Single Sign on with Google.

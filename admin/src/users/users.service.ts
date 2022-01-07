@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { classToPlain, plainToClass } from 'class-transformer';
@@ -19,6 +19,21 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     const user = userDtoToEntity(createUserDto);
+    // Check if username is available
+    const existingUser = await this.userRepository.findOne({
+      select: ['id'],
+      where: { username: user.username },
+    });
+    if (existingUser) {
+      throw new HttpException(
+        {
+          status: HttpStatus.PRECONDITION_FAILED,
+          error:
+            'This username is not available. Please select a different one.',
+        },
+        HttpStatus.PRECONDITION_FAILED,
+      );
+    }
     if (createUserDto.skills) {
       // add skills relationship
       user.skills = createUserDto.skills.map((id) => <Skill>{ id });

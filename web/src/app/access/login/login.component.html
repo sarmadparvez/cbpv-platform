@@ -4,26 +4,30 @@
       Login to CBPV Platform
     </mat-card-title>
     <mat-card-content>
-      <form (keyup.enter)="login(username, password)">
+      <form [formGroup]="form">
         <mat-form-field class="login-field" appearance="outline">
+          <mat-label>Username</mat-label>
           <input
             matInput
-            placeholder="Email"
-            name="email"
-            [(ngModel)]="username"
-            type="email"
+            formControlName="username"
             autocomplete="username"
           />
+          <mat-error *ngIf="form.controls.username.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
         </mat-form-field>
         <mat-form-field class="login-field" appearance="outline">
+          <mat-label>Password</mat-label>
           <input
             matInput
-            placeholder="Password"
             name="password"
-            [(ngModel)]="password"
+            formControlName="password"
             type="password"
             autocomplete="current-password"
           />
+          <mat-error *ngIf="form.controls.password.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
         </mat-form-field>
       </form>
       <mat-error [textContent]="errorMessage"></mat-error>
@@ -35,8 +39,7 @@
             mat-raised-button
             color="black"
             class="login-field"
-            (click)="login(username, password)"
-            type="submit"
+            (click)="login()"
         >
           Login
         </button>
@@ -51,7 +54,10 @@
           &nbsp; Sign in with Google
         </button>
       </div>
-
+      <div fxLayout="column" class="register-container" fxLayoutAlign="centre center">
+        <mat-label class="half-opacity">Don't have an account?</mat-label>
+        <a mat-button routerLink="/access/register">Create account</a>
+      </div>
 
     </mat-card-actions>
   </mat-card>

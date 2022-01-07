@@ -52,7 +52,7 @@ export class AuthService {
       // user is already registered
       const login = await this.login(user);
       res.redirect(
-        `${webAppUrl}?userId=${user.id}&accessToken=${login.accessToken}`,
+        `${webAppUrl}/access/login?accessToken=${login.accessToken}`,
       );
       return;
     }

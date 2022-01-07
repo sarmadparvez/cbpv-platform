@@ -8,6 +8,9 @@ import {
   LoginDto,
 } from '../../../gen/api/admin';
 import { firstValueFrom } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
+import { ActivatedRoute, Router } from '@angular/router';
 const { AUTH_TOKEN } = StorageKey;
 
 @Injectable({
@@ -16,7 +19,7 @@ const { AUTH_TOKEN } = StorageKey;
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService extends CrudService {
+export class AuthService {
   endpoint = 'auth';
   token: string;
   redirectUrl: string;
@@ -25,35 +28,12 @@ export class AuthService extends CrudService {
     http: HttpClient,
     private storage: StorageService,
     private readonly authService: AdminAuthService,
+    private readonly snackBar: MatSnackBar,
+    private readonly translateService: TranslateService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
   ) {
-    super(http);
     this.token = this.storage.read(AUTH_TOKEN) || '';
-  }
-
-  public async login(email: string, password: string) {
-    try {
-      this.token = await this.post({ email, password });
-      this.storage.save(AUTH_TOKEN, this.token);
-      return this.redirectUrl;
-    } catch (error) {
-      console.error('Error during login request', error);
-      return Promise.reject(error);
-    }
-  }
-
-  public async mockLogin(email: string, password: string) {
-    try {
-      if (!(email === 'user' && password === 'user')) {
-        throw new Error(
-          'When using mockLogin, login with credentials: \nemail: user\npassword:user',
-        );
-      }
-      this.token = 'user';
-      this.storage.save(StorageKey.AUTH_TOKEN, this.token);
-      return this.redirectUrl;
-    } catch (e) {
-      return Promise.reject(e.message);
-    }
   }
 
   public async loginWithUsernameAndPassword(
@@ -67,13 +47,39 @@ export class AuthService extends CrudService {
           password,
         }),
       );
-      console.log('login response ', response);
-      this.token = 'user';
-      this.storage.save(StorageKey.AUTH_TOKEN, this.token);
-      return this.redirectUrl;
+      if (response.accessToken) {
+        this.token = response.accessToken;
+        this.storage.save(AUTH_TOKEN, this.token);
+        return this.redirectUrl;
+      }
+      throw new Error(`unable to login`);
     } catch (e) {
+      console.error('Error during login request', e);
       return Promise.reject(e.message);
     }
+  }
+
+  async loginWithToken(token: string) {
+    if (token) {
+      try {
+        this.token = token;
+        await firstValueFrom(this.authService.loginWithToken());
+        this.storage.save(AUTH_TOKEN, this.token);
+        return this.redirectUrl;
+      } catch (err) {
+        console.log(err);
+        this.snackBar.open(this.translateService.instant('error.login'), '', {
+          duration: 5000,
+        });
+        // remove the accessToken from URL
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: {},
+        });
+        throw new Error('Error logging in with token');
+      }
+    }
+    throw new Error('Cannot login without a token');
   }
 
   public getToken(): string {

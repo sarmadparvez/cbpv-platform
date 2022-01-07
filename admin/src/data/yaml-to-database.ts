@@ -23,13 +23,16 @@ export async function yamlToDatabase(fileName: string) {
   records.forEach((record) => {
     data.push(record);
   });
-  console.log('data ', data);
   if (data.length > 1) {
     await connection
       .createQueryBuilder()
       .insert()
       .into(tableName)
       .values(data)
+      .orUpdate({
+        conflict_target: ['id'],
+        overwrite: Object.keys(data[0]),
+      })
       .execute();
   }
 }

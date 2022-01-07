@@ -1,16 +1,22 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LogoModule } from '../../logo/logo.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { AccessContainerModule } from '../access-container/access-container.component';
 import { MatIconModule } from '@angular/material/icon';
 import { environment } from '../../../environments/environment';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -22,29 +28,45 @@ export class LoginComponent implements OnInit {
   password: string;
   errorMessage: string;
 
+  form = this.fb.group({
+    username: ['', Validators.required],
+    password: ['', Validators.required],
+  });
+
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
+    private readonly fb: FormBuilder,
+    private readonly route: ActivatedRoute,
+    private readonly translateService: TranslateService,
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.errorMessage = '';
+    const accessToken = this.route.snapshot.queryParamMap.get('accessToken');
+    if (accessToken) {
+      const url = await this.authService.loginWithToken(accessToken);
+      this.navigateTo(url);
+    }
   }
 
   googleSSORedirect(): void {
     window.location.href = `${environment.adminServiceUrl}/auth/google`;
   }
 
-  public async login(username: string, password: string) {
+  public async login() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     try {
-      // const url = (await this.authService.mockLogin(email, password)) as string;
       const url = await this.authService.loginWithUsernameAndPassword(
-        username,
-        password,
+        this.form.controls.username.value,
+        this.form.controls.password.value,
       );
       this.navigateTo(url);
     } catch (e) {
-      this.errorMessage = 'Wrong Credentials!';
+      this.errorMessage = this.translateService.instant('error.login');
       console.error('Unable to Login!\n', e);
     }
   }
@@ -67,6 +89,9 @@ export class LoginComponent implements OnInit {
     FormsModule,
     AccessContainerModule,
     MatIconModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    RouterModule,
   ],
 })
 export class LoginModule {}

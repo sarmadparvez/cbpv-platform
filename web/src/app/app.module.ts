@@ -27,6 +27,9 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 export function adminServiceConfigFactory(): AdminConfiguration {
   const params: AdminConfigurationParameters = {
@@ -51,8 +54,8 @@ export function taskServiceConfigFactory(): TaskConfiguration {
     TaskApiModule.forRoot(taskServiceConfigFactory),
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     TranslateModule.forRoot({
-      defaultLanguage: 'en',
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
@@ -61,11 +64,13 @@ export function taskServiceConfigFactory(): TaskConfiguration {
     }),
     AppRoutingModule,
     NavModule,
-    HttpClientModule,
     ReactiveFormsModule,
     MatNativeDateModule,
     MatDatepickerModule,
     MatSelectModule,
+    MatAutocompleteModule,
+    MatChipsModule,
+    MatSnackBarModule,
   ],
   providers: [
     {

@@ -4,13 +4,13 @@
       Registration
     </mat-card-title>
     <mat-card-content>
-      <form [formGroup]="registerForm">
+      <form [formGroup]="form">
         <div fxLayout fxLayoutGap="10px">
           <!--First name-->
           <mat-form-field class="full-width" appearance="outline">
             <mat-label>First name</mat-label>
             <input formControlName="firstName" matInput>
-            <mat-error *ngIf="registerForm.get('firstName').hasError('required')">
+            <mat-error *ngIf="form.get('firstName').hasError('required')">
              {{ 'error.required' | translate }}
             </mat-error>
           </mat-form-field>
@@ -18,17 +18,17 @@
           <mat-form-field class="full-width" appearance="outline">
             <mat-label>Last name</mat-label>
             <input formControlName="lastName" matInput>
-            <mat-error *ngIf="registerForm.get('lastName').hasError('required')">
+            <mat-error *ngIf="form.get('lastName').hasError('required')">
               {{ 'error.required' | translate }}
             </mat-error>
           </mat-form-field>
         </div>
-        <div fxLayout fxLayoutGap="10px" *ngIf="!this.googleId">
+        <div fxLayout fxLayoutGap="10px" *ngIf="!this.ssoProfileId" class="credentials-row">
           <!--Username -->
           <mat-form-field class="full-width" appearance="outline">
             <mat-label>Username</mat-label>
             <input formControlName="username" matInput >
-            <mat-error *ngIf="registerForm.get('username').hasError('required')">
+            <mat-error *ngIf="form.get('username').hasError('required')">
               {{ 'error.required' | translate }}
             </mat-error>
           </mat-form-field>
@@ -36,19 +36,22 @@
             <!--Password-->
             <mat-form-field class="full-width" appearance="outline">
               <mat-label>Password</mat-label>
-              <input formControlName="password" matInput>
-              <mat-error *ngIf="registerForm.get('passwords').hasError('required')">
+              <input type="password" formControlName="password" matInput>
+              <mat-error *ngIf="form.get('passwords').get('password').hasError('required')">
                 {{ 'error.required' | translate }}
+              </mat-error>
+              <mat-error *ngIf="form.get('passwords').get('password').hasError('pattern')">
+                {{ 'error.passwordPattern' | translate }}
               </mat-error>
             </mat-form-field>
             <!--Repeat password-->
             <mat-form-field class="full-width" appearance="outline">
               <mat-label>Confirm password</mat-label>
-              <input formControlName="repeatPassword" [errorStateMatcher]="customMatcher" matInput>
-              <mat-error *ngIf="registerForm.get('passwords').get('repeatPassword').hasError('required')">
+              <input type="password" formControlName="repeatPassword" [errorStateMatcher]="customMatcher" matInput>
+              <mat-error *ngIf="form.get('passwords').get('repeatPassword').hasError('required')">
                 {{ 'error.required' | translate }}
               </mat-error>
-              <mat-error *ngIf="registerForm.get('passwords').hasError('matchPassword')">
+              <mat-error *ngIf="form.get('passwords').hasError('matchPassword')">
                 {{ 'error.passwordMismatch' | translate }}
               </mat-error>
             </mat-form-field>
@@ -61,13 +64,13 @@
             <input matInput [matDatepicker]="picker" formControlName="birthDate">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="registerForm.get('birthDate').hasError('required')">
+            <mat-error *ngIf="form.get('birthDate').hasError('required')">
               {{ 'error.required' | translate }}
             </mat-error>
           </mat-form-field>
 
           <!--Gender-->
-          <mat-form-field appearance="fill" class="full-width">
+          <mat-form-field appearance="outline" class="full-width">
             <mat-label>Gender</mat-label>
             <mat-select formControlName="gender" >
               <mat-option [value]="GenderEnum.Male">
@@ -77,14 +80,14 @@
                 {{GenderEnum.Female}}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="registerForm.get('gender').hasError('required')">
+            <mat-error *ngIf="form.get('gender').hasError('required')">
               {{ 'error.required' | translate }}
             </mat-error>
           </mat-form-field>
         </div>
         <div fxLayout fxLayoutGap="10px">
           <!--Roles-->
-          <mat-form-field appearance="fill" class="full-width">
+          <mat-form-field appearance="outline" class="full-width">
             <mat-label>Role(s)</mat-label>
             <mat-select formControlName="roles" multiple>
               <mat-option [value]="RolesEnum.Developer">
@@ -94,12 +97,68 @@
                 {{RolesEnum.Crowdworker}}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="registerForm.get('roles').hasError('required')">
+            <mat-error *ngIf="form.get('roles').hasError('required')">
               {{ 'error.required' | translate }}
             </mat-error>
           </mat-form-field>
           <!-- Country -->
-
+          <mat-form-field class="full-width" appearance="outline">
+            <mat-label>Country</mat-label>
+            <input type="text"
+                   placeholder="Select one"
+                   matInput
+                   formControlName="country"
+                   [matAutocomplete]="autoCountry">
+            <mat-autocomplete #autoCountry="matAutocomplete" [displayWith]="displayFn">
+              <mat-option *ngFor="let option of filteredCountries | async" [value]="option">
+                {{option.name}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="form.controls.country.hasError('required')">
+              {{ 'error.required' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout fxLayoutGap="10px">
+          <!--Skills-->
+          <mat-form-field class="full-width" appearance="outline" fxFlex="70%">
+            <mat-label>Skill(s) *</mat-label>
+            <mat-chip-list #chipList formControlName="skills" >
+              <mat-chip
+                  *ngFor="let skill of selectedSkills"
+                  (removed)="remove(skill)"
+              >
+                {{skill.name}}
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip>
+              <input
+                  placeholder="New Skill..."
+                  #skillsInput
+                  formControlName="skills"
+                  [matAutocomplete]="autoSkill"
+                  [matChipInputFor]="chipList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  (matChipInputTokenEnd)="addSkill($event)">
+            </mat-chip-list>
+            <mat-autocomplete #autoSkill="matAutocomplete" (optionSelected)="selectedSkill($event)" [displayWith]="displayFn">
+              <mat-option *ngFor="let skill of filteredSkills | async" [value]="skill">
+                {{skill.name}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="skillsControl.hasError('required')">
+              {{ 'error.required' | translate }}
+            </mat-error>
+          </mat-form-field>
+          <!--Experience-->
+          <mat-form-field appearance="outline">
+            <mat-label> Experience (Years) </mat-label>
+            <input type="number" min="0" formControlName="experience" matInput />
+            <mat-error *ngIf="form.controls.experience.hasError('required')">
+              {{ 'error.required' | translate }}
+            </mat-error>
+          </mat-form-field>
         </div>
 
       </form>

@@ -17,6 +17,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
       useFactory: async () =>
         Object.assign(await getConnectionOptions(), {
           autoLoadEntities: true,
+          migrationsRun: true,
         }),
     }),
     SkillsModule,
