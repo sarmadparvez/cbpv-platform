@@ -11,6 +11,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NavMenuItemComponent } from './nav-menu-item/nav-menu-item.component';
 import { NavToolbarModule } from './nav-toolbar/nav-toolbar.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { PermissionPipeModule } from '../iam/permission.pipe';
 
 @NgModule({
   declarations: [NavComponent, NavMenuItemComponent],
@@ -25,6 +26,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatButtonModule,
     MatExpansionModule,
     NavToolbarModule,
+    PermissionPipeModule,
   ],
 })
 export class NavModule {}

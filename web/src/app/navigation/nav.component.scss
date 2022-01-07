@@ -6,10 +6,8 @@
 
 .app-sidenav {
   overflow: hidden;
-  position: fixed !important;
   background: $app-grey-white;
   box-shadow: 12px 0 12px $app-grey-shadow;
-  color: $app-dark-navy;
   border-right: none !important;
   width: 93px;
 }

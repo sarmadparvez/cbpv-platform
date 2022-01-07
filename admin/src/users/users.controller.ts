@@ -8,14 +8,15 @@ import {
   Delete,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from '../auth/public.decorator';
-import { Action, defineAbilityFor } from '../iam/policy';
-import { ForbiddenError, subject } from '@casl/ability';
+import { Action } from '../iam/policy';
+import { ForbiddenError } from '@casl/ability';
 import * as contextService from 'request-context';
 import { User } from './entities/user.entity';
 import { CreateWithSSODto } from './dto/create-with-sso.dto';

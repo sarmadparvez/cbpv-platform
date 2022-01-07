@@ -14,6 +14,7 @@ import cloudinary from './config/cloudinary';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { UsersModule } from './users/users.module';
+import { IamModule } from './iam/iam.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { UsersModule } from './users/users.module';
     CountriesModule,
     FeedbacksModule,
     UsersModule,
+    IamModule,
   ],
   providers: [
     {

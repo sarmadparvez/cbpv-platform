@@ -1,18 +1,19 @@
 import { Component, EventEmitter, NgModule, Output } from '@angular/core';
 import { AvatarModule } from 'ngx-avatars';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { User } from '../../../../gen/api/admin';
+import { CreateWithSSODto, User } from '../../../../gen/api/admin';
 import { AuthService } from '../../auth/auth.service';
-import { Observable, ReplaySubject } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import RolesEnum = CreateWithSSODto.RolesEnum;
 
 @Component({
   selector: 'app-nav-toolbar',
@@ -21,11 +22,10 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class NavToolbarComponent {
   @Output() toggleSideNav = new EventEmitter();
-  @Output() logout = new EventEmitter();
   roleControl = new FormControl();
   user = new ReplaySubject<User>();
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
     this.setUser();
   }
 
@@ -40,10 +40,13 @@ export class NavToolbarComponent {
   }
 
   public onLogout() {
-    this.logout.emit();
+    this.authService.logout();
+    this.router.navigate(['login'], { replaceUrl: true });
   }
 
-  setRole(value: any) {}
+  setRole(value: RolesEnum) {
+    this.roleControl.setValue(value);
+  }
 }
 
 @NgModule({

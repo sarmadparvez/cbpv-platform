@@ -9,6 +9,7 @@
     <mat-nav-list>
       <!--Projects-->
       <app-nav-menu-item
+          *ngIf="Action.Read | permission : 'Project' | async"
         text="Projects"
         icon="account_tree"
         routerLink="/projects"
@@ -20,7 +21,6 @@
   <mat-sidenav-content>
     <app-nav-toolbar
       (toggleSideNav)="toggleSideNav()"
-      (logout)="logout()"
     ></app-nav-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>

@@ -4,16 +4,18 @@ import { StorageService } from '../storage/storage.service';
 import { StorageKey } from '../storage/storage.model';
 import {
   AuthService as AdminAuthService,
+  IAMService,
   LoginDto,
   User,
   UsersService,
 } from '../../../gen/api/admin';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom, ReplaySubject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
 const { AUTH_TOKEN } = StorageKey;
 import jwt_decode from 'jwt-decode';
+import { PermissionsService } from '../iam/permission.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +25,7 @@ export class AuthService {
   token: string;
   redirectUrl: string;
   user: User;
+  logoutObservable = new ReplaySubject<void>(1);
 
   constructor(
     http: HttpClient,
@@ -32,9 +35,11 @@ export class AuthService {
     private readonly translateService: TranslateService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly iamService: IAMService,
     private readonly userService: UsersService,
   ) {
     this.token = this.storage.read(AUTH_TOKEN) || '';
+    Window['asself'] = this;
   }
 
   public async loginWithUsernameAndPassword(
@@ -103,6 +108,7 @@ export class AuthService {
   public logout() {
     this.token = '';
     this.user = null;
+    this.logoutObservable.next(null);
     this.storage.remove(AUTH_TOKEN);
   }
 

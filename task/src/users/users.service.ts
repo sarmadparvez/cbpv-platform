@@ -31,7 +31,7 @@ export class UsersService {
     try {
       const response = await firstValueFrom(
         this.httpService.get<User>(`${adminAPI}/${usersEndpoint}/${id}`, {
-          headers: this.getAuthorizationHeader(),
+          headers: getAuthorizationHeader(),
         }),
       );
       return response.data;
@@ -45,10 +45,10 @@ export class UsersService {
       );
     }
   }
+}
 
-  getAuthorizationHeader() {
-    return {
-      Authorization: contextService.get('request').header('Authorization'),
-    };
-  }
+export function getAuthorizationHeader() {
+  return {
+    Authorization: contextService.get('request').header('Authorization'),
+  };
 }
