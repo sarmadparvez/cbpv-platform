@@ -10,7 +10,7 @@ export class PermissionPipe implements PipeTransform {
 
   transform(action: ActionEnum, subject: string): Observable<boolean> {
     return this.permService.userAbility.pipe(
-      map((ability) => {
+      map(ability => {
         return ability.can(action, subject);
       }),
     );

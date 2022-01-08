@@ -24,15 +24,15 @@ export class NavToolbarComponent {
   @Output() toggleSideNav = new EventEmitter();
   roleControl = new FormControl();
   user = new ReplaySubject<User>();
+  RolesEnum = RolesEnum;
 
   constructor(private authService: AuthService, private router: Router) {
-    this.setUser();
+    this.getUser();
   }
 
-  async setUser() {
+  async getUser() {
     const user = await this.authService.getCurrentUser();
     this.user.next(user);
-    this.setRole(user.roles[0]);
   }
 
   public onToggleSideNav() {
@@ -42,10 +42,6 @@ export class NavToolbarComponent {
   public onLogout() {
     this.authService.logout();
     this.router.navigate(['login'], { replaceUrl: true });
-  }
-
-  setRole(value: RolesEnum) {
-    this.roleControl.setValue(value);
   }
 }
 

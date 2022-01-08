@@ -3,9 +3,23 @@
         <mat-icon>menu</mat-icon>
     </button>
 
-    <div fxFlex="100%" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-        <!--Roles dropdown-->
-        <mat-select
+    <div fxFlex="100%" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+        <!--Roles-->
+        <ng-container *ngIf="user | async as user">
+            <div fxLayout fxLayoutAlign="start center"
+                 fxLayoutGap="10px"
+                 *ngIf="user.roles.includes(RolesEnum.Admin)">
+                <mat-icon>admin_panel_settings</mat-icon><span>Administrator</span></div>
+            <div fxLayout fxLayoutAlign="start center"
+                 fxLayoutGap="10px"
+                 *ngIf="user.roles.includes(RolesEnum.Developer)">
+                <mat-icon>app_settings_alt</mat-icon><span>Developer</span></div>
+            <div fxLayout fxLayoutAlign="start center"
+                 fxLayoutGap="10px"
+                 *ngIf="user.roles.includes(RolesEnum.Crowdworker)">
+                <mat-icon>note_alt</mat-icon><span>Crowdworker</span></div>
+        </ng-container>
+        <!--<mat-select
             *ngIf="user | async as user"
             [formControl]="roleControl"
             (selectionChange)="setRole($event.value)"
@@ -19,10 +33,10 @@
                 {{ 'roles.'+role | translate}}
 
             </mat-option>
-        </mat-select>
+        </mat-select>-->
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
         <!--Full name-->
         <div class="full-name" *ngIf="user | async as user">
             {{ user.firstName + ' ' + user.lastName }}
