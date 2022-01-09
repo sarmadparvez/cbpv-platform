@@ -4,7 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { ProjectComponent } from '../project/project.component';
+import { ProjectFormComponent } from '../project-form/project-form.component';
 import { Project, ProjectsService } from '../../../../gen/api/task';
 import { firstValueFrom } from 'rxjs';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -48,12 +48,10 @@ export class ProjectsComponent {
   openProjectFormDialog(projectId?: string) {
     let project: Project;
     if (projectId) {
-      project = this.dataSource.data.find(
-        (project) => project.id === projectId,
-      );
+      project = this.dataSource.data.find(project => project.id === projectId);
     }
     this.dialog
-      .open(ProjectComponent, {
+      .open(ProjectFormComponent, {
         data: project,
         disableClose: true,
       })
@@ -69,7 +67,7 @@ export class ProjectsComponent {
     const projects = await firstValueFrom(this.projectService.searchAll());
     // convert creation date time to display string
     projects.forEach(
-      (project) =>
+      project =>
         (project.dateCreated = dateToDisplayString(
           new Date(project.dateCreated),
           true,
@@ -82,13 +80,7 @@ export class ProjectsComponent {
 
   openProject(event: MouseEvent, project: string) {
     event.preventDefault();
-    if (
-      (!(event.view?.getSelection()?.type === 'Range') ||
-        (<HTMLElement>event.currentTarget).tagName === 'A') &&
-      project
-    ) {
-      this.router.navigate([name]).then();
-    }
+    this.router.navigate([project]).then();
   }
 
   async deleteProject(project: string) {

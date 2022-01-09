@@ -19,16 +19,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-project',
-  templateUrl: './project.component.html',
-  styleUrls: ['./project.component.scss'],
+  selector: 'app-project-form',
+  templateUrl: './project-form.component.html',
+  styleUrls: ['./project-form.component.scss'],
 })
-export class ProjectComponent {
+export class ProjectFormComponent {
   constructor(
     private readonly fb: FormBuilder,
     private readonly projectService: ProjectsService,
     private readonly snackBar: MatSnackBar,
-    private dialog: MatDialogRef<ProjectComponent>,
+    private dialog: MatDialogRef<ProjectFormComponent>,
     private translateService: TranslateService,
     @Inject(MAT_DIALOG_DATA) private project: Project,
   ) {
@@ -79,7 +79,7 @@ export class ProjectComponent {
 }
 
 @NgModule({
-  declarations: [ProjectComponent],
+  declarations: [ProjectFormComponent],
   imports: [
     CommonModule,
     MatButtonModule,
@@ -89,4 +89,4 @@ export class ProjectComponent {
     MatInputModule,
   ],
 })
-export class ProjectModule {}
+export class ProjectFormModule {}

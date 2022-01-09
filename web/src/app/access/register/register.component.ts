@@ -142,7 +142,7 @@ export class RegisterComponent implements OnInit {
     await Promise.all([this.fetchCountries(), this.fetchSkills()]);
     this.filteredCountries = this.form.controls.country.valueChanges.pipe(
       startWith(''),
-      map((value) => this.filterCountries(value)),
+      map(value => this.filterCountries(value)),
     );
     this.filteredSkills = this.form.controls.skills.valueChanges.pipe(
       startWith(null),
@@ -226,7 +226,7 @@ export class RegisterComponent implements OnInit {
       new Date(this.form.controls.birthDate.value),
     );
     request.country = this.form.controls.country.value.id;
-    request.skills = this.selectedSkills.map((skill) => skill.id);
+    request.skills = this.selectedSkills.map(skill => skill.id);
   }
 
   private handleRegistrationSuccess() {
@@ -255,7 +255,7 @@ export class RegisterComponent implements OnInit {
     }
     const filterValue = value.toLowerCase();
 
-    return this.countries.filter((option) =>
+    return this.countries.filter(option =>
       option.name.toLowerCase().includes(filterValue),
     );
   }
@@ -269,8 +269,8 @@ export class RegisterComponent implements OnInit {
       return this.selectedSkills.includes(skill);
     };
     return this.allSkills
-      .filter((skill) => !skillSelected(skill))
-      .filter((option) => option.name.toLowerCase().includes(filterValue));
+      .filter(skill => !skillSelected(skill))
+      .filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
   displayFn(option: Country | Skill): string {
