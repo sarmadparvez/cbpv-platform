@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { StorageKey } from './storage.model';
+
+export enum StorageKey {
+  AUTH_TOKEN = 'AUTH_TOKEN',
+}
 
 @Injectable({
   providedIn: 'root',

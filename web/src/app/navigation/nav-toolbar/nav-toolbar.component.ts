@@ -22,7 +22,6 @@ import RolesEnum = CreateWithSSODto.RolesEnum;
 })
 export class NavToolbarComponent {
   @Output() toggleSideNav = new EventEmitter();
-  roleControl = new FormControl();
   user = new ReplaySubject<User>();
   RolesEnum = RolesEnum;
 

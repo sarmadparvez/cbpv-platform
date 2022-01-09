@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { StorageService } from '../storage/storage.service';
-import { StorageKey } from '../storage/storage.model';
+import { StorageKey } from '../storage/storage.service';
 import {
   AuthService as AdminAuthService,
   IAMService,
@@ -39,7 +39,6 @@ export class AuthService {
     private readonly userService: UsersService,
   ) {
     this.token = this.storage.read(AUTH_TOKEN) || '';
-    Window['asself'] = this;
   }
 
   public async loginWithUsernameAndPassword(

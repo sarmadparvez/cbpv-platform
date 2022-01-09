@@ -9,31 +9,16 @@
             <div fxLayout fxLayoutAlign="start center"
                  fxLayoutGap="10px"
                  *ngIf="user.roles.includes(RolesEnum.Admin)">
-                <mat-icon>admin_panel_settings</mat-icon><span>Administrator</span></div>
+                <mat-icon>admin_panel_settings</mat-icon><span>{{'role.admin' | translate}}</span></div>
             <div fxLayout fxLayoutAlign="start center"
                  fxLayoutGap="10px"
                  *ngIf="user.roles.includes(RolesEnum.Developer)">
-                <mat-icon>app_settings_alt</mat-icon><span>Developer</span></div>
+                <mat-icon>app_settings_alt</mat-icon><span>{{'role.developer' | translate}}</span></div>
             <div fxLayout fxLayoutAlign="start center"
                  fxLayoutGap="10px"
                  *ngIf="user.roles.includes(RolesEnum.Crowdworker)">
-                <mat-icon>note_alt</mat-icon><span>Crowdworker</span></div>
+                <mat-icon>note_alt</mat-icon><span>{{'role.crowdworker' | translate}}</span></div>
         </ng-container>
-        <!--<mat-select
-            *ngIf="user | async as user"
-            [formControl]="roleControl"
-            (selectionChange)="setRole($event.value)"
-            class="role-select"
-        >
-            <mat-select-trigger>
-                {{ 'roles.'+roleControl.value | translate  }}
-            </mat-select-trigger>
-            <mat-option *ngFor="let role of user.roles" [value]="role">
-
-                {{ 'roles.'+role | translate}}
-
-            </mat-option>
-        </mat-select>-->
     </div>
 
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">

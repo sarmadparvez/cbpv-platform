@@ -1,17 +1,29 @@
 {
+  "action": {
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
   "notification": {
-    "registerSuccess": "User registered successfully, please proceed with login."
+    "registerSuccess": "User registered successfully, please proceed with login.",
+    "create": "Created successfully",
+    "update": "Updated Successfully"
   },
   "error": {
     "required": "This field is required",
     "passwordMismatch": "The passwords do not match",
     "passwordPattern": "Password should be at-least 8 characters long, must contain one lower case and one upper case letter, and one digit.",
-    "login": "Unable to login. Please make sure the credentials are correct!"
+    "login": "Unable to login. Please make sure the credentials are correct!",
+    "delete": "Unable to delete record",
+    "create": "Unable to create",
+    "update": "Unable to update"
   },
-
-  "roles": {
+  "role": {
     "admin": "Administrator",
     "developer": "Developer",
     "crowdworker": "Crowdworker"
+  },
+  "note": {
+    "noData": "No data available"
   }
 }

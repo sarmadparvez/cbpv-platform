@@ -1,3 +1,84 @@
 <div class="page-container">
-  Show projects here
+  <div fxLayout fxLayoutAlign="end center">
+    <span class="margin-right-auto">You can start a new Project from <em>Create Project</em> button. After creating a Project you can add your prototypes to it in form of Tasks.</span>
+
+    <button mat-raised-button color="black"
+    (click)="openProjectFormDialog()"
+    >Create Project</button>
+  </div>
+
+  <div [hidden]="dataSource?.data?.length < 1">
+
+    <!--Projects table-->
+    <h2>Existing Projects</h2>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+      <!-- Title Column -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
+        <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+      </ng-container>
+      <!-- Name Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+      </ng-container>
+
+      <!-- Creation date Column -->
+      <ng-container matColumnDef="dateCreated">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Creation Date </th>
+        <td mat-cell *matCellDef="let element"> {{element.dateCreated}} </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+      </ng-container>
+
+      <!-- Options Column -->
+      <ng-container matColumnDef="options" >
+        <th mat-header-cell *matHeaderCellDef > <span class="float-right">Options</span></th>
+        <td mat-cell *matCellDef="let element">
+          <button
+              class="float-right"
+              (click)="$event.stopPropagation()"
+              [matMenuTriggerFor]="menu"
+              mat-icon-button
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu>
+            <a
+                mat-menu-item
+                href="{{ element.name }}"
+                (click)="openProject($event, element.id)"
+            >
+              Open
+            </a>
+            <button
+                (click)="openProjectFormDialog(element.id)"
+                mat-menu-item
+            >
+              <span>{{ 'action.edit' | translate }}</span>
+            </button>
+            <button
+                (click)="deleteProject(element.id)"
+                mat-menu-item
+            >
+              <span>{{ 'action.delete' | translate }}</span>
+            </button>
+          </mat-menu>
+
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator class="mat-elevation-z8" [pageSizeOptions]="[ 10, 25, 50, 100]"
+                   showFirstLastButtons = "true"
+    ></mat-paginator>
+  </div>
 </div>
+
+<app-no-data *ngIf="dataSource?.data?.length < 1"></app-no-data>

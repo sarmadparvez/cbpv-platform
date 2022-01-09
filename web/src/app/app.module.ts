@@ -30,7 +30,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { AvatarModule } from 'ngx-avatars';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 export function adminServiceConfigFactory(): AdminConfiguration {
   const params: AdminConfigurationParameters = {
@@ -72,6 +74,8 @@ export function taskServiceConfigFactory(): TaskConfiguration {
     MatAutocompleteModule,
     MatChipsModule,
     MatSnackBarModule,
+    MatDialogModule,
+    MatPaginatorModule,
   ],
   providers: [
     {
