@@ -25,17 +25,13 @@ import { FormsModule } from '@angular/forms';
 })
 export class TaskFormatSelectorCardComponent {
   TestTypeEnum = TestTypeEnum;
-  testType: TestTypeEnum;
+  @Input() testType: TestTypeEnum;
   @Input() title: string;
   @Input() subtitle: string;
   @Input() note: string;
   @Input() icon: string;
   @Input() selectorForPrototypeFormat: PrototypeFormatEnum;
   @Input() selectedPrototypeFormat: PrototypeFormatEnum;
-  @Input()
-  set setSelectedPrototypeFormat(value: PrototypeFormatEnum) {
-    this.selectedPrototypeFormat = value;
-  }
   @Output() testTypeEmitter = new EventEmitter<TestTypeEnum>();
 
   constructor() {}

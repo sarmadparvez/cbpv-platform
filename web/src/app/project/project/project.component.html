@@ -1,6 +1,4 @@
-<mat-sidenav-container
-  class="second-sidenav-container"
->
+<mat-sidenav-container class="second-sidenav-container">
   <mat-sidenav
     [disableClose]="true"
     class="second-sidenav"
@@ -10,38 +8,76 @@
   >
     <!-- Task iterations dropdown -->
     <mat-select
-      (selectionChange)="setCurrentIterations($event)"
-      [formControl]="iterationsControl"
+      [formControl]="taskControl"
       class="task-iterations-select"
       placeholder="Task Iterations"
     >
-      <mat-select-trigger>Iteration: 1</mat-select-trigger>
-      <mat-option [value]="1" class="dir-revision-select-item">
-        Iteration 1
-      </mat-option>
-
-      <mat-option [value]="2" class="dir-revision-select-item">
-        Iteration 2
+      <mat-select-trigger>{{
+        'Iteration ' + (tasks.length - tasks.indexOf(taskControl.value))
+      }}</mat-select-trigger>
+      <mat-option
+        [value]="task"
+        *ngFor="let task of tasks; let i = index"
+        class="dir-revision-select-item"
+      >
+        {{ 'Iteration ' + (tasks.length - i) }}
       </mat-option>
     </mat-select>
   </mat-sidenav>
 
   <mat-sidenav-content class="page-content">
-    <!--Main content-->
-    <div fxLayout fxLayoutAlign="end center" fxLayoutGap="10px">
-      <span class="margin-right-auto">You can create new task from <em>Start New Iteration</em> button.</span>
-      <!--Create button-->
-      <button mat-raised-button color="black"
-              (click)="openTaskForm()"
-      >Start New Iteration</button>
-      <!--close button-->
+    <!--Header content-->
+    <div fxLayout fxLayoutAlign="end center" class="mb-20" fxLayoutGap="10px">
+      <h2 class="text-note inline-heading project-name margin-right-auto">{{project?.title}}</h2>
+      <!--Edit button-->
       <button
-          mat-button
-          (click)="routeToProjects()"
+        mat-raised-button
+        color="black"
+        *ngIf="task?.status === StatusEnum.Draft"
+        (click)="openTaskForm(true)"
       >
+        {{ 'action.edit' | translate }}
+      </button>
+      <!--Create button-->
+      <button
+        *ngIf="tasks[0]?.status === StatusEnum.Closed || tasks.length === 0"
+        mat-raised-button
+        color="black"
+        (click)="openTaskForm()"
+      >
+        Start New Iteration
+      </button>
+      <!--close button-->
+      <button mat-button (click)="routeToProjects()">
         {{ 'action.cancel' | translate }}
       </button>
+      <!-- Additional options -->
+      <button mat-icon-button [mat-menu-trigger-for]="additionalOptions">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <!--Menu-->
+      <!-- Menu -->
+      <mat-menu #additionalOptions="matMenu">
+        <button
+          mat-menu-item
+          *ngIf="task?.status === StatusEnum.Draft"
+          (click)="deleteTask()"
+        >
+          <span>
+            {{ 'action.delete' | translate }}
+          </span>
+        </button>
+      </mat-menu>
     </div>
-  </mat-sidenav-content>>
-</mat-sidenav-container
->
+    <span
+        class="margin-right-auto"
+        *ngIf="tasks[0]?.status === StatusEnum.Closed || tasks.length === 0"
+    >You can create new task from <em>Start New Iteration</em> button.</span
+    >
+    <app-task-detail
+      class="full-width"
+      *ngIf="taskControl.value"
+      [task]="taskControl.value"
+    ></app-task-detail> </mat-sidenav-content
+  >>
+</mat-sidenav-container>

@@ -34,6 +34,18 @@ export enum TaskStatus {
   Closed = 'closed',
 }
 
+// Typeorm return decimal values as string. Here is the workaround for that.
+// Based on solution from https://stackoverflow.com/questions/69872250/typeorm-decimal-column-values-returned-as-strings-instead-of-decimal-numbers
+
+export class ColumnNumericTransformer {
+  to(data: number): number {
+    return data;
+  }
+  from(data: string): number {
+    return parseFloat(data);
+  }
+}
+
 @Entity()
 export class Task {
   @PrimaryGeneratedColumn('uuid')
@@ -92,10 +104,14 @@ export class Task {
   @Column({ default: 49 })
   maxExperience: number;
 
-  @Column('decimal')
+  @Column('decimal', {
+    transformer: new ColumnNumericTransformer(),
+  })
   budget: number;
 
-  @Column('decimal')
+  @Column('decimal', {
+    transformer: new ColumnNumericTransformer(),
+  })
   incentive: number;
 
   @Column('uuid')

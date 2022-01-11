@@ -6,6 +6,8 @@
     "cancel": "Cancel"
   },
   "name": {
+    "budget": "Total budget (€)",
+    "countries": "Countries",
     "link": "Link",
     "image": "Image",
     "text": "Text",
@@ -18,21 +20,24 @@
     "prototypeFormat": "Prototype Format",
     "crowdCriteria": "Crowd Matching Criteria",
     "skills": "Skills",
-    "countries": "Countries",
+    "status": "Status",
     "incentive": "Per Crowdworker fee (€)",
-    "budget": "Total budget (€)"
+    "draft": "Draft",
+    "open": "Open",
+    "closed": "Closed"
   },
   "notification": {
     "registerSuccess": "User registered successfully, please proceed with login.",
     "create": "Created successfully",
-    "update": "Updated Successfully"
+    "update": "Updated Successfully",
+    "delete": "Deleted Successfully"
   },
   "error": {
     "required": "This field is required",
     "passwordMismatch": "The passwords do not match",
     "passwordPattern": "Password should be at-least 8 characters long, must contain one lower case and one upper case letter, and one digit.",
     "login": "Unable to login. Please make sure the credentials are correct!",
-    "delete": "Unable to delete record",
+    "delete": "Unable to delete ",
     "create": "Unable to create",
     "update": "Unable to update"
   },

@@ -74,7 +74,7 @@ export class TasksController {
   }
 
   /**
-   * Get a list of all task iterations for a projectId.
+   * Get a list of all task iterations for a projectId. The iterations are returned in descending order.
    * The user must have Read permission on the Project and its Task iterations.
    */
   @ApiParam({

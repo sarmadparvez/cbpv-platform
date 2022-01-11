@@ -1,0 +1,29 @@
+<mat-card>
+  <mat-card-title>{{ task?.title }}</mat-card-title>
+  <mat-card-content>
+
+    <!--Description-->
+    <div class="field-container" fxLayout>
+      <!--Description-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.description' | translate }}
+        </div>
+        <div>
+          <span>{{ task?.description }}</span>
+        </div>
+      </div>
+      <!--Status-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.status' | translate }}
+        </div>
+        <div>
+          <span>{{ 'name.'+task?.status | translate }}</span>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider inset></mat-divider>
+  </mat-card-content>
+</mat-card>

@@ -51,7 +51,7 @@ export class TasksService {
     }
 
     // check if there is already a draft or open Task available, the new Task cannot be created.
-    const existingTask = this.taskRepository.findOne({
+    const existingTask = await this.taskRepository.findOne({
       select: ['id'],
       where: {
         status: In([TaskStatus.Open, TaskStatus.Draft]),
@@ -67,6 +67,16 @@ export class TasksService {
             'Please close previous Task iteration before starting a new one.',
         },
         HttpStatus.PRECONDITION_FAILED,
+      );
+    }
+
+    if (createTaskDto.incentive > createTaskDto.budget) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          error: 'Incentive cannot be greater than total budget.',
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
 
@@ -108,7 +118,7 @@ export class TasksService {
         projectId,
       },
       order: {
-        dateCreated: 'ASC',
+        dateCreated: 'DESC',
       },
     });
   }
@@ -314,6 +324,8 @@ export class TasksService {
       ) {
         messages.push('Task cannot be activated without textual description.');
       }
+    } else {
+      messages.push('The Prototype format must be set');
     }
     if (messages.length > 0) {
       throw new HttpException(

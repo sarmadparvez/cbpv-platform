@@ -16,12 +16,13 @@
     "format:fix": "prettier --config ./.prettierrc --write \"src/{app,environments,assets}/**/*{.ts,.js,.json,.css,.scss}\"",
     "postgenpage": "ng lint --fix",
     "lint": "ng lint",
+    "lint:format:fix": "npm run lint:fix && npm run format:fix",
     "generate:api": "openapi-generator-cli generate -i ../admin/swagger/swagger.json -g typescript-angular -o gen/api/admin/ -p=removeOperationIdPrefix=true && openapi-generator-cli generate -i ../task/swagger/swagger.json -g typescript-angular -o gen/api/task/ -p=removeOperationIdPrefix=true",
     "generate:api:node": "openapi-generator-cli generate -i ../admin/swagger/swagger.json -g typescript-node -o gen/api/node/admin/ -p=removeOperationIdPrefix=true "
   },
   "husky": {
     "hooks": {
-      "pre-commit": "run-s format:fix format:check lint:fix lint:check"
+      "pre-commit": "run-s format:fix lint:fix"
     }
   },
   "private": true,

@@ -38,8 +38,9 @@
           [icon]="'link'"
           [subtitle]="'note.iframeTaskSubtitle' | translate"
           [note]="'note.iframeTask' | translate"
+          [testType]="form.controls.prototypeFormat.value === PrototypeFormatEnum.Iframe ? prototypeToTestTypeMap.get(PrototypeFormatEnum.Iframe): undefined"
           [selectorForPrototypeFormat]="PrototypeFormatEnum.Iframe"
-          [setSelectedPrototypeFormat]="form.controls.prototypeFormat.value"
+          [selectedPrototypeFormat]="form.controls.prototypeFormat.value"
           (click)="setPrototypeFormat(PrototypeFormatEnum.Iframe)"
           (testTypeEmitter)="setTestType($event, PrototypeFormatEnum.Iframe)"
         >
@@ -51,8 +52,9 @@
           [icon]="'file_upload'"
           [subtitle]="'note.imageTaskSubtitle' | translate"
           [note]="'note.imageTask' | translate"
+          [testType]="form.controls.prototypeFormat.value === PrototypeFormatEnum.Image ? prototypeToTestTypeMap.get(PrototypeFormatEnum.Image): undefined"
           [selectorForPrototypeFormat]="PrototypeFormatEnum.Image"
-          [setSelectedPrototypeFormat]="form.controls.prototypeFormat.value"
+          [selectedPrototypeFormat]="form.controls.prototypeFormat.value"
           (click)="setPrototypeFormat(PrototypeFormatEnum.Image)"
           (testTypeEmitter)="setTestType($event, PrototypeFormatEnum.Image)"
         >
@@ -64,8 +66,9 @@
           [icon]="'description'"
           [subtitle]="'note.textTaskSubtitle' | translate"
           [note]="'note.textTask' | translate"
+          [testType]="form.controls.prototypeFormat.value === PrototypeFormatEnum.Text ? prototypeToTestTypeMap.get(PrototypeFormatEnum.Text): undefined"
           [selectorForPrototypeFormat]="PrototypeFormatEnum.Text"
-          [setSelectedPrototypeFormat]="form.controls.prototypeFormat.value"
+          [selectedPrototypeFormat]="form.controls.prototypeFormat.value"
           (click)="setPrototypeFormat(PrototypeFormatEnum.Text)"
           (testTypeEmitter)="setTestType($event, PrototypeFormatEnum.Text)"
         >

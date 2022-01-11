@@ -60,7 +60,7 @@ export interface TaskFormDialogData {
 export class TaskFormComponent implements OnInit {
   PrototypeFormatEnum = PrototypeFormatEnum;
   prototypeToTestTypeMap = new Map<PrototypeFormatEnum, TestTypeEnum>();
-
+  task: Task;
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
   allCountries: Country[] = [];
@@ -81,7 +81,7 @@ export class TaskFormComponent implements OnInit {
     maxExperience: [49, Validators.required],
     minAge: [18, Validators.required],
     maxAge: [67, Validators.required],
-    countries: ['', [() => this.skillsValid()]],
+    countries: ['', [() => this.countriesValid()]],
     skills: ['', [() => this.skillsValid()]],
   });
 
@@ -100,7 +100,14 @@ export class TaskFormComponent implements OnInit {
   ) {
     Window['tfself'] = this;
     if (this.data.task) {
-      this.form.patchValue(this.data.task);
+      this.task = this.data.task;
+      this.form.patchValue(this.task);
+      this.selectedSkills = this.task.skills.slice();
+      this.selectedCountries = this.task.countries.slice();
+      this.prototypeToTestTypeMap.set(
+        this.task.prototypeFormat,
+        this.task.testType,
+      );
     }
   }
 
@@ -108,8 +115,10 @@ export class TaskFormComponent implements OnInit {
     // fetch skills and countries
     await Promise.all([this.fetchCountries(), this.fetchSkills()]);
     this.filteredCountries = this.form.controls.countries.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filterCountries(value)),
+      startWith(null),
+      map((value: string | null) =>
+        value ? this.filterCountries(value) : this.filterCountries(''),
+      ),
     );
     this.filteredSkills = this.form.controls.skills.valueChanges.pipe(
       startWith(null),
@@ -140,7 +149,7 @@ export class TaskFormComponent implements OnInit {
     let successMsg = '';
 
     try {
-      if (!this.data.task) {
+      if (!this.task) {
         const request = <CreateTaskDto>{
           ...this.form.value,
         };
@@ -151,9 +160,7 @@ export class TaskFormComponent implements OnInit {
         const request = <UpdateTaskDto>{
           ...this.form.value,
         };
-        await firstValueFrom(
-          this.taskService.update(this.data.task.id, request),
-        );
+        await firstValueFrom(this.taskService.update(this.task.id, request));
         successMsg = 'notification.update';
       }
       // success message
@@ -202,7 +209,11 @@ export class TaskFormComponent implements OnInit {
     }
     const filterValue = value.toLowerCase();
     const skillSelected = (skill: Skill) => {
-      return this.selectedSkills.includes(skill);
+      return (
+        this.selectedSkills.findIndex(
+          selectedSkill => selectedSkill.id === skill.id,
+        ) > -1
+      );
     };
     return this.allSkills
       .filter(skill => !skillSelected(skill))
@@ -215,7 +226,11 @@ export class TaskFormComponent implements OnInit {
     }
     const filterValue = value.toLowerCase();
     const countrySelected = (country: Country) => {
-      return this.selectedCountries.includes(country);
+      return (
+        this.selectedCountries.findIndex(
+          selectedCountry => selectedCountry.id === country.id,
+        ) > -1
+      );
     };
     return this.allCountries
       .filter(country => !countrySelected(country))

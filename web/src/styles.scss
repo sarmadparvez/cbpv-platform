@@ -65,6 +65,9 @@ body {
 .text-note {
   color: rgba(0, 0, 0, 0.54);
 }
+.field-label {
+  color: #878787;
+}
 
 .mb-20 {
   margin-bottom: 20px !important;
@@ -74,4 +77,14 @@ body {
 }
 .mt-10 {
   margin-top: 10px;
+}
+
+.disabled-element {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.inline-heading {
+  margin-block-start: unset;
+  margin-block-end: unset;
 }
