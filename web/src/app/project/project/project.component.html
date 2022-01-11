@@ -1,0 +1,47 @@
+<mat-sidenav-container
+  class="second-sidenav-container"
+>
+  <mat-sidenav
+    [disableClose]="true"
+    class="second-sidenav"
+    mode="side"
+    opened="true"
+    position="start"
+  >
+    <!-- Task iterations dropdown -->
+    <mat-select
+      (selectionChange)="setCurrentIterations($event)"
+      [formControl]="iterationsControl"
+      class="task-iterations-select"
+      placeholder="Task Iterations"
+    >
+      <mat-select-trigger>Iteration: 1</mat-select-trigger>
+      <mat-option [value]="1" class="dir-revision-select-item">
+        Iteration 1
+      </mat-option>
+
+      <mat-option [value]="2" class="dir-revision-select-item">
+        Iteration 2
+      </mat-option>
+    </mat-select>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="page-content">
+    <!--Main content-->
+    <div fxLayout fxLayoutAlign="end center" fxLayoutGap="10px">
+      <span class="margin-right-auto">You can create new task from <em>Start New Iteration</em> button.</span>
+      <!--Create button-->
+      <button mat-raised-button color="black"
+              (click)="openTaskForm()"
+      >Start New Iteration</button>
+      <!--close button-->
+      <button
+          mat-button
+          (click)="routeToProjects()"
+      >
+        {{ 'action.cancel' | translate }}
+      </button>
+    </div>
+  </mat-sidenav-content>>
+</mat-sidenav-container
+>

@@ -24,6 +24,11 @@ import { MatInputModule } from '@angular/material/input';
   styleUrls: ['./project-form.component.scss'],
 })
 export class ProjectFormComponent {
+  form = this.fb.group({
+    title: ['', Validators.required],
+    description: [null],
+  });
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly projectService: ProjectsService,
@@ -36,11 +41,6 @@ export class ProjectFormComponent {
       this.form.patchValue(this.project);
     }
   }
-
-  form = this.fb.group({
-    title: ['', Validators.required],
-    description: [null],
-  });
 
   async saveProject() {
     if (this.form.invalid) {
@@ -60,7 +60,7 @@ export class ProjectFormComponent {
         await firstValueFrom(
           this.projectService.update(this.project.id, request),
         );
-        successMsg = 'notification.updated';
+        successMsg = 'notification.update';
         errorMsg = 'error.update';
       }
       // success message

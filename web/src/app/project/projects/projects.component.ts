@@ -10,7 +10,7 @@ import { firstValueFrom } from 'rxjs';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NoDataModule } from '../../template/no-data/no-data.component';
@@ -35,11 +35,12 @@ export class ProjectsComponent {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private dialog: MatDialog,
+    private readonly dialog: MatDialog,
     private readonly projectService: ProjectsService,
-    private router: Router,
-    private snackBar: MatSnackBar,
+    private readonly router: Router,
+    private readonly snackBar: MatSnackBar,
     private readonly translateService: TranslateService,
+    private readonly route: ActivatedRoute,
   ) {
     this.searchProjects();
     Window['pself'] = this;
@@ -54,6 +55,7 @@ export class ProjectsComponent {
       .open(ProjectFormComponent, {
         data: project,
         disableClose: true,
+        width: '35vw',
       })
       .afterClosed()
       .subscribe((created: boolean) => {
@@ -80,7 +82,9 @@ export class ProjectsComponent {
 
   openProject(event: MouseEvent, project: string) {
     event.preventDefault();
-    this.router.navigate([project]).then();
+    this.router.navigate([project], {
+      relativeTo: this.route,
+    });
   }
 
   async deleteProject(project: string) {

@@ -196,7 +196,7 @@ export class RegisterComponent implements OnInit {
     let request = <CreateUserDto>{
       ...formData,
     };
-    this.filLDataInRequest(request);
+    this.fillDataInRequest(request);
     request.password = this.form.get('passwords').get('password').value;
     try {
       await firstValueFrom(this.userService.create(request));
@@ -211,7 +211,7 @@ export class RegisterComponent implements OnInit {
       ssoProfileId: this.ssoProfileId,
       ...this.form.value,
     };
-    this.filLDataInRequest(request);
+    this.fillDataInRequest(request);
     request.ssoProvider = SsoProviderEnum.Google;
     try {
       await firstValueFrom(this.userService.createWithSSO(request));
@@ -221,7 +221,7 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  private filLDataInRequest(request: CreateUserDto | CreateWithSSODto) {
+  private fillDataInRequest(request: CreateUserDto | CreateWithSSODto) {
     request.birthDate = dateToDBDateString(
       new Date(this.form.controls.birthDate.value),
     );

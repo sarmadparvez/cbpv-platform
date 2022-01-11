@@ -2,7 +2,25 @@
   "action": {
     "save": "Save",
     "delete": "Delete",
-    "edit": "Edit"
+    "edit": "Edit",
+    "cancel": "Cancel"
+  },
+  "name": {
+    "link": "Link",
+    "image": "Image",
+    "text": "Text",
+    "minExperience": "Min Experience (Years)",
+    "maxExperience": "Max Experience (Years)",
+    "minAge": "Min Age",
+    "maxAge": "Max Age",
+    "title": "Title",
+    "description": "Description",
+    "prototypeFormat": "Prototype Format",
+    "crowdCriteria": "Crowd Matching Criteria",
+    "skills": "Skills",
+    "countries": "Countries",
+    "incentive": "Per Crowdworker fee (€)",
+    "budget": "Total budget (€)"
   },
   "notification": {
     "registerSuccess": "User registered successfully, please proceed with login.",
@@ -23,7 +41,21 @@
     "developer": "Developer",
     "crowdworker": "Crowdworker"
   },
+  "testType": {
+    "basic": "Basic",
+    "split": "Split"
+  },
   "note": {
-    "noData": "No data available"
+    "noData": "No data available",
+    "crowdCriteria": "Set the criteria for matching this Task with Crowdworkers. Only the Crowdworkers matching the specified criteria will be able to see this Task.",
+    "iframeTask": "The Prototype will be embedded as an iframe in the platform. You will need to provide a link for the prototype.",
+    "iframeTaskSubtitle": "Link from a third party prototyping tool",
+    "imageTask": "The Prototype will be uploaded in the form of images. The images correspond to different screens in your Application.",
+    "imageTaskSubtitle": "Images of your Application's User Interface",
+    "prototype": "Select the Prototype format and Test type.",
+    "textTask": "The Prototype will be added as Text. You can provide textual description of your Application idea.",
+    "textTaskSubtitle": "Textual description",
+    "basicTest": "In a basic test, a single Prototype is evaluated.",
+    "splitTest": "In a split test, two Prototypes of the same Application are evaluated with a comparison."
   }
 }

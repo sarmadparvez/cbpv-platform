@@ -1,0 +1,270 @@
+<h2 mat-dialog-title>Create Task</h2>
+<mat-dialog-content class="mat-typography">
+  <p class="text-note">
+    The Task will be created in the draft state. You can activate it later after
+    adding Prototype and Questionnaire.
+  </p>
+
+  <form [formGroup]="form">
+    <div fxLayout fxLayoutGap="10px">
+      <!--Title-->
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>{{ 'name.title' | translate }}</mat-label>
+        <input formControlName="title" matInput />
+        <mat-hint>Title for a Task iteration</mat-hint>
+        <mat-error *ngIf="form.controls.title.hasError('required')">
+          {{ 'error.required' | translate }}
+        </mat-error>
+      </mat-form-field>
+      <!--Description -->
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>{{ 'name.description' | translate }}</mat-label>
+        <textarea formControlName="description" matInput> </textarea>
+        <mat-hint>Optional description for the task</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!--Prototype format Selector -->
+    <div fxLayout="column" fxLayoutGap="10px" class="form-container">
+      <h3>{{ 'name.prototypeFormat' | translate }}</h3>
+      <div class="text-note mb-20">
+        {{ 'note.prototype' | translate }}
+      </div>
+
+      <div fxLayout fxLayoutGap="10px">
+        <app-task-format-selector-card
+          fxFlex="1 1 0px"
+          [title]="'name.link' | translate"
+          [icon]="'link'"
+          [subtitle]="'note.iframeTaskSubtitle' | translate"
+          [note]="'note.iframeTask' | translate"
+          [selectorForPrototypeFormat]="PrototypeFormatEnum.Iframe"
+          [setSelectedPrototypeFormat]="form.controls.prototypeFormat.value"
+          (click)="setPrototypeFormat(PrototypeFormatEnum.Iframe)"
+          (testTypeEmitter)="setTestType($event, PrototypeFormatEnum.Iframe)"
+        >
+        </app-task-format-selector-card>
+
+        <app-task-format-selector-card
+          fxFlex="1 1 0px"
+          [title]="'name.image' | translate"
+          [icon]="'file_upload'"
+          [subtitle]="'note.imageTaskSubtitle' | translate"
+          [note]="'note.imageTask' | translate"
+          [selectorForPrototypeFormat]="PrototypeFormatEnum.Image"
+          [setSelectedPrototypeFormat]="form.controls.prototypeFormat.value"
+          (click)="setPrototypeFormat(PrototypeFormatEnum.Image)"
+          (testTypeEmitter)="setTestType($event, PrototypeFormatEnum.Image)"
+        >
+        </app-task-format-selector-card>
+
+        <app-task-format-selector-card
+          fxFlex="1 1 0px"
+          [title]="'name.text' | translate"
+          [icon]="'description'"
+          [subtitle]="'note.textTaskSubtitle' | translate"
+          [note]="'note.textTask' | translate"
+          [selectorForPrototypeFormat]="PrototypeFormatEnum.Text"
+          [setSelectedPrototypeFormat]="form.controls.prototypeFormat.value"
+          (click)="setPrototypeFormat(PrototypeFormatEnum.Text)"
+          (testTypeEmitter)="setTestType($event, PrototypeFormatEnum.Text)"
+        >
+        </app-task-format-selector-card>
+      </div>
+      <!--Test type notes-->
+      <div class="text-note">
+        <strong>Basic Test: </strong> {{ 'note.basicTest' | translate }}
+        <br />
+        <strong>Split Test: </strong> {{ 'note.splitTest' | translate }}
+      </div>
+      <mat-error
+        *ngIf="
+          form.controls.prototypeFormat.touched &&
+          form.controls.prototypeFormat.hasError('required')
+        "
+      >
+        Please select the Prototype Format
+      </mat-error>
+    </div>
+    <!--Crowd criteria-->
+    <div fxLayout="column" fxLayoutGap="10px" class="form-container mb-10">
+      <h3>{{ 'name.crowdCriteria' | translate }}</h3>
+
+      <div class="text-note mb-20">
+        {{ 'note.crowdCriteria' | translate }}
+      </div>
+
+
+      <div fxLayout fxLayoutGap="10px">
+        <!--Min Experience-->
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label> {{ 'name.minExperience' | translate }} </mat-label>
+          <input
+            type="number"
+            min="0"
+            max="49"
+            formControlName="minExperience"
+            matInput
+          />
+          <mat-error *ngIf="form.controls.minExperience.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+          <mat-hint>The minimum experience limit for a Crowdworker to work on this Task</mat-hint>
+        </mat-form-field>
+
+        <!--Max Experience-->
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label> {{ 'name.maxExperience' | translate }} </mat-label>
+          <input
+            type="number"
+            min="0"
+            max="49"
+            formControlName="maxExperience"
+            matInput
+          />
+          <mat-error *ngIf="form.controls.maxExperience.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+          <mat-hint>The maximum experience limit for a Crowdworker to work on this Task</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div fxLayout fxLayoutGap="10px">
+        <!--Min Age-->
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label> {{ 'name.minAge' | translate }} </mat-label>
+          <input
+              type="number"
+              min="18"
+              max="67"
+              formControlName="minAge"
+              matInput
+          />
+          <mat-error *ngIf="form.controls.minAge.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+          <mat-hint>The minimum age limit for a Crowdworker to work on this Task</mat-hint>
+        </mat-form-field>
+
+        <!--Max Age-->
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label> {{ 'name.maxAge' | translate }} </mat-label>
+          <input
+              type="number"
+              min="18"
+              max="67"
+              formControlName="maxAge"
+              matInput
+          />
+          <mat-error *ngIf="form.controls.maxAge.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+          <mat-hint>The maximum age limit for a Crowdworker to work on this Task</mat-hint>
+        </mat-form-field>
+      </div>
+      <div fxLayout class="full-width" fxLayoutGap="10px">
+        <!--Skills-->
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>{{'name.skills' | translate}} *</mat-label>
+          <mat-chip-list #chipList formControlName="skills" >
+            <mat-chip
+                *ngFor="let skill of selectedSkills"
+                (removed)="removeSkill(skill)"
+            >
+              {{skill.name}}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+            <input
+                placeholder="New Skill..."
+                #skillsInput
+                formControlName="skills"
+                [matAutocomplete]="autoSkill"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="addSkill($event)">
+          </mat-chip-list>
+          <mat-autocomplete #autoSkill="matAutocomplete" (optionSelected)="selectedSkill($event)" [displayWith]="displayFn">
+            <mat-option *ngFor="let skill of filteredSkills | async" [value]="skill">
+              {{skill.name}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="form.controls.skills.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+          <mat-hint>Crowdworkers having one of these skills will be able to work on this Task</mat-hint>
+        </mat-form-field>
+
+        <!--Countries-->
+        <mat-form-field class="full-width" class="full-width" appearance="outline">
+          <mat-label>{{'name.countries' | translate}} *</mat-label>
+          <mat-chip-list #countryChipList formControlName="countries" >
+            <mat-chip
+                *ngFor="let country of selectedCountries"
+                (removed)="removeCountry(country)"
+            >
+              {{country.name}}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+            <input
+                placeholder="New Country..."
+                #countriesInput
+                formControlName="countries"
+                [matAutocomplete]="autoCountry"
+                [matChipInputFor]="countryChipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="addCountry($event)">
+          </mat-chip-list>
+          <mat-autocomplete #autoCountry="matAutocomplete" (optionSelected)="selectedCountry($event)" [displayWith]="displayFn">
+            <mat-option *ngFor="let country of filteredCountries | async" [value]="country">
+              {{country.name}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="form.controls.countries.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+          <mat-hint>Crowdworkers from one of these skills will be able to work on this Task</mat-hint>
+        </mat-form-field>
+      </div>
+      <div fxLayout fxLayoutGap="10px">
+        <!-- Incentive-->
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label> {{ 'name.incentive' | translate }} </mat-label>
+          <input
+              type="number"
+              min="0"
+              formControlName="incentive"
+              matInput
+          />
+          <mat-error *ngIf="form.controls.incentive.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+          <mat-hint>The incentive given to each Crowdworker who works on this Task</mat-hint>
+        </mat-form-field>
+
+        <!--Budget-->
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label> {{ 'name.budget' | translate }} </mat-label>
+          <input
+              type="number"
+              min="0"
+              formControlName="budget"
+              matInput
+          />
+          <mat-error *ngIf="form.controls.budget.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+          <mat-hint>Total budget for this Task iteration</mat-hint>
+        </mat-form-field>
+      </div>
+
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-dialog-close mat-button>Cancel</button>
+  <button mat-button color="black" (click)="saveTask()">Save</button>
+</mat-dialog-actions>

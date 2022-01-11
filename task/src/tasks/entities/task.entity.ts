@@ -72,21 +72,24 @@ export class Task {
   @Column({ type: 'text', nullable: true })
   textualDescription2: string;
 
-  @Min(14)
-  @Column({ default: 14 })
+  @Min(18)
+  @Max(67)
+  @Column({ default: 18 })
   minAge: number;
 
+  @Min(18)
   @Max(67)
   @Column({ default: 67 })
   maxAge: number;
 
   @Min(0)
+  @Max(49)
   @Column({ default: 0 })
   minExperience: number;
 
   @Min(0)
-  @Max(67)
-  @Column({ default: 67 })
+  @Max(49)
+  @Column({ default: 49 })
   maxExperience: number;
 
   @Column('decimal')

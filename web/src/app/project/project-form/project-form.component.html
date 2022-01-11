@@ -1,9 +1,8 @@
 <h2 mat-dialog-title>Create Project</h2>
 <mat-dialog-content class="mat-typography">
-  <h3>Start a new Project now and create prototypes in it later.</h3>
+  <p class="text-note">Start a new Project now and create prototypes in it later.</p>
 
   <form [formGroup]="form">
-    <!--<div fxLayout fxLayoutGap="10px">-->
       <!--Title-->
       <mat-form-field class="full-width" appearance="outline">
         <mat-label>Title</mat-label>
@@ -18,7 +17,6 @@
         <textarea formControlName="description" matInput>
           </textarea>
       </mat-form-field>
-    <!--</div>-->
   </form>
 
 </mat-dialog-content>

@@ -48,23 +48,26 @@ export class CreateTaskDto {
   textualDescription2?: string;
 
   @IsInt()
-  @Min(14)
+  @Min(18)
+  @Max(67)
   @IsOptional()
   minAge?: number;
 
   @IsInt()
+  @Min(18)
   @Max(67)
   @IsOptional()
   maxAge?: number;
 
   @IsInt()
   @Min(0)
+  @Max(49)
   @IsOptional()
   minExperience?: number;
 
   @IsInt()
   @Min(0)
-  @Max(67)
+  @Max(49)
   @IsOptional()
   maxExperience?: number;
 

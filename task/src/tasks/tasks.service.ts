@@ -50,6 +50,26 @@ export class TasksService {
       );
     }
 
+    // check if there is already a draft or open Task available, the new Task cannot be created.
+    const existingTask = this.taskRepository.findOne({
+      select: ['id'],
+      where: {
+        status: In([TaskStatus.Open, TaskStatus.Draft]),
+        projectId: createTaskDto.projectId,
+      },
+    });
+
+    if (existingTask) {
+      throw new HttpException(
+        {
+          status: HttpStatus.PRECONDITION_FAILED,
+          error:
+            'Please close previous Task iteration before starting a new one.',
+        },
+        HttpStatus.PRECONDITION_FAILED,
+      );
+    }
+
     const task = taskDtoToEntity(createTaskDto);
     task.userId = user.id;
     if (createTaskDto.skills) {
@@ -245,6 +265,15 @@ export class TasksService {
     // validate task first
     if (task.status !== TaskStatus.Draft) {
       messages.push('Task can only be activated when in draft state.');
+    }
+    if (!task.incentive || task.incentive < 1) {
+      messages.push('Please set the incentive.');
+    }
+    if (!task.budget || task.budget < 1) {
+      messages.push('Please set the budget.');
+    }
+    if (task.incentive > task.budget) {
+      messages.push('Incentive cannot be greater than budget');
     }
     if (task.countries.length === 0) {
       messages.push(
