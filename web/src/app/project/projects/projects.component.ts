@@ -67,14 +67,6 @@ export class ProjectsComponent {
 
   async searchProjects() {
     const projects = await firstValueFrom(this.projectService.searchAll());
-    // convert creation date time to display string
-    projects.forEach(
-      project =>
-        (project.dateCreated = dateToDisplayString(
-          new Date(project.dateCreated),
-          true,
-        )),
-    );
     this.dataSource = new MatTableDataSource(projects);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

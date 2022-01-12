@@ -1,0 +1,50 @@
+<mat-card>
+  <mat-card-title>{{ 'name.Images' | translate }}</mat-card-title>
+  <mat-card-subtitle *ngIf="task?.testType === TestTypeEnum.Split">
+    {{ 'name.prototype1' | translate }}
+  </mat-card-subtitle>
+  <mat-card-content>
+    <!--Prototype 1-->
+    <p class="text-note">
+      <ng-container
+        *ngIf="task?.testType === TestTypeEnum.Basic; else splitImageUploadNote"
+      >
+        {{ 'note.basicImageUpload' | translate }}
+      </ng-container>
+      <ng-template #splitImageUploadNote>
+        {{ 'note.splitImageUpload1' | translate }}
+      </ng-template>
+    </p>
+    <ng-container
+      *ngTemplateOutlet="imageUploadViewer; context: { data: { splitNumber: 1 } }"
+    ></ng-container>
+
+    <!--Prototype 2-->
+    <ng-container *ngIf="task?.testType === TestTypeEnum.Split">
+      <mat-divider inset></mat-divider>
+      <mat-card-title class="mt-15">{{
+        'name.Images' | translate
+      }}</mat-card-title>
+      <mat-card-subtitle>{{ 'name.prototype2' | translate }}</mat-card-subtitle>
+
+      <p class="text-note">
+        {{ 'note.splitImageUpload2' | translate }}
+      </p>
+
+      <ng-container
+        *ngTemplateOutlet="
+          imageUploadViewer;
+          context: { data: { splitNumber: 2 } }
+        "
+      ></ng-container>
+    </ng-container>
+  </mat-card-content>
+</mat-card>
+
+<!-- Image uploader and Viewer-->
+<ng-template #imageUploadViewer let-data="data">
+  <app-image-uploader [uniqueId]="data.splitNumber"
+                      (completeEvent)="imageUploadComplete($event, data.splitNumber)"
+  [taskId]="task?.id"
+  ></app-image-uploader>
+</ng-template>

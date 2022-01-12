@@ -11,13 +11,15 @@
   border-right: none !important;
   width: 93px;
 }
-
 .sidenav-logo-container {
   box-shadow: 0 10px 15px -10px #bbb;
   background: #2196f3;
   text-align: center;
 }
 
+.main-sidenav-content {
+  overflow: hidden;
+}
 .logo {
   height: 60px;
 }

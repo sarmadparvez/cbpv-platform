@@ -34,10 +34,6 @@
       <div fxLayout fxLayoutGap="10px">
         <app-task-format-selector-card
           fxFlex="1 1 0px"
-          [title]="'name.link' | translate"
-          [icon]="'link'"
-          [subtitle]="'note.iframeTaskSubtitle' | translate"
-          [note]="'note.iframeTask' | translate"
           [testType]="form.controls.prototypeFormat.value === PrototypeFormatEnum.Iframe ? prototypeToTestTypeMap.get(PrototypeFormatEnum.Iframe): undefined"
           [selectorForPrototypeFormat]="PrototypeFormatEnum.Iframe"
           [selectedPrototypeFormat]="form.controls.prototypeFormat.value"
@@ -48,10 +44,6 @@
 
         <app-task-format-selector-card
           fxFlex="1 1 0px"
-          [title]="'name.image' | translate"
-          [icon]="'file_upload'"
-          [subtitle]="'note.imageTaskSubtitle' | translate"
-          [note]="'note.imageTask' | translate"
           [testType]="form.controls.prototypeFormat.value === PrototypeFormatEnum.Image ? prototypeToTestTypeMap.get(PrototypeFormatEnum.Image): undefined"
           [selectorForPrototypeFormat]="PrototypeFormatEnum.Image"
           [selectedPrototypeFormat]="form.controls.prototypeFormat.value"
@@ -62,10 +54,6 @@
 
         <app-task-format-selector-card
           fxFlex="1 1 0px"
-          [title]="'name.text' | translate"
-          [icon]="'description'"
-          [subtitle]="'note.textTaskSubtitle' | translate"
-          [note]="'note.textTask' | translate"
           [testType]="form.controls.prototypeFormat.value === PrototypeFormatEnum.Text ? prototypeToTestTypeMap.get(PrototypeFormatEnum.Text): undefined"
           [selectorForPrototypeFormat]="PrototypeFormatEnum.Text"
           [selectedPrototypeFormat]="form.controls.prototypeFormat.value"
@@ -76,9 +64,9 @@
       </div>
       <!--Test type notes-->
       <div class="text-note">
-        <strong>Basic Test: </strong> {{ 'note.basicTest' | translate }}
+        <strong>{{ 'name.basicTest' | translate }}: </strong> {{ 'note.basicTest' | translate }}
         <br />
-        <strong>Split Test: </strong> {{ 'note.splitTest' | translate }}
+        <strong>{{ 'name.splitTest' | translate }}: </strong> {{ 'note.splitTest' | translate }}
       </div>
       <mat-error
         *ngIf="

@@ -26,8 +26,8 @@
 
       <!-- Creation date Column -->
       <ng-container matColumnDef="dateCreated">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Creation Date </th>
-        <td mat-cell *matCellDef="let element"> {{element.dateCreated}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'name.dateCreated' | translate}} </th>
+        <td mat-cell *matCellDef="let element"> {{ element.dateCreated | date: 'dd.MM.y HH:mm:ss' }} </td>
       </ng-container>
 
       <!-- Status Column -->
@@ -73,7 +73,7 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"
           (click)="openProject($event, row.id)"
       ></tr>

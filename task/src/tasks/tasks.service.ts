@@ -373,6 +373,10 @@ export class TasksService {
       cloudinaryConfig.apiSecret,
     );
     return plainToClass(FileUploadSignatureResponseDto, {
+      apiKey: cloudinaryConfig.apiKey,
+      uploadUrl: cloudinaryConfig.apiUrl
+        .replace(':cloud_name', cloudinaryConfig.cloudName)
+        .replace(':action', 'upload'),
       signature,
       timestamp,
       folder,

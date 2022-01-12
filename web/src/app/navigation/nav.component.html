@@ -1,15 +1,18 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav mode="side" [opened]="isOpen" class="app-sidenav">
     <div class="sidenav-logo-container">
-      <img class="logo clickable" src="assets/images/logo.png" alt="logo"
-           routerLink="/home"
+      <img
+        class="logo clickable"
+        src="assets/images/logo.png"
+        alt="logo"
+        routerLink="/home"
       />
     </div>
     <!--Items in the main sidebar-->
     <mat-nav-list>
       <!--Projects-->
       <app-nav-menu-item
-          *ngIf="Action.Read | permission : 'Project' | async"
+        *ngIf="Action.Read | permission: 'Project' | async"
         text="Projects"
         icon="account_tree"
         routerLink="/projects"
@@ -18,10 +21,8 @@
       </app-nav-menu-item>
     </mat-nav-list>
   </mat-sidenav>
-  <mat-sidenav-content>
-    <app-nav-toolbar
-      (toggleSideNav)="toggleSideNav()"
-    ></app-nav-toolbar>
+  <mat-sidenav-content class="main-sidenav-content">
+    <app-nav-toolbar (toggleSideNav)="toggleSideNav()"></app-nav-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

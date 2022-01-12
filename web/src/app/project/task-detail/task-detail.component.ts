@@ -5,6 +5,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { TranslateModule } from '@ngx-translate/core';
 import { FlexModule } from '@angular/flex-layout';
+import { TaskFormatSelectorCardModule } from '../task-format-selector-card/task-format-selector-card.component';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-task-detail',
@@ -28,6 +30,8 @@ export class TaskDetailComponent {
     MatDividerModule,
     TranslateModule,
     FlexModule,
+    TaskFormatSelectorCardModule,
+    MatChipsModule,
   ],
 })
 export class TaskDetailModule {}

@@ -3,13 +3,18 @@
     "save": "Save",
     "delete": "Delete",
     "edit": "Edit",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "upload": "Upload"
   },
   "name": {
     "budget": "Total budget (€)",
+    "basicTest": "Basic Test",
+    "splitTest": "Split Test",
     "countries": "Countries",
+    "dateCreated": "Creation date",
     "link": "Link",
     "image": "Image",
+    "Images": "Images",
     "text": "Text",
     "minExperience": "Min Experience (Years)",
     "maxExperience": "Max Experience (Years)",
@@ -18,10 +23,12 @@
     "title": "Title",
     "description": "Description",
     "prototypeFormat": "Prototype Format",
+    "prototype1": "Prototype 1",
+    "prototype2": "Prototype 2",
     "crowdCriteria": "Crowd Matching Criteria",
     "skills": "Skills",
     "status": "Status",
-    "incentive": "Per Crowdworker fee (€)",
+    "incentive": "Per Crowdworker incentive (€)",
     "draft": "Draft",
     "open": "Open",
     "closed": "Closed"
@@ -39,7 +46,9 @@
     "login": "Unable to login. Please make sure the credentials are correct!",
     "delete": "Unable to delete ",
     "create": "Unable to create",
-    "update": "Unable to update"
+    "update": "Unable to update",
+    "imageSignature": "Failed to get signature for Image upload",
+    "uploadImage": "Failed uploading file to cloud storage"
   },
   "role": {
     "admin": "Administrator",
@@ -61,6 +70,9 @@
     "textTask": "The Prototype will be added as Text. You can provide textual description of your Application idea.",
     "textTaskSubtitle": "Textual description",
     "basicTest": "In a basic test, a single Prototype is evaluated.",
-    "splitTest": "In a split test, two Prototypes of the same Application are evaluated with a comparison."
+    "splitTest": "In a split test, two Prototypes of the same Application are evaluated with a comparison.",
+    "basicImageUpload": "Please upload images of your Prototype.",
+    "splitImageUpload1": "Please upload images of your Prototype 1.",
+    "splitImageUpload2": "Please upload images of your Prototype 2."
   }
 }

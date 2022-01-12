@@ -28,7 +28,9 @@
   <mat-sidenav-content class="page-content">
     <!--Header content-->
     <div fxLayout fxLayoutAlign="end center" class="mb-20" fxLayoutGap="10px">
-      <h2 class="text-note inline-heading project-name margin-right-auto">{{project?.title}}</h2>
+      <h2 class="text-note inline-heading project-name margin-right-auto">
+        {{ project?.title }}
+      </h2>
       <!--Edit button-->
       <button
         mat-raised-button
@@ -70,14 +72,23 @@
       </mat-menu>
     </div>
     <span
-        class="margin-right-auto"
-        *ngIf="tasks[0]?.status === StatusEnum.Closed || tasks.length === 0"
-    >You can create new task from <em>Start New Iteration</em> button.</span
+      class="margin-right-auto"
+      *ngIf="tasks[0]?.status === StatusEnum.Closed || tasks.length === 0"
+      >You can create new task from <em>Start New Iteration</em> button.</span
     >
+    <!--Task detail component-->
     <app-task-detail
       class="full-width"
       *ngIf="taskControl.value"
       [task]="taskControl.value"
-    ></app-task-detail> </mat-sidenav-content
-  >>
+    ></app-task-detail>
+
+    <div class="mt-30">
+      <app-image-prototype
+        *ngIf="task?.prototypeFormat === PrototypeFormatEnum.Image"
+        [task]="task"
+      >
+      </app-image-prototype>
+    </div>
+  </mat-sidenav-content>
 </mat-sidenav-container>

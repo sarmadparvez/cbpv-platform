@@ -18,16 +18,19 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { TaskDetailModule } from '../task-detail/task-detail.component';
 import StatusEnum = Task.StatusEnum;
+import PrototypeFormatEnum = Task.PrototypeFormatEnum;
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ImagePrototypeModule } from '../image-prototype/image-prototype.component';
 
 @Component({
-  selector: 'app-project',
-  templateUrl: './project.component.html',
-  styleUrls: ['./project.component.scss'],
+  selector: 'app-project-detail',
+  templateUrl: './project-detail.component.html',
+  styleUrls: ['./project-detail.component.scss'],
 })
-export class ProjectComponent {
+export class ProjectDetailComponent {
+  PrototypeFormatEnum = PrototypeFormatEnum;
   taskControl = new FormControl('');
   projectId: string;
   tasks: Task[] = [];
@@ -126,7 +129,7 @@ export class ProjectComponent {
  * Project module
  * */
 @NgModule({
-  declarations: [ProjectComponent],
+  declarations: [ProjectDetailComponent],
   imports: [
     CommonModule,
     MatSelectModule,
@@ -138,6 +141,7 @@ export class ProjectComponent {
     TaskDetailModule,
     MatMenuModule,
     MatIconModule,
+    ImagePrototypeModule,
   ],
 })
-export class ProjectModule {}
+export class ProjectDetailModule {}

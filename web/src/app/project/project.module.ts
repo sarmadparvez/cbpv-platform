@@ -2,7 +2,7 @@ import { ProjectsComponent } from './projects/projects.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AuthGuard } from '../auth/auth.guard';
-import { ProjectComponent } from './project/project.component';
+import { ProjectDetailComponent } from './project/project-detail.component';
 
 const routes: Routes = [
   {
@@ -12,7 +12,7 @@ const routes: Routes = [
   },
   {
     path: ':projectId',
-    component: ProjectComponent,
+    component: ProjectDetailComponent,
     canActivate: [AuthGuard],
   },
 ];
