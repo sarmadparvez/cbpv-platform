@@ -7,8 +7,6 @@ import { Image } from './entities/image.entity';
 import { Question } from './entities/question.entity';
 import { ConfigModule } from '@nestjs/config';
 import { Project } from '../projects/entities/project.entity';
-import { HttpModule } from '@nestjs/axios';
-import { UsersService } from '../users/users.service';
 import { UsersModule } from '../users/users.module';
 
 @Module({

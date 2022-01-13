@@ -1,0 +1,15 @@
+@import 'src/variables';
+
+.ngx-gallery {
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+::ng-deep .ngx-gallery-active {
+  position: absolute !important;
+}
+
+.ngx-gallery ::ng-deep .ngx-gallery-thumbnails .ngx-gallery-thumbnail {
+  // border: none !important;
+  box-sizing: border-box;
+}

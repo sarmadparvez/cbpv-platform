@@ -35,7 +35,7 @@
       <button
         mat-raised-button
         color="black"
-        *ngIf="task?.status === StatusEnum.Draft"
+        *ngIf="(task | async)?.status === StatusEnum.Draft"
         (click)="openTaskForm(true)"
       >
         {{ 'action.edit' | translate }}
@@ -62,8 +62,8 @@
       <mat-menu #additionalOptions="matMenu">
         <button
           mat-menu-item
-          *ngIf="task?.status === StatusEnum.Draft"
-          (click)="deleteTask()"
+          *ngIf="(task | async)?.status === StatusEnum.Draft"
+          (click)="(taskControl.value.id)"
         >
           <span>
             {{ 'action.delete' | translate }}
@@ -79,16 +79,16 @@
     <!--Task detail component-->
     <app-task-detail
       class="full-width"
-      *ngIf="taskControl.value"
-      [task]="taskControl.value"
+      *ngIf="task | async as t"
+      [task]="t"
     ></app-task-detail>
 
     <div class="mt-30">
-      <app-image-prototype
-        *ngIf="task?.prototypeFormat === PrototypeFormatEnum.Image"
-        [task]="task"
-      >
-      </app-image-prototype>
+        <app-image-prototype
+          *ngIf="(task | async)?.prototypeFormat === PrototypeFormatEnum.Image"
+          [task]="task"
+        >
+        </app-image-prototype>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

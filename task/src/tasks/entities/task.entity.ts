@@ -124,7 +124,7 @@ export class Task {
   @JoinColumn({ name: 'projectId' })
   projectId: string;
 
-  @OneToMany(() => Image, (image) => image.task, {
+  @OneToMany(() => Image, (image) => image.taskId, {
     cascade: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
@@ -147,7 +147,7 @@ export class Task {
   @JoinTable()
   countries: Country[];
 
-  @OneToMany(() => Question, (question) => question.task, {
+  @OneToMany(() => Question, (question) => question.taskId, {
     cascade: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

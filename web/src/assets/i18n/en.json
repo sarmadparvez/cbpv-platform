@@ -37,7 +37,8 @@
     "registerSuccess": "User registered successfully, please proceed with login.",
     "create": "Created successfully",
     "update": "Updated Successfully",
-    "delete": "Deleted Successfully"
+    "delete": "Deleted Successfully",
+    "imageUpload": "Image(s) uploaded successfully"
   },
   "error": {
     "required": "This field is required",
@@ -48,7 +49,8 @@
     "create": "Unable to create",
     "update": "Unable to update",
     "imageSignature": "Failed to get signature for Image upload",
-    "uploadImage": "Failed uploading file to cloud storage"
+    "uploadImage": "Failed uploading file to cloud storage,",
+    "saveImageUrls": "Unable to store image urls"
   },
   "role": {
     "admin": "Administrator",

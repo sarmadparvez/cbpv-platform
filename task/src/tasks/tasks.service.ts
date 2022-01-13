@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { classToPlain, plainToClass } from 'class-transformer';
@@ -12,7 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, In, Repository } from 'typeorm';
 import { Skill } from '../skills/entities/skill.entity';
 import { Country } from '../countries/entities/country.entity';
-import { FindAllTaskDto } from './dto/find-all-task-dto';
+import { FindAllTasksDto } from './dto/find-all-tasks.dto';
 import { v2 as cloudinary } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
 import { FileUploadSignatureResponseDto } from './dto/file-upload-signature-response.dto';
@@ -23,6 +23,11 @@ import { Project } from '../projects/entities/project.entity';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { Feedback } from '../feedbacks/entities/feedback.entity';
+import { BatchCreateImagesDto } from './dto/batch-create-images.dto';
+import { Image } from './entities/image.entity';
+import cloudinaryConfig from '../config/cloudinary';
+
+cloudinary.config(cloudinaryConfig().cloudinary.config);
 
 @Injectable()
 export class TasksService {
@@ -93,7 +98,7 @@ export class TasksService {
     return this.taskRepository.save(task);
   }
 
-  findAll(query?: FindAllTaskDto) {
+  findAll(query?: FindAllTasksDto) {
     const options: FindManyOptions = {
       relations: ['skills', 'countries'],
     };
@@ -228,15 +233,7 @@ export class TasksService {
     );
 
     // task can only be updated if it is draft state
-    if (existingTask.status !== TaskStatus.Draft) {
-      throw new HttpException(
-        {
-          status: HttpStatus.PRECONDITION_FAILED,
-          error: 'Task is not in draft state.',
-        },
-        HttpStatus.PRECONDITION_FAILED,
-      );
-    }
+    this.draftCheck(existingTask);
 
     const task = taskDtoToEntity(updateTaskDto);
     if (updateTaskDto.skills) {
@@ -370,17 +367,107 @@ export class TasksService {
         timestamp,
         folder,
       },
-      cloudinaryConfig.apiSecret,
+      cloudinaryConfig.config.api_secret,
     );
     return plainToClass(FileUploadSignatureResponseDto, {
-      apiKey: cloudinaryConfig.apiKey,
+      apiKey: cloudinaryConfig.config.api_key,
       uploadUrl: cloudinaryConfig.apiUrl
-        .replace(':cloud_name', cloudinaryConfig.cloudName)
+        .replace(':cloud_name', cloudinaryConfig.config.cloud_name)
         .replace(':action', 'upload'),
       signature,
       timestamp,
       folder,
     });
+  }
+
+  async batchCreateImages(
+    taskId: string,
+    batchCreateImagesDto: BatchCreateImagesDto,
+  ) {
+    // check if user have permission to update Task
+    // a user can only update task which belongs to him (task.userId = user.id)
+    const existingTask = await findWithPermissionCheck(
+      taskId,
+      Action.Update,
+      this.taskRepository,
+    );
+    // Images can only be added if the task is in draft state
+    this.draftCheck(existingTask);
+
+    batchCreateImagesDto.images.forEach((image) => (image.taskId = taskId));
+    // insert images
+    return this.taskRepository.manager.insert(
+      Image,
+      batchCreateImagesDto.images,
+    );
+  }
+
+  private draftCheck(task: Task) {
+    if (task.status !== TaskStatus.Draft) {
+      throw new HttpException(
+        {
+          status: HttpStatus.PRECONDITION_FAILED,
+          error: 'Task is not in draft state.',
+        },
+        HttpStatus.PRECONDITION_FAILED,
+      );
+    }
+  }
+
+  async findAllImages(taskId: string, splitNumber: number) {
+    // check if user have permission to Read Task
+    const task = await findWithPermissionCheck(
+      taskId,
+      Action.Read,
+      this.taskRepository,
+    );
+    const where = {
+      taskId,
+    };
+    if (splitNumber) {
+      where['splitNumber'] = splitNumber;
+    }
+    return this.taskRepository.manager.find(Image, {
+      where,
+    });
+  }
+
+  async removeImage(taskId: string, imageId: string) {
+    // check if user have permission to Update Task
+    const task = await findWithPermissionCheck(
+      taskId,
+      Action.Update,
+      this.taskRepository,
+    );
+    // check if image belongs to the taskId
+    const image = await this.taskRepository.manager.findOneOrFail(Image, {
+      where: {
+        id: imageId,
+        taskId,
+      },
+    });
+    // delete image from cloud storage
+    try {
+      const response = await cloudinary.uploader.destroy(image.cloudId);
+      // delete image from database
+      if (response['result'] && response['result'] === 'ok') {
+        await this.taskRepository.manager.delete(Image, image.id);
+      } else {
+        Logger.error(response);
+        throw new HttpException(
+          {
+            status: HttpStatus.UNPROCESSABLE_ENTITY,
+            error: response.result,
+          },
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      }
+    } catch (err) {
+      Logger.error(
+        `failed deleting image from the cloudinary with public id ${image.cloudId} and imageId ${image.id} `,
+      );
+      throw err;
+    }
   }
 }
 

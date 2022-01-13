@@ -1,3 +1,7 @@
+/**
+ * Based on the opensource solution available on github https://gist.github.com/ZakiMohammed/9e5b88146a53570b120a4e9a1244fbeb
+ */
+
 import {
   Component,
   EventEmitter,
@@ -11,10 +15,12 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import {
+  BatchCreateImagesDto,
   FileUploadSignatureResponseDto,
+  Image,
   TasksService,
 } from '../../../../gen/api/task';
-import { first, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   animate,
@@ -30,9 +36,9 @@ import {
 } from '@angular/common/http';
 
 @Component({
-  selector: 'app-image-uploader',
-  templateUrl: './image-uploader.component.html',
-  styleUrls: ['./image-uploader.component.scss'],
+  selector: 'app-image-upload',
+  templateUrl: './image-upload.component.html',
+  styleUrls: ['./image-upload.component.scss'],
   animations: [
     trigger('fadeInOut', [
       state('in', style({ opacity: 100 })),
@@ -40,7 +46,7 @@ import {
     ]),
   ],
 })
-export class ImageUploaderComponent {
+export class ImageUploadComponent {
   constructor(
     private readonly taskService: TasksService,
     private readonly snackbar: MatSnackBar,
@@ -50,7 +56,7 @@ export class ImageUploaderComponent {
     Window['iuself'] = this;
   }
   /** accepted filed extensions */
-  accept = 'image/jpeg,image/png';
+  accept = '.jpg, .jpeg, .png';
   files: FileUpload[] = [];
   uploadSignature: FileUploadSignatureResponseDto;
 
@@ -59,7 +65,7 @@ export class ImageUploaderComponent {
   @Input() taskId: string;
 
   /** Emit urls of the uploaded images when the image uploading is completed. */
-  @Output() completeEvent = new EventEmitter<string[]>();
+  @Output() completeEvent = new EventEmitter<void>();
 
   /**
    * Cancel uploading of image file
@@ -139,7 +145,7 @@ export class ImageUploaderComponent {
    * @param file The file to be uploaded
    * Based on the example from https://cloudinary.com/documentation/upload_images#code_explorer_upload_multiple_files_using_a_form_signed
    */
-  protected async uploadFile(file: FileUpload): Promise<string> {
+  protected async uploadFile(file: FileUpload): Promise<Image> {
     if (!this.uploadSignature) {
       return;
     }
@@ -166,7 +172,11 @@ export class ImageUploaderComponent {
       );
       file.inProgress = false;
       this.removeFileFromArray(file);
-      return response.secure_url;
+      return <Image>{
+        url: response.secure_url,
+        splitNumber: this.uniqueId,
+        cloudId: response.public_id,
+      };
     } catch (err) {
       console.log('error uploading image to cloudinary', err);
       this.snackbar.open(
@@ -180,19 +190,40 @@ export class ImageUploaderComponent {
     }
   }
 
+  async batchCreateImages(images: Image[]) {
+    const request: BatchCreateImagesDto = {
+      images,
+    };
+    let message = '';
+    try {
+      await firstValueFrom(
+        this.taskService.batchCreateImages(this.taskId, request),
+      );
+      message = 'notification.imageUpload';
+    } catch (err) {
+      console.log('err', err);
+      message = 'error.saveImageUrls';
+    } finally {
+      this.snackbar.open(this.translateService.instant(message), '', {
+        duration: 5000,
+      });
+    }
+  }
+
   /**
    * Loop through all selected files and upload them
    */
-  protected async uploadFiles() {
-    const promises: Promise<string>[] = [];
+  private async uploadFiles() {
+    const promises: Promise<Image>[] = [];
     const fileUpload = document.getElementById(
       `imageUpload${this.uniqueId}`,
     ) as HTMLInputElement;
     fileUpload.value = '';
 
     this.files.forEach(file => promises.push(this.uploadFile(file)));
-    const uploadUrls = await Promise.all(promises);
-    this.completeEvent.emit(uploadUrls);
+    const images = await Promise.all(promises);
+    await this.batchCreateImages(images);
+    this.completeEvent.emit();
   }
 }
 
@@ -212,8 +243,8 @@ export interface FileUpload {
  * Project module
  * */
 @NgModule({
-  declarations: [ImageUploaderComponent],
-  exports: [ImageUploaderComponent],
+  declarations: [ImageUploadComponent],
+  exports: [ImageUploadComponent],
   imports: [
     CommonModule,
     TranslateModule,
@@ -223,4 +254,4 @@ export interface FileUpload {
     HttpClientModule,
   ],
 })
-export class ImageUploaderModule {}
+export class ImageUploadModule {}

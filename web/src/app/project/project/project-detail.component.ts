@@ -1,6 +1,6 @@
 import { Component, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { FlexModule } from '@angular/flex-layout';
@@ -15,7 +15,7 @@ import {
   Task,
   TasksService,
 } from '../../../../gen/api/task';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, ReplaySubject } from 'rxjs';
 import { TaskDetailModule } from '../task-detail/task-detail.component';
 import StatusEnum = Task.StatusEnum;
 import PrototypeFormatEnum = Task.PrototypeFormatEnum;
@@ -34,7 +34,7 @@ export class ProjectDetailComponent {
   taskControl = new FormControl('');
   projectId: string;
   tasks: Task[] = [];
-  task: Task;
+  task = new ReplaySubject<Task>(1);
   project: Project;
   StatusEnum = StatusEnum;
   constructor(
@@ -50,8 +50,9 @@ export class ProjectDetailComponent {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.getProject();
     this.searchTasks();
-
-    this.taskControl.valueChanges.subscribe((task: Task) => (this.task = task));
+    this.taskControl.valueChanges.subscribe((task: Task) =>
+      this.task.next(task),
+    );
   }
 
   async searchTasks() {
@@ -71,31 +72,35 @@ export class ProjectDetailComponent {
     );
   }
 
-  openTaskForm(edit?: boolean) {
+  async openTaskForm(edit?: boolean) {
+    let task: Task;
+    if (edit) {
+      task = await firstValueFrom(this.task);
+    }
     this.dialog
       .open(TaskFormComponent, {
         disableClose: true,
         width: '70vw',
         data: {
-          task: edit ? this.task : null,
+          task: edit ? task : null,
           projectId: this.projectId,
         },
       })
       .afterClosed()
-      .subscribe((taskId: string) => {
-        if (taskId) {
-          if (!this.task) {
+      .subscribe((saved: boolean) => {
+        if (saved) {
+          if (!edit) {
             // creation case, fetch all tasks
             this.searchTasks();
           } else {
-            this.getTask(taskId);
+            this.getTask(task.id);
           }
         }
       });
   }
 
-  async getTask(id: string) {
-    const task = await firstValueFrom(this.taskService.findOne(this.task.id));
+  async getTask(taskId: string) {
+    const task = await firstValueFrom(this.taskService.findOne(taskId));
     const index = this.tasks.findIndex(t => t.id === task.id);
     if (index > -1) {
       this.tasks[index] = task;
@@ -107,15 +112,15 @@ export class ProjectDetailComponent {
     this.router.navigate(['projects']);
   }
 
-  async deleteTask() {
+  async deleteTask(id: string) {
     let message = '';
     try {
-      await firstValueFrom(this.taskService.remove(this.task.id));
+      await firstValueFrom(this.taskService.remove(id));
       message = this.translateService.instant('notification.delete');
-      const taskIndex = this.tasks.findIndex(t => t.id === this.task.id);
+      const taskIndex = this.tasks.findIndex(t => t.id === id);
       this.tasks.splice(taskIndex, 1);
-      this.task = this.tasks[0];
-      this.taskControl.setValue(this.task);
+      this.task.next(this.tasks[0]);
+      this.taskControl.setValue(this.tasks[0]);
     } catch (err) {
       console.log('error deleting task ', err);
       message = this.translateService.instant('error.delete');

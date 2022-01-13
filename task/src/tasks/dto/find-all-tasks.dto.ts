@@ -1,7 +1,7 @@
 import { IsOptional, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class FindAllTaskDto {
+export class FindAllTasksDto {
   @IsUUID()
   @IsOptional()
   @ApiProperty({

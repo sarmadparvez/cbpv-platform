@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { IsEnum, Min } from 'class-validator';
 import { Task } from './task.entity';
 
@@ -34,5 +40,6 @@ export class Question {
     onDelete: 'CASCADE',
     orphanedRowAction: 'delete',
   })
-  task: string;
+  @JoinColumn({ name: 'taskId' })
+  taskId: string;
 }

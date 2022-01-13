@@ -13,14 +13,14 @@ import {
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
-import { FindAllTaskDto } from './dto/find-all-task-dto';
+import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { FindAllTasksDto } from './dto/find-all-tasks.dto';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../iam/policy';
 import * as contextService from 'request-context';
 import { Task } from './entities/task.entity';
-import { Project } from '../projects/entities/project.entity';
 import { Feedback } from '../feedbacks/entities/feedback.entity';
+import { BatchCreateImagesDto } from './dto/batch-create-images.dto';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -64,7 +64,7 @@ export class TasksController {
    */
   @ApiBearerAuth()
   @Get()
-  findAll(@Query() query?: FindAllTaskDto) {
+  findAll(@Query() query?: FindAllTasksDto) {
     // check if user have permission to list Tasks
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Read,
@@ -142,5 +142,46 @@ export class TasksController {
   @Get(':id/imageUploadSignature')
   imageUploadSignature(@Param('id') id: string) {
     return this.tasksService.getImageUploadSignature(id);
+  }
+
+  /**
+   * Batch create Images
+   * The user must have Update permission for Task.
+   */
+  @ApiBearerAuth()
+  @Post(':id/batchCreateImages')
+  batchCreateImages(
+    @Param('id') id: string,
+    @Body() saveImageUrlsDto: BatchCreateImagesDto,
+  ) {
+    return this.tasksService.batchCreateImages(id, saveImageUrlsDto);
+  }
+
+  /**
+   * Get list of images for the Task.
+   * The caller must have read permission for the Task
+   */
+  @ApiBearerAuth()
+  @ApiQuery({
+    name: 'splitNumber',
+    required: false,
+    description: 'Optional filtering by splitNumber',
+    type: 'number',
+  })
+  @Get(':id/images')
+  findAllImages(
+    @Param('id') id: string,
+    @Query('splitNumber') splitNumber?: number,
+  ) {
+    return this.tasksService.findAllImages(id, splitNumber);
+  }
+
+  /**
+   * Delete an Image for Task. The calling user must have Update permission on the Task.
+   */
+  @ApiBearerAuth()
+  @Delete(':id/images/:imageId')
+  removeImage(@Param('id') id: string, @Param('imageId') imageId: string) {
+    return this.tasksService.removeImage(id, imageId);
   }
 }

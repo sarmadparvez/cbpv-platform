@@ -1,13 +1,13 @@
 <mat-card>
   <mat-card-title>{{ 'name.Images' | translate }}</mat-card-title>
-  <mat-card-subtitle *ngIf="task?.testType === TestTypeEnum.Split">
+  <mat-card-subtitle *ngIf="(task | async)?.testType === TestTypeEnum.Split">
     {{ 'name.prototype1' | translate }}
   </mat-card-subtitle>
   <mat-card-content>
     <!--Prototype 1-->
     <p class="text-note">
       <ng-container
-        *ngIf="task?.testType === TestTypeEnum.Basic; else splitImageUploadNote"
+        *ngIf="(task | async)?.testType === TestTypeEnum.Basic; else splitImageUploadNote"
       >
         {{ 'note.basicImageUpload' | translate }}
       </ng-container>
@@ -16,11 +16,14 @@
       </ng-template>
     </p>
     <ng-container
-      *ngTemplateOutlet="imageUploadViewer; context: { data: { splitNumber: 1 } }"
+      *ngTemplateOutlet="
+        imageUploadViewer;
+        context: { data: { splitNumber: 1 } }
+      "
     ></ng-container>
 
     <!--Prototype 2-->
-    <ng-container *ngIf="task?.testType === TestTypeEnum.Split">
+    <ng-container *ngIf="(task | async)?.testType === TestTypeEnum.Split">
       <mat-divider inset></mat-divider>
       <mat-card-title class="mt-15">{{
         'name.Images' | translate
@@ -43,8 +46,16 @@
 
 <!-- Image uploader and Viewer-->
 <ng-template #imageUploadViewer let-data="data">
-  <app-image-uploader [uniqueId]="data.splitNumber"
-                      (completeEvent)="imageUploadComplete($event, data.splitNumber)"
-  [taskId]="task?.id"
-  ></app-image-uploader>
+  <app-image-upload
+    [uniqueId]="data.splitNumber"
+    (completeEvent)="findAllImages(data.splitNumber)"
+    [taskId]="(task | async)?.id"
+  ></app-image-upload>
+
+  <app-image-viewer
+  [images]="(images.get(data.splitNumber) | async) || []"
+  (deleteEvent)="deleteImage($event, data.splitNumber)"
+  >
+
+  </app-image-viewer>
 </ng-template>

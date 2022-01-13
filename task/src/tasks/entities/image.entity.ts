@@ -1,10 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Task, TestType } from './task.entity';
-
-export enum SplitNumber {
-  One = 1,
-  Two = 2,
-}
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Task } from './task.entity';
+import { Max, Min } from 'class-validator';
 
 @Entity()
 export class Image {
@@ -17,9 +19,22 @@ export class Image {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   dateCreated: Date;
 
-  @Column({ type: 'enum', enum: SplitNumber, nullable: true })
-  splitNumber: SplitNumber;
+  @Min(1)
+  @Max(2)
+  @Column({ default: 1 })
+  splitNumber: number;
 
-  @ManyToOne(() => Task, (task) => task.images)
-  task: string;
+  @ManyToOne(() => Task, (task) => task.images, {
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
+  @JoinColumn({ name: 'taskId' })
+  taskId: string;
+
+  @Column()
+  cloudId: string;
+
+  public constructor(init?: Partial<Image>) {
+    Object.assign(this, init);
+  }
 }
