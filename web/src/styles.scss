@@ -64,6 +64,29 @@ body {
   border-right: none !important;
 }
 
+.second-sidenav-options {
+  padding: 5px 0 5px 0px;
+  font-style: normal;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s;
+}
+
+.second-sidenav__selected {
+  background-color: #a8d7fd !important;
+  font-weight: bolder;
+}
+
+.second-sidenav-options:hover {
+  background: #ffffff ;
+}
+
+.second-sidenav-icon {
+  padding-left: 8px;
+  padding-right: 10px;
+}
+
+
 .text-note {
   color: rgba(0, 0, 0, 0.54);
 }

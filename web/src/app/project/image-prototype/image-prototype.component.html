@@ -1,5 +1,5 @@
 <mat-card>
-  <mat-card-title>{{ 'name.Images' | translate }}</mat-card-title>
+  <mat-card-title>{{ 'name.images' | translate }}</mat-card-title>
   <mat-card-subtitle *ngIf="(task | async)?.testType === TestTypeEnum.Split">
     {{ 'name.prototype1' | translate }}
   </mat-card-subtitle>
@@ -26,7 +26,7 @@
     <ng-container *ngIf="(task | async)?.testType === TestTypeEnum.Split">
       <mat-divider inset></mat-divider>
       <mat-card-title class="mt-15">{{
-        'name.Images' | translate
+        'name.images' | translate
       }}</mat-card-title>
       <mat-card-subtitle>{{ 'name.prototype2' | translate }}</mat-card-subtitle>
 

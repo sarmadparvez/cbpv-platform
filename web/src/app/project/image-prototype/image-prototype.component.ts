@@ -4,7 +4,7 @@ import { CreateTaskDto, Image, Task } from 'gen/api/task/model/models';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ImageUploadModule } from '../image-uploader/image-upload.component';
+import { ImageUploadModule } from '../image-upload/image-upload.component';
 import TestTypeEnum = CreateTaskDto.TestTypeEnum;
 import { TasksService } from '../../../../gen/api/task';
 import { firstValueFrom, ReplaySubject } from 'rxjs';

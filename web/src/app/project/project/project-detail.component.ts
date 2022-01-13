@@ -23,6 +23,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ImagePrototypeModule } from '../image-prototype/image-prototype.component';
+import { IframePrototypeModule } from '../iframe-prototype/iframe-prototype.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SamplePrototypeModule } from '../sample-prototype/sample-prototype.component';
+
+const views = ['overview', 'sample'] as const;
+type View = typeof views[number];
 
 @Component({
   selector: 'app-project-detail',
@@ -37,6 +43,8 @@ export class ProjectDetailComponent {
   task = new ReplaySubject<Task>(1);
   project: Project;
   StatusEnum = StatusEnum;
+  currentView: View;
+
   constructor(
     private readonly router: Router,
     private readonly dialog: MatDialog,
@@ -48,11 +56,23 @@ export class ProjectDetailComponent {
   ) {
     Window['pcself'] = this;
     this.projectId = this.route.snapshot.paramMap.get('projectId');
+    this.hanleQueryParamsChange();
     this.getProject();
     this.searchTasks();
     this.taskControl.valueChanges.subscribe((task: Task) =>
       this.task.next(task),
     );
+  }
+
+  hanleQueryParamsChange() {
+    this.route.queryParamMap.subscribe(value => {
+      const view = value.get('view') as View;
+      if (views.includes(view)) {
+        this.currentView = view;
+      } else {
+        this.openView('overview', true);
+      }
+    });
   }
 
   async searchTasks() {
@@ -128,6 +148,15 @@ export class ProjectDetailComponent {
       this.snackBar.open(message, '', { duration: 3000 });
     }
   }
+
+  openView(view: View, replaceUrl: boolean = false) {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParamsHandling: 'merge',
+      queryParams: { view },
+      replaceUrl,
+    });
+  }
 }
 
 /**
@@ -147,6 +176,9 @@ export class ProjectDetailComponent {
     MatMenuModule,
     MatIconModule,
     ImagePrototypeModule,
+    IframePrototypeModule,
+    MatTooltipModule,
+    SamplePrototypeModule,
   ],
 })
 export class ProjectDetailModule {}

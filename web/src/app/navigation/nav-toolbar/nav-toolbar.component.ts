@@ -22,7 +22,7 @@ import RolesEnum = CreateWithSSODto.RolesEnum;
 })
 export class NavToolbarComponent {
   @Output() toggleSideNav = new EventEmitter();
-  user = new ReplaySubject<User>();
+  user = new ReplaySubject<User>(1);
   RolesEnum = RolesEnum;
 
   constructor(private authService: AuthService, private router: Router) {

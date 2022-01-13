@@ -4,7 +4,11 @@
     "delete": "Delete",
     "edit": "Edit",
     "cancel": "Cancel",
-    "upload": "Upload"
+    "prototypeLink": "Prototype Link",
+    "upload": "Upload",
+    "overview": "Overview",
+    "editPrototypeLink": "Edit Prototype Link",
+    "samplePrototypes": "Sample Prototypes"
   },
   "name": {
     "budget": "Total budget (€)",
@@ -14,7 +18,7 @@
     "dateCreated": "Creation date",
     "link": "Link",
     "image": "Image",
-    "Images": "Images",
+    "images": "Images",
     "text": "Text",
     "minExperience": "Min Experience (Years)",
     "maxExperience": "Max Experience (Years)",
@@ -49,7 +53,7 @@
     "create": "Unable to create",
     "update": "Unable to update",
     "imageSignature": "Failed to get signature for Image upload",
-    "uploadImage": "Failed uploading file to cloud storage,",
+    "uploadImage": "Failed uploading file to cloud storage.",
     "saveImageUrls": "Unable to store image urls"
   },
   "role": {
@@ -69,12 +73,16 @@
     "imageTask": "The Prototype will be uploaded in the form of images. The images correspond to different screens in your Application.",
     "imageTaskSubtitle": "Images of your Application's User Interface",
     "prototype": "Select the Prototype format and Test type.",
+    "prototypeLink": "Add a link for your prototype. Please not that it should be a link and not an embed code. If the Prototyping tool that you used provides an embed code for the Iframe, get the link out of that code and paste it here.",
     "textTask": "The Prototype will be added as Text. You can provide textual description of your Application idea.",
     "textTaskSubtitle": "Textual description",
     "basicTest": "In a basic test, a single Prototype is evaluated.",
     "splitTest": "In a split test, two Prototypes of the same Application are evaluated with a comparison.",
     "basicImageUpload": "Please upload images of your Prototype.",
+    "basicIframeUpload": "Please add link to your Prototype.",
     "splitImageUpload1": "Please upload images of your Prototype 1.",
-    "splitImageUpload2": "Please upload images of your Prototype 2."
+    "splitImageUpload2": "Please upload images of your Prototype 2.",
+    "splitIframeUpload1": "Please add link to your Prototype 1.",
+    "splitIframeUpload2": "Please add link to your Prototype 2."
   }
 }

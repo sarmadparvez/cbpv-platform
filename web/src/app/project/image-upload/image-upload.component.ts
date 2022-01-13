@@ -34,6 +34,7 @@ import {
   HttpClientModule,
   HttpHeaders,
 } from '@angular/common/http';
+import { parseError } from '../../error/parse-error';
 
 @Component({
   selector: 'app-image-upload',
@@ -178,14 +179,17 @@ export class ImageUploadComponent {
         cloudId: response.public_id,
       };
     } catch (err) {
+      file.inProgress = false;
+      this.removeFileFromArray(file);
       console.log('error uploading image to cloudinary', err);
-      this.snackbar.open(
-        this.translateService.instant('error.uploadImage'),
-        '',
-        {
-          duration: 5000,
-        },
-      );
+      let message = this.translateService.instant('error.uploadImage');
+      const error = parseError(err);
+      if (error?.message) {
+        message += ' ' + error.message;
+      }
+      this.snackbar.open(message, '', {
+        duration: 5000,
+      });
       return Promise.reject(err);
     }
   }

@@ -23,7 +23,11 @@ function parseHttpError(err: HttpErrorResponse) {
     if (err.error.message) {
       error.message = err.error.message;
     } else if (err.error.error) {
-      error.message = err.error.error;
+      if (err.error.error?.message) {
+        error.message = err.error.error.message;
+      } else {
+        error.message = err.error.error;
+      }
     }
   }
   error.code = err.status;
