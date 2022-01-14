@@ -26,6 +26,7 @@ import { ImagePrototypeModule } from '../image-prototype/image-prototype.compone
 import { IframePrototypeModule } from '../iframe-prototype/iframe-prototype.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SamplePrototypeModule } from '../sample-prototype/sample-prototype.component';
+import { TextPrototypeModule } from '../text-prototype/text-prototype.component';
 
 const views = ['overview', 'sample'] as const;
 type View = typeof views[number];
@@ -179,6 +180,7 @@ export class ProjectDetailComponent {
     IframePrototypeModule,
     MatTooltipModule,
     SamplePrototypeModule,
+    TextPrototypeModule,
   ],
 })
 export class ProjectDetailModule {}

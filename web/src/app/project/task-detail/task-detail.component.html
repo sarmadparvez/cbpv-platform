@@ -1,7 +1,6 @@
 <mat-card>
   <mat-card-title>{{ task?.title }}</mat-card-title>
   <mat-card-content>
-
     <div class="field-container" fxLayout>
       <!--Description-->
       <div class="full-width">
@@ -18,7 +17,7 @@
           {{ 'name.status' | translate }}
         </div>
         <div>
-          <span>{{ 'name.'+task?.status | translate }}</span>
+          <span>{{ 'name.' + task?.status | translate }}</span>
         </div>
       </div>
     </div>
@@ -34,21 +33,7 @@
       </div>
     </div>
     <mat-divider inset></mat-divider>
-    <h3>{{ 'name.prototypeFormat' | translate }}</h3>
-    <!--Prototype format card-->
-    <app-task-format-selector-card
-        [testType]="task?.testType"
-        [selectorForPrototypeFormat]="task?.prototypeFormat"
-        [readonly]="true"
-    >
-    </app-task-format-selector-card>
-    <!--Test type notes-->
-    <div class="text-note mt-15 field-container">
-      <strong>{{ 'name.basicTest' | translate }}: </strong> {{ 'note.basicTest' | translate }}
-      <br />
-      <strong>{{ 'name.splitTest' | translate }}: </strong> {{ 'note.splitTest' | translate }}
-    </div>
-    <mat-divider inset></mat-divider>
+
     <h3>{{ 'name.crowdCriteria' | translate }}</h3>
     <div class="field-container" fxLayout>
       <!--Min Experience-->
@@ -100,9 +85,9 @@
           {{ 'name.skills' | translate }}
         </div>
         <div>
-          <mat-chip-list >
+          <mat-chip-list>
             <mat-chip *ngFor="let skill of task?.skills">
-              {{skill.name}}
+              {{ skill.name }}
             </mat-chip>
           </mat-chip-list>
         </div>
@@ -113,9 +98,9 @@
           {{ 'name.countries' | translate }}
         </div>
         <div>
-          <mat-chip-list >
+          <mat-chip-list>
             <mat-chip *ngFor="let country of task?.countries">
-              {{country.name}}
+              {{ country.name }}
             </mat-chip>
           </mat-chip-list>
         </div>
@@ -144,6 +129,22 @@
       </div>
     </div>
 
-
+    <mat-divider inset></mat-divider>
+    <h3>{{ 'name.prototypeFormat' | translate }}</h3>
+    <!--Prototype format card-->
+    <app-task-format-selector-card
+      [testType]="task?.testType"
+      [selectorForPrototypeFormat]="task?.prototypeFormat"
+      [readonly]="true"
+    >
+    </app-task-format-selector-card>
+    <!--Test type notes-->
+    <div class="text-note mt-15 field-container">
+      <strong>{{ 'name.basicTest' | translate }}: </strong>
+      {{ 'note.basicTest' | translate }}
+      <br />
+      <strong>{{ 'name.splitTest' | translate }}: </strong>
+      {{ 'note.splitTest' | translate }}
+    </div>
   </mat-card-content>
 </mat-card>

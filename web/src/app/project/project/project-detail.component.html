@@ -25,30 +25,29 @@
     </mat-select>
     <!--Overview-->
     <div
-        class="second-sidenav-options clickable"
-        (click)="openView('overview')"
-        [ngClass]="{
+      class="second-sidenav-options clickable"
+      (click)="openView('overview')"
+      [ngClass]="{
         'second-sidenav__selected': currentView === 'overview'
       }"
-         >
-      <mat-icon class="second-sidenav-icon" > account_tree </mat-icon>
+    >
+      <mat-icon class="second-sidenav-icon"> account_tree </mat-icon>
 
-      <span >{{ 'action.overview' | translate }}</span>
+      <span>{{ 'action.overview' | translate }}</span>
     </div>
 
     <!--Sample Prototypes-->
     <div
-        class="second-sidenav-options clickable mt-15"
-        (click)="openView('sample')"
-        [ngClass]="{
+      class="second-sidenav-options clickable mt-15"
+      (click)="openView('sample')"
+      [ngClass]="{
         'second-sidenav__selected': currentView === 'sample'
-      }" >
-      <mat-icon class="second-sidenav-icon" > account_tree </mat-icon>
+      }"
+    >
+      <mat-icon class="second-sidenav-icon"> account_tree </mat-icon>
 
-      <span >{{ 'action.samplePrototypes' | translate }}</span>
+      <span>{{ 'action.samplePrototypes' | translate }}</span>
     </div>
-
-
   </mat-sidenav>
 
   <mat-sidenav-content class="page-content">
@@ -66,9 +65,9 @@
       >
         {{ 'action.edit' | translate }}
       </button>
-      <!--Create button-->
+      <!--Start new iteration-->
       <button
-        *ngIf="tasks[0]?.status === StatusEnum.Closed || tasks.length === 0"
+        *ngIf="tasks[0]?.status === StatusEnum.Closed || ((task | async) === undefined && tasks.length === 0)"
         mat-raised-button
         color="black"
         (click)="openTaskForm()"
@@ -100,36 +99,48 @@
     <ng-container [ngSwitch]="currentView">
       <!--Overview-->
       <ng-container *ngSwitchCase="'overview'">
-            <span
-                class="margin-right-auto"
-                *ngIf="tasks[0]?.status === StatusEnum.Closed || tasks.length === 0"
-            >You can create new task from <em>Start New Iteration</em> button.</span
-            >
+        <span
+          class="margin-right-auto"
+          *ngIf="tasks[0]?.status === StatusEnum.Closed || tasks.length === 0"
+          >You can create new task from
+          <em>Start New Iteration</em> button.</span
+        >
         <!--Task detail component-->
         <app-task-detail
-            class="full-width"
-            *ngIf="task | async as t"
-            [task]="t"
+          class="full-width"
+          *ngIf="task | async as t"
+          [task]="t"
         ></app-task-detail>
 
         <div class="mt-30">
+          <!--Image Prototype-->
           <app-image-prototype
-              *ngIf="(task | async)?.prototypeFormat === PrototypeFormatEnum.Image"
-              [task]="task"
+            *ngIf="
+              (task | async)?.prototypeFormat === PrototypeFormatEnum.Image
+            "
+            [task]="task"
           >
           </app-image-prototype>
+          <!--Iframe Prototype-->
           <app-iframe-prototype
-              *ngIf="(task | async)?.prototypeFormat === PrototypeFormatEnum.Iframe"
-              [task]="task"
+            *ngIf="
+              (task | async)?.prototypeFormat === PrototypeFormatEnum.Iframe
+            "
+            [task]="task"
           >
           </app-iframe-prototype>
+          <!--Text Prototype-->
+          <app-text-prototype
+            *ngIf="(task | async)?.prototypeFormat === PrototypeFormatEnum.Text"
+            [task]="task"
+          >
+          </app-text-prototype>
         </div>
       </ng-container>
       <!--Sample Prototypes-->
       <ng-container *ngSwitchCase="'sample'">
         <app-sample-prototype></app-sample-prototype>
       </ng-container>
-
     </ng-container>
   </mat-sidenav-content>
 </mat-sidenav-container>

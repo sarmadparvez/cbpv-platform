@@ -1,55 +1,53 @@
-import { Component, Inject, Input, NgModule } from '@angular/core';
+import { Component, Inject, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Task, TasksService, UpdateTaskDto } from '../../../../gen/api/task';
-import { firstValueFrom } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatButtonModule } from '@angular/material/button';
+import { firstValueFrom } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
-export interface IframeFormData {
+export interface TextFormData {
   task: Task;
   splitNo: number;
 }
-
 @Component({
-  selector: 'app-iframe-form',
-  templateUrl: './iframe-form.component.html',
-  styleUrls: ['./iframe-form.component.scss'],
+  selector: 'app-text-form',
+  templateUrl: './text-form.component.html',
+  styleUrls: ['./text-form.component.scss'],
 })
-export class IframeFormComponent {
+export class TextFormComponent {
   control = new FormControl(null, Validators.required);
-
   constructor(
     private readonly taskService: TasksService,
     private translateService: TranslateService,
     private readonly snackBar: MatSnackBar,
-    private dialog: MatDialogRef<IframeFormComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: IframeFormData,
+    private dialog: MatDialogRef<TextFormComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: TextFormData,
   ) {
     if (this.data.splitNo === 1) {
-      this.control.setValue(this.data.task.iframeUrl1);
+      this.control.setValue(this.data.task.textualDescription1);
     } else {
-      this.control.setValue(this.data.task.iframeUrl2);
+      this.control.setValue(this.data.task.textualDescription2);
     }
   }
 
-  async saveLink() {
+  async saveDescription() {
     if (this.control.invalid) {
       return;
     }
     const request = <UpdateTaskDto>{};
     if (this.data.splitNo === 1) {
-      request.iframeUrl1 = this.control.value;
+      request.textualDescription1 = this.control.value;
     } else {
-      request.iframeUrl2 = this.control.value;
+      request.textualDescription2 = this.control.value;
     }
     let message = 'notification.update';
     try {
@@ -57,7 +55,7 @@ export class IframeFormComponent {
       this.dialog.close(this.control.value);
     } catch (err) {
       message = 'error.update';
-      console.log('Unable to save iframe url ', err);
+      console.log('Unable to save textual description', err);
     } finally {
       // Message
       this.snackBar.open(this.translateService.instant(message), '', {
@@ -71,12 +69,12 @@ export class IframeFormComponent {
   imports: [
     CommonModule,
     MatDialogModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
     TranslateModule,
-    MatButtonModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
     MatInputModule,
+    MatButtonModule,
   ],
-  declarations: [IframeFormComponent],
+  declarations: [TextFormComponent],
 })
-export class IframeFormModule {}
+export class TextFormModule {}
