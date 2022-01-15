@@ -31,7 +31,7 @@
         'second-sidenav__selected': currentView === 'overview'
       }"
     >
-      <mat-icon class="second-sidenav-icon"> account_tree </mat-icon>
+      <mat-icon class="second-sidenav-icon"> visibility </mat-icon>
 
       <span>{{ 'action.overview' | translate }}</span>
     </div>
@@ -44,7 +44,7 @@
         'second-sidenav__selected': currentView === 'sample'
       }"
     >
-      <mat-icon class="second-sidenav-icon"> account_tree </mat-icon>
+      <mat-icon class="second-sidenav-icon"> apps </mat-icon>
 
       <span>{{ 'action.samplePrototypes' | translate }}</span>
     </div>
@@ -67,7 +67,10 @@
       </button>
       <!--Start new iteration-->
       <button
-        *ngIf="tasks[0]?.status === StatusEnum.Closed || ((task | async) === undefined && tasks.length === 0)"
+        *ngIf="
+          tasks[0]?.status === StatusEnum.Closed ||
+          ((task | async) === undefined && tasks.length === 0)
+        "
         mat-raised-button
         color="black"
         (click)="openTaskForm()"
@@ -136,6 +139,11 @@
           >
           </app-text-prototype>
         </div>
+        <!--Questionnaire-->
+        <div class="mt-30">
+          <app-questionnaire [task]="task"> </app-questionnaire>
+        </div>
+
       </ng-container>
       <!--Sample Prototypes-->
       <ng-container *ngSwitchCase="'sample'">

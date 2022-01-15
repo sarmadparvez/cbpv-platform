@@ -1,5 +1,6 @@
 {
   "action": {
+    "add": "Add",
     "save": "Save",
     "delete": "Delete",
     "edit": "Edit",
@@ -9,10 +10,12 @@
     "overview": "Overview",
     "editPrototypeLink": "Edit Prototype Link",
     "editText": "Edit Prototype Text",
+    "editQuestionnaire": "Edit Questionnaire",
     "samplePrototypes": "Sample Prototypes",
     "textDescription": "Text Description"
   },
   "name": {
+    "answerType": "Answer Type",
     "budget": "Total budget (€)",
     "basicTest": "Basic Test",
     "splitTest": "Split Test",
@@ -37,7 +40,9 @@
     "incentive": "Per Crowdworker incentive (€)",
     "draft": "Draft",
     "open": "Open",
-    "closed": "Closed"
+    "closed": "Closed",
+    "questionnaire": "Questionnaire",
+    "question": "Question"
   },
   "notification": {
     "registerSuccess": "User registered successfully, please proceed with login.",
@@ -67,9 +72,17 @@
     "basic": "Basic",
     "split": "Split"
   },
+  "questionType": {
+    "text": "Text",
+    "radio": "Radio buttons",
+    "star-rating": "Start rating",
+    "thumbs-rating": "Thumbs up/down rating"
+  },
   "note": {
+    "askQuestions": "Ask questions about your Prototype. This questionnaire will be presented to Crowdworkers to get feedback for your Prototype.",
     "noData": "No data available",
     "crowdCriteria": "Set the criteria for matching this Task with Crowdworkers. Only the Crowdworkers matching the specified criteria will be able to see this Task.",
+    "enterQuestion": "Please enter your question and select the answer type.",
     "iframeTask": "The Prototype will be embedded as an iframe in the platform. You will need to provide a link for the prototype.",
     "iframeTaskSubtitle": "Link from a third party prototyping tool",
     "imageTask": "The Prototype will be uploaded in the form of images. The images correspond to different screens in your Application.",
@@ -89,6 +102,8 @@
     "splitIframeUpload1": "Please provide link for your Prototype 1.",
     "splitIframeUpload2": "Please provide link for your Prototype 2.",
     "splitText1": "Please provide textual description of your Prototype 1.",
-    "splitText2": "Please provide textual description of your Prototype 2."
+    "splitText2": "Please provide textual description of your Prototype 2.",
+    "questionnaire": "Add a Questionnaire to get feedback on your Prototype.",
+    "radioOptionsHint": "Provide radio button options. Each entry in this field will be a radio button available as an option to be selected when answering this question. To create an option, enter text in this field and press enter button."
   }
 }

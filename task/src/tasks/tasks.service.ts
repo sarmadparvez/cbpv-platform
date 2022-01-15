@@ -247,6 +247,11 @@ export class TasksService {
     task.id = id;
     // using save instead of update here to also add/remove the relationships
     await this.taskRepository.save(task);
+    if (updateTaskDto.questions) {
+      return this.taskRepository.findOne(id, {
+        relations: ['questions'],
+      });
+    }
     return this.taskRepository.findOne(id);
   }
 

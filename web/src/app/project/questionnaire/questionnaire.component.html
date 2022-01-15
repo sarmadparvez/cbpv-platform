@@ -1,0 +1,13 @@
+<mat-card>
+  <mat-card-title>{{ 'name.questionnaire' | translate }}</mat-card-title>
+  <mat-card-content>
+    <!--Textual description 1-->
+    <p class="text-note">
+        {{ 'note.questionnaire' | translate }}
+    </p>
+    <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
+      <a mat-button color="primary" (click)="openEditDialog()" >{{ 'action.editQuestionnaire' | translate }}</a>
+    </div>
+
+  </mat-card-content>
+</mat-card>
