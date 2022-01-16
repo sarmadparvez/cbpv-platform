@@ -47,15 +47,16 @@
 <!-- Image uploader and Viewer-->
 <ng-template #imageUploadViewer let-data="data">
   <app-image-upload
+      *ngIf="(task | async).status === TaskStatusEnum.Draft"
     [uniqueId]="data.splitNumber"
     (completeEvent)="findAllImages(data.splitNumber)"
     [taskId]="(task | async)?.id"
   ></app-image-upload>
 
   <app-image-viewer
-  [images]="(images.get(data.splitNumber) | async) || []"
-  (deleteEvent)="deleteImage($event, data.splitNumber)"
+      [readonly]="(task | async).status !== TaskStatusEnum.Draft"
+      [images]="(images.get(data.splitNumber) | async) || []"
+      (deleteEvent)="deleteImage($event, data.splitNumber)"
   >
-
   </app-image-viewer>
 </ng-template>

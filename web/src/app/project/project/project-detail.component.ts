@@ -28,6 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SamplePrototypeModule } from '../sample-prototype/sample-prototype.component';
 import { TextPrototypeModule } from '../text-prototype/text-prototype.component';
 import { QuestionnaireModule } from '../questionnaire/questionnaire.component';
+import { parseError } from '../../error/parse-error';
 
 const views = ['overview', 'sample'] as const;
 type View = typeof views[number];
@@ -134,12 +135,13 @@ export class ProjectDetailComponent {
     this.router.navigate(['projects']);
   }
 
-  async deleteTask(id: string) {
+  async deleteTask() {
+    const taskToDelete = await firstValueFrom(this.task);
     let message = '';
     try {
-      await firstValueFrom(this.taskService.remove(id));
+      await firstValueFrom(this.taskService.remove(taskToDelete.id));
       message = this.translateService.instant('notification.delete');
-      const taskIndex = this.tasks.findIndex(t => t.id === id);
+      const taskIndex = this.tasks.findIndex(t => t.id === taskToDelete.id);
       this.tasks.splice(taskIndex, 1);
       this.task.next(this.tasks[0]);
       this.taskControl.setValue(this.tasks[0]);
@@ -158,6 +160,29 @@ export class ProjectDetailComponent {
       queryParams: { view },
       replaceUrl,
     });
+  }
+
+  async activateTask() {
+    const task = await firstValueFrom(this.task);
+    let message = this.translateService.instant('notification.activate');
+    try {
+      const updatedTask = await firstValueFrom(
+        this.taskService.activate(task.id),
+      );
+      task.status = updatedTask.status;
+      this.task.next(task);
+    } catch (err) {
+      console.log('unable to activate task ', err);
+      message = this.translateService.instant('error.activate');
+      const error = parseError(err);
+      if (error?.message) {
+        message += error.message;
+      }
+    } finally {
+      this.snackBar.open(message, '', {
+        duration: 5000,
+      });
+    }
   }
 }
 

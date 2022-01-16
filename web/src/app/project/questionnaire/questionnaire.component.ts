@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FlexModule } from '@angular/flex-layout';
 import { MatDialog } from '@angular/material/dialog';
 import { QuestionnaireFormComponent } from '../questionnaire-form/questionnaire-form.component';
+import { QuestionnaireDetailModule } from '../questionnaire-detail/questionnaire-detail.component';
 
 @Component({
   selector: 'app-questionnaire',
@@ -16,6 +17,7 @@ import { QuestionnaireFormComponent } from '../questionnaire-form/questionnaire-
 })
 export class QuestionnaireComponent {
   @Input() task: ReplaySubject<Task>;
+  TaskStatusEnum = Task.StatusEnum;
 
   constructor(private readonly dialog: MatDialog) {}
 
@@ -44,6 +46,7 @@ export class QuestionnaireComponent {
     TranslateModule,
     MatButtonModule,
     FlexModule,
+    QuestionnaireDetailModule,
   ],
   declarations: [QuestionnaireComponent],
   exports: [QuestionnaireComponent],

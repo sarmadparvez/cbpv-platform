@@ -1,6 +1,7 @@
 {
   "action": {
     "add": "Add",
+    "activate": "Activate",
     "save": "Save",
     "delete": "Delete",
     "edit": "Edit",
@@ -15,6 +16,7 @@
     "textDescription": "Text Description"
   },
   "name": {
+    "answer": "Answer",
     "answerType": "Answer Type",
     "budget": "Total budget (€)",
     "basicTest": "Basic Test",
@@ -45,6 +47,7 @@
     "question": "Question"
   },
   "notification": {
+    "activate": "Task activated Successfully. You cannot edit the task anymore.",
     "registerSuccess": "User registered successfully, please proceed with login.",
     "create": "Created successfully",
     "update": "Updated Successfully",
@@ -52,6 +55,7 @@
     "imageUpload": "Image(s) uploaded successfully"
   },
   "error": {
+    "activate": "Unable to activate Task. ",
     "required": "This field is required",
     "passwordMismatch": "The passwords do not match",
     "passwordPattern": "Password should be at-least 8 characters long, must contain one lower case and one upper case letter, and one digit.",

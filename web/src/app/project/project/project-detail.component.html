@@ -77,12 +77,23 @@
       >
         Start New Iteration
       </button>
+      <!--Activate button-->
+      <button
+          mat-raised-button
+          color="black"
+          *ngIf="(task | async)?.status === StatusEnum.Draft"
+          (click)="activateTask()"
+      >
+        {{ 'action.activate' | translate }}
+      </button>
       <!--close button-->
       <button mat-button (click)="routeToProjects()">
         {{ 'action.cancel' | translate }}
       </button>
       <!-- Additional options -->
-      <button mat-icon-button [mat-menu-trigger-for]="additionalOptions">
+      <button mat-icon-button [mat-menu-trigger-for]="additionalOptions"
+              *ngIf="(task | async)?.status === StatusEnum.Draft"
+      >
         <mat-icon>more_vert</mat-icon>
       </button>
       <!--Menu-->
@@ -91,7 +102,7 @@
         <button
           mat-menu-item
           *ngIf="(task | async)?.status === StatusEnum.Draft"
-          (click)="(taskControl.value.id)"
+          (click)="deleteTask()"
         >
           <span>
             {{ 'action.delete' | translate }}
@@ -140,7 +151,9 @@
           </app-text-prototype>
         </div>
         <!--Questionnaire-->
-        <div class="mt-30">
+        <div class="mt-30"
+             *ngIf="(task | async)"
+        >
           <app-questionnaire [task]="task"> </app-questionnaire>
         </div>
 

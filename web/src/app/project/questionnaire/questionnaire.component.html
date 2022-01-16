@@ -3,11 +3,15 @@
   <mat-card-content>
     <!--Textual description 1-->
     <p class="text-note">
-        {{ 'note.questionnaire' | translate }}
+      {{ 'note.questionnaire' | translate }}
     </p>
-    <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
-      <a mat-button color="primary" (click)="openEditDialog()" >{{ 'action.editQuestionnaire' | translate }}</a>
-    </div>
+      <a mat-button color="primary" (click)="openEditDialog()"
+         *ngIf="(task | async)?.status === TaskStatusEnum.Draft"
+      >{{
+        'action.editQuestionnaire' | translate
+      }}</a>
 
+    <app-questionnaire-detail [readonly]="true" [task]="task">
+    </app-questionnaire-detail>
   </mat-card-content>
 </mat-card>

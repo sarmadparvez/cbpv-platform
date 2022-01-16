@@ -26,6 +26,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class IframePrototypeComponent implements OnInit {
   @Input() task: ReplaySubject<Task>;
+  TaskStatusEnum = Task.StatusEnum;
   TestTypeEnum = TestTypeEnum;
   figmaEmbedUrl = 'https://www.figma.com/embed?embed_host=share&url=';
   safeIframeUrl1 = new ReplaySubject<SafeResourceUrl>(1);

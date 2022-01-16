@@ -26,6 +26,7 @@ import { Feedback } from '../feedbacks/entities/feedback.entity';
 import { BatchCreateImagesDto } from './dto/batch-create-images.dto';
 import { Image } from './entities/image.entity';
 import cloudinaryConfig from '../config/cloudinary';
+import { Question } from './entities/question.entity';
 
 cloudinary.config(cloudinaryConfig().cloudinary.config);
 
@@ -117,7 +118,7 @@ export class TasksService {
       Action.Read,
       this.projectRepository,
     );
-    return this.taskRepository.find({
+    const tasks = await this.taskRepository.find({
       relations: ['skills', 'countries', 'questions'],
       where: {
         projectId,
@@ -126,6 +127,10 @@ export class TasksService {
         dateCreated: 'DESC',
       },
     });
+    tasks.forEach((task) => {
+      task.questions = this.sortQuestions(task.questions);
+    });
+    return tasks;
   }
 
   async findOpenTasks() {
@@ -192,6 +197,8 @@ export class TasksService {
     const task = await this.taskRepository.findOneOrFail(id, {
       relations: ['skills', 'countries', 'questions'],
     });
+    // sort questions for the task
+    task.questions = this.sortQuestions(task.questions);
     const ability = contextService.get('userAbility') as AppAbility;
     if (ability.can(Action.Read, task)) {
       // user have explicit permission to Read the task
@@ -223,6 +230,12 @@ export class TasksService {
     );
   }
 
+  private sortQuestions(questions: Question[]) {
+    return questions.sort((a, b) => {
+      return a.order - b.order;
+    });
+  }
+
   async update(id: string, updateTaskDto: UpdateTaskDto) {
     // check if user have permission to update Task
     // a user can only update task which belongs to him (task.userId = user.id)
@@ -248,9 +261,11 @@ export class TasksService {
     // using save instead of update here to also add/remove the relationships
     await this.taskRepository.save(task);
     if (updateTaskDto.questions) {
-      return this.taskRepository.findOne(id, {
+      const updatedTask = await this.taskRepository.findOne(id, {
         relations: ['questions'],
       });
+      updatedTask.questions = this.sortQuestions(updatedTask.questions);
+      return updatedTask;
     }
     return this.taskRepository.findOne(id);
   }
@@ -285,7 +300,7 @@ export class TasksService {
       messages.push('Please set the budget.');
     }
     if (task.incentive > task.budget) {
-      messages.push('Incentive cannot be greater than budget');
+      messages.push('Incentive cannot be greater than budget.');
     }
     if (task.countries.length === 0) {
       messages.push(
@@ -308,23 +323,44 @@ export class TasksService {
     if (this.isIframeFormat(task)) {
       if (
         (this.isBasicTest(task) && !task.iframeUrl1) ||
-        (this.isSplitTest(task) && (!task.iframeUrl1 || !task.iframeUrl2))
+        task.iframeUrl1.trim() === ''
       ) {
-        messages.push('Task cannot be activated without iframe url.');
+        messages.push('Task cannot be activated without a prototype link.');
+      } else if (
+        this.isSplitTest(task) &&
+        (!task.iframeUrl1 ||
+          !task.iframeUrl2 ||
+          task.iframeUrl1.trim() === '' ||
+          task.iframeUrl2.trim() === '')
+      ) {
+        messages.push('Please provide link for the both prototypes.');
       }
     } else if (this.isImageFormat(task)) {
       if (this.isBasicTest(task) && task.images.length === 0) {
         messages.push('At-least one image is required for the basic test.');
-      } else if (this.isSplitTest(task) && task.images.length < 2) {
-        messages.push('At-least two images are required for a split test.');
+      } else if (this.isSplitTest(task)) {
+        const imageForSplit1 = task.images.find((t) => t.splitNumber === 1);
+        const imageForSplit2 = task.images.find((t) => t.splitNumber === 2);
+        if (!imageForSplit1 || !imageForSplit2) {
+          messages.push('Please provide images for both prototypes.');
+        }
       }
     } else if (this.isTextFormat(task)) {
       if (
         (this.isBasicTest(task) && !task.textualDescription1) ||
-        (this.isSplitTest(task) &&
-          (!task.textualDescription1 || !task.textualDescription2))
+        task.textualDescription1.trim() === ''
       ) {
         messages.push('Task cannot be activated without textual description.');
+      } else if (
+        this.isSplitTest(task) &&
+        (!task.textualDescription1 ||
+          task.textualDescription1.trim() === '' ||
+          !task.textualDescription2 ||
+          task.textualDescription2.trim() === '')
+      ) {
+        messages.push(
+          'Please provide textual description for both prototypes.',
+        );
       }
     } else {
       messages.push('The Prototype format must be set');
@@ -333,7 +369,7 @@ export class TasksService {
       throw new HttpException(
         {
           status: HttpStatus.PRECONDITION_FAILED,
-          error: messages,
+          error: messages.join(' '),
         },
         HttpStatus.PRECONDITION_FAILED,
       );

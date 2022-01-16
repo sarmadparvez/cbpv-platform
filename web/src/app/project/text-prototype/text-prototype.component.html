@@ -19,7 +19,9 @@
       </ng-template>
     </p>
     <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
-      <a mat-button color="primary" (click)="openEditDialog(1)" >{{ 'action.editText' | translate }}</a>
+      <a mat-button color="primary" (click)="openEditDialog(1)"
+      *ngIf="(task | async)?.status === TaskStatusEnum.Draft"
+      >{{ 'action.editText' | translate }}</a>
       <ng-container
           *ngTemplateOutlet="textViewer; context: { data: { textualDescription: (task | async)?.textualDescription1 } }"
       ></ng-container>
@@ -36,7 +38,9 @@
       <p class="text-note">{{ 'note.splitText2' | translate }}</p>
 
       <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
-        <a mat-button color="primary" (click)="openEditDialog(2)" >{{ 'action.editText' | translate }}</a>
+        <a mat-button color="primary" (click)="openEditDialog(2)"
+           *ngIf="(task | async)?.status === TaskStatusEnum.Draft"
+        >{{ 'action.editText' | translate }}</a>
         <ng-container
             *ngTemplateOutlet="textViewer; context: { data: { textualDescription: (task | async )?.textualDescription2 }}"
         ></ng-container>

@@ -7,10 +7,10 @@
     <!--Prototype 1-->
     <p class="text-note">
       <ng-container
-          *ngIf="
-        (task | async)?.testType === TestTypeEnum.Basic;
-        else splitIframeUploadNote
-      "
+        *ngIf="
+          (task | async)?.testType === TestTypeEnum.Basic;
+          else splitIframeUploadNote
+        "
       >
         {{ 'note.basicIframeUpload' | translate }}
       </ng-container>
@@ -19,9 +19,18 @@
       </ng-template>
     </p>
     <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
-      <a mat-button color="primary" (click)="openEditDialog(1)" >{{ 'action.editPrototypeLink' | translate }}</a>
+      <a
+        mat-button
+        color="primary"
+        (click)="openEditDialog(1)"
+        *ngIf="(task | async)?.status === TaskStatusEnum.Draft"
+        >{{ 'action.editPrototypeLink' | translate }}</a
+      >
       <ng-container
-          *ngTemplateOutlet="iframeViewer; context: { data: { iframeUrl: safeIframeUrl1 | async } }"
+        *ngTemplateOutlet="
+          iframeViewer;
+          context: { data: { iframeUrl: safeIframeUrl1 | async } }
+        "
       ></ng-container>
     </div>
 
@@ -36,9 +45,18 @@
       <p class="text-note">{{ 'note.splitIframeUpload2' | translate }}</p>
 
       <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
-        <a mat-button color="primary" (click)="openEditDialog(2)" >{{ 'action.editPrototypeLink' | translate }}</a>
+        <a
+          mat-button
+          color="primary"
+          (click)="openEditDialog(2)"
+          *ngIf="(task | async)?.status === TaskStatusEnum.Draft"
+          >{{ 'action.editPrototypeLink' | translate }}</a
+        >
         <ng-container
-            *ngTemplateOutlet="iframeViewer; context: { data: { iframeUrl: safeIframeUrl2 | async } }"
+          *ngTemplateOutlet="
+            iframeViewer;
+            context: { data: { iframeUrl: safeIframeUrl2 | async } }
+          "
         ></ng-container>
       </div>
     </ng-container>
@@ -49,8 +67,8 @@
 <ng-template #iframeViewer let-data="data">
   <!--Iframe-->
   <iframe
-      class="mb-20"
-      *ngIf="data.iframeUrl"
+    class="mb-20"
+    *ngIf="data.iframeUrl"
     height="450"
     width="800"
     [src]="data.iframeUrl"

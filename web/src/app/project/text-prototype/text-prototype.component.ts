@@ -21,6 +21,7 @@ import {
 export class TextPrototypeComponent {
   @Input() task: ReplaySubject<Task>;
   TestTypeEnum = CreateTaskDto.TestTypeEnum;
+  TaskStatusEnum = Task.StatusEnum;
   constructor(private readonly dialog: MatDialog) {}
 
   async openEditDialog(splitNum: number) {

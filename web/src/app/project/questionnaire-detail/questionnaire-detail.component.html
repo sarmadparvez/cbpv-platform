@@ -1,0 +1,42 @@
+<ng-container *ngFor="let question of (task | async).questions; let i = index">
+  <div fxLayout
+       fxLayoutGap="10px"
+       class="mt-20"
+  >
+    <strong>Q{{ i + 1 }}: </strong>
+    <!--Question-->
+    <span>{{ question.description | translate }}</span>
+  </div>
+  <!--Answer-->
+  <div class="answer-container mt-10" [ngSwitch]="question.type">
+    <!--Description -->
+    <mat-form-field class="full-width" appearance="outline" *ngSwitchCase="QuestionType.Text"  >
+      <mat-label>{{ 'name.answer' | translate }}</mat-label>
+      <textarea [disabled]="readonly" matInput> </textarea>
+    </mat-form-field>
+
+  <!--Radio answer-->
+        <mat-radio-group fxLayout fxLayoutGap="10px"  *ngSwitchCase="QuestionType.Radio" [disabled]="readonly"
+                         [disabled]="readonly"
+        >
+          <mat-radio-button
+              *ngFor="let option of question.radioOptions"
+              value="{{ option }}"
+          >{{ option }}</mat-radio-button
+          >
+        </mat-radio-group>
+
+    <!--Star rating-->
+
+    <ngx-material-rating *ngSwitchCase="QuestionType.StarRating" [color]="'primary'" [disabled]="readonly"
+                         [readonly]="readonly"  [max]="5">
+    </ngx-material-rating>
+    <div fxLayout fxLayoutGap="10px" *ngSwitchCase="QuestionType.ThumbsRating">
+      <mat-icon fontSet="material-icons-outlined">thumb_up</mat-icon>
+      <mat-icon [fontSet]="'material-icons-outlined'">thumb_down</mat-icon>
+    </div>
+
+  </div>
+
+
+</ng-container>

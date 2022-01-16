@@ -24,6 +24,7 @@ type GalleryImage = NgxGalleryImage & {
 export class ImagePrototypeComponent implements OnInit {
   @Input() task: ReplaySubject<Task>;
   TestTypeEnum = TestTypeEnum;
+  TaskStatusEnum = Task.StatusEnum;
   images = new Map<number, ReplaySubject<GalleryImage[]>>();
 
   constructor(
@@ -92,10 +93,14 @@ export class ImagePrototypeComponent implements OnInit {
   }
 
   async deleteImage(deleteIndex: number, splitNumber: number) {
-    const imagesSubject = this.images.get(splitNumber);
-
-    const images = await firstValueFrom(imagesSubject);
     const task = await firstValueFrom(this.task);
+    if (task.status !== Task.StatusEnum.Draft) {
+      return;
+    }
+
+    const imagesSubject = this.images.get(splitNumber);
+    const images = await firstValueFrom(imagesSubject);
+
     if (images[deleteIndex]) {
       try {
         const response = await firstValueFrom(

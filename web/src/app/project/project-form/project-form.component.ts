@@ -51,17 +51,17 @@ export class ProjectFormComponent {
     let errorMsg = '';
     try {
       if (!this.project) {
+        errorMsg = 'error.create';
+        successMsg = 'notification.create';
         const request = <CreateProjectDto>{ ...this.form.value };
         await firstValueFrom(this.projectService.create(request));
-        successMsg = 'notification.create';
-        errorMsg = 'error.create';
       } else {
+        successMsg = 'notification.update';
+        errorMsg = 'error.update';
         const request = <UpdateProjectDto>{ ...this.form.value };
         await firstValueFrom(
           this.projectService.update(this.project.id, request),
         );
-        successMsg = 'notification.update';
-        errorMsg = 'error.update';
       }
       // success message
       this.snackBar.open(this.translateService.instant(successMsg), '', {

@@ -26,12 +26,21 @@ import {
 export class ImageViewerComponent implements OnInit {
   options: NgxGalleryOptions[];
   @Input() images: NgxGalleryImage[] = [];
+
+  @Input() readonly: boolean;
+
   @Output() deleteEvent = new EventEmitter<number>();
 
-  constructor() {}
+  constructor() {
+    Window['ivself'] = this;
+  }
 
   ngOnInit(): void {
     this.removeProblematicStyle();
+    this.setOptions();
+  }
+
+  setOptions() {
     const actions: NgxGalleryAction[] = [
       {
         icon: 'fa fa-trash',
@@ -41,10 +50,13 @@ export class ImageViewerComponent implements OnInit {
         },
       },
     ];
-    const options: NgxGalleryOptions = {
-      imageActions: actions,
-      thumbnailActions: actions,
-    };
+    let options: NgxGalleryOptions = {};
+    if (!this.readonly) {
+      options = {
+        imageActions: actions,
+        thumbnailActions: actions,
+      };
+    }
     this.options = [
       {
         width: '600px',
