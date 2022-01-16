@@ -43,6 +43,7 @@ import {
   CreateWithSSODto,
   Skill,
   SkillsService,
+  UpdateUserDto,
   UsersService,
 } from '../../../../gen/api/admin';
 import GenderEnum = CreateWithSSODto.GenderEnum;
@@ -125,14 +126,14 @@ export class RegisterComponent implements OnInit {
     experience: [null, Validators.required],
   });
   constructor(
-    private readonly route: ActivatedRoute,
-    private readonly fb: FormBuilder,
-    private readonly translateService: TranslateService,
-    private readonly skillService: SkillsService,
-    private readonly countryService: CountriesService,
-    private readonly userService: UsersService,
-    private readonly snackBar: MatSnackBar,
-    private readonly router: Router,
+    protected readonly route: ActivatedRoute,
+    protected readonly fb: FormBuilder,
+    protected readonly translateService: TranslateService,
+    protected readonly skillService: SkillsService,
+    protected readonly countryService: CountriesService,
+    protected readonly userService: UsersService,
+    protected readonly snackBar: MatSnackBar,
+    protected readonly router: Router,
   ) {
     Window['rcself'] = this;
   }
@@ -193,7 +194,7 @@ export class RegisterComponent implements OnInit {
 
   async registerWithUsername() {
     const { passwords, country, skills, ...formData } = this.form.value;
-    let request = <CreateUserDto>{
+    const request = <CreateUserDto>{
       ...formData,
     };
     this.fillDataInRequest(request);
@@ -221,7 +222,9 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  private fillDataInRequest(request: CreateUserDto | CreateWithSSODto) {
+  protected fillDataInRequest(
+    request: CreateUserDto | CreateWithSSODto | UpdateUserDto,
+  ) {
     request.birthDate = dateToDBDateString(
       new Date(this.form.controls.birthDate.value),
     );
@@ -266,7 +269,7 @@ export class RegisterComponent implements OnInit {
     }
     const filterValue = value.toLowerCase();
     const skillSelected = (skill: Skill) => {
-      return this.selectedSkills.includes(skill);
+      return this.selectedSkills.findIndex(s => s.id === skill.id) > -1;
     };
     return this.allSkills
       .filter(skill => !skillSelected(skill))

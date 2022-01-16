@@ -27,7 +27,7 @@
             {{ user.firstName + ' ' + user.lastName }}
         </div>
 
-        <!--User account button-->
+        <!--User button-->
         <button
             mat-icon-button
             [matMenuTriggerFor]="userMenu"
@@ -40,6 +40,14 @@
             ></ngx-avatars>
         </button>
         <mat-menu #userMenu="matMenu" class="">
+            <!-- Account button -->
+            <button mat-menu-item (click)="showProfile()">
+                <mat-icon> account_circle </mat-icon>
+                <span>
+            Profile
+          </span>
+            </button>
+            <!--Logout button-->
             <button mat-menu-item (click)="onLogout()">
                 <mat-icon> exit_to_app </mat-icon>
                 <span>

@@ -1,3 +1,61 @@
 <div class="page-content">
-    home-page works!
+  <h1>Welcome to Crowd-Based Prototype Validation Platform</h1>
+
+  <ng-container
+    *ngIf="
+      [RolesEnum.Crowdworker, RolesEnum.Developer] | hasRoles | async;
+      else singleRole
+    "
+  >
+    <p>
+      You have <strong>Developer</strong> and
+      <strong>Crowdworker</strong> roles.
+    </p>
+
+    <ul>
+      <li class="list-item">
+        You can create Prototypes as a Developer to get feedback on them.
+      </li>
+
+      <li class="list-item">
+        You can also give feedback on other Prototypes as a Crowdworker.
+      </li>
+    </ul>
+
+    <p>
+      To start creating your Prototypes, go to Projects from the sidebar. Create
+      a Project and start a new Task iteration in it.
+    </p>
+  </ng-container>
+
+  <ng-template #singleRole>
+    <ng-container *ngIf="[RolesEnum.Developer] | hasRoles | async">
+      <p>You have <strong>Developer</strong> role.</p>
+
+      <ul>
+        <li class="list-item">
+          You can create Prototypes as a Developer to get feedback on them.
+        </li>
+      </ul>
+
+      <p>
+        To start creating your Prototypes, go to Projects from the sidebar.
+        Create a Project and start a new Task iteration in it.
+      </p>
+    </ng-container>
+
+    <ng-container *ngIf="[RolesEnum.Crowdworker] | hasRoles | async">
+      <p>You have <strong>Crowdworker</strong> role.</p>
+
+      <ul>
+        <li class="list-item">
+          You can give feedback on other Prototypes as a Crowdworker.
+        </li>
+      </ul>
+
+      <p>
+       <strong>Note:</strong> You cannot give feedbacks yet. This feature is under development.
+      </p>
+    </ng-container>
+  </ng-template>
 </div>

@@ -8,7 +8,7 @@
         <div fxLayout fxLayoutGap="10px">
           <!--First name-->
           <mat-form-field class="full-width" appearance="outline">
-            <mat-label>First name</mat-label>
+            <mat-label>{{'name.firstName' | translate}}</mat-label>
             <input formControlName="firstName" matInput>
             <mat-error *ngIf="form.get('firstName').hasError('required')">
              {{ 'error.required' | translate }}
@@ -16,7 +16,7 @@
           </mat-form-field>
           <!--Last Name-->
           <mat-form-field class="full-width" appearance="outline">
-            <mat-label>Last name</mat-label>
+            <mat-label>{{'name.lastName' | translate}}</mat-label>
             <input formControlName="lastName" matInput>
             <mat-error *ngIf="form.get('lastName').hasError('required')">
               {{ 'error.required' | translate }}
@@ -26,7 +26,7 @@
         <div fxLayout fxLayoutGap="10px" *ngIf="!this.ssoProfileId" class="credentials-row">
           <!--Username -->
           <mat-form-field class="full-width" appearance="outline">
-            <mat-label>Username</mat-label>
+            <mat-label>{{'name.username' | translate}}</mat-label>
             <input formControlName="username" matInput >
             <mat-error *ngIf="form.get('username').hasError('required')">
               {{ 'error.required' | translate }}
@@ -35,7 +35,7 @@
           <ng-container formGroupName="passwords">
             <!--Password-->
             <mat-form-field class="full-width" appearance="outline">
-              <mat-label>Password</mat-label>
+              <mat-label>{{'name.password' | translate}}</mat-label>
               <input type="password" formControlName="password" matInput>
               <mat-error *ngIf="form.get('passwords').get('password').hasError('required')">
                 {{ 'error.required' | translate }}
@@ -46,7 +46,7 @@
             </mat-form-field>
             <!--Repeat password-->
             <mat-form-field class="full-width" appearance="outline">
-              <mat-label>Confirm password</mat-label>
+              <mat-label>{{'name.confirmPassword' | translate}}</mat-label>
               <input type="password" formControlName="repeatPassword" [errorStateMatcher]="customMatcher" matInput>
               <mat-error *ngIf="form.get('passwords').get('repeatPassword').hasError('required')">
                 {{ 'error.required' | translate }}
@@ -60,7 +60,7 @@
         <div fxLayout fxLayoutGap="10px">
           <!--Birthdate-->
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Birthdate</mat-label>
+            <mat-label>{{'name.birthdate' | translate}}</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="birthDate">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
@@ -71,7 +71,7 @@
 
           <!--Gender-->
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Gender</mat-label>
+            <mat-label>{{'name.gender' | translate}}</mat-label>
             <mat-select formControlName="gender" >
               <mat-option [value]="GenderEnum.Male">
                 {{GenderEnum.Male}}
@@ -88,13 +88,13 @@
         <div fxLayout fxLayoutGap="10px">
           <!--Roles-->
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Role(s)</mat-label>
+            <mat-label>{{'name.roles' | translate}}</mat-label>
             <mat-select formControlName="roles" multiple>
               <mat-option [value]="RolesEnum.Developer">
-                {{RolesEnum.Developer}}
+                {{'role.'+ RolesEnum.Developer | translate}}
               </mat-option>
               <mat-option [value]="RolesEnum.Crowdworker">
-                {{RolesEnum.Crowdworker}}
+                {{'role.'+RolesEnum.Crowdworker | translate}}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="form.get('roles').hasError('required')">
@@ -103,7 +103,7 @@
           </mat-form-field>
           <!-- Country -->
           <mat-form-field class="full-width" appearance="outline">
-            <mat-label>Country</mat-label>
+            <mat-label>{{'name.country' | translate}}</mat-label>
             <input type="text"
                    placeholder="Select one"
                    matInput
@@ -122,7 +122,7 @@
         <div fxLayout fxLayoutGap="10px">
           <!--Skills-->
           <mat-form-field class="full-width" appearance="outline" fxFlex="70%">
-            <mat-label>Skill(s) *</mat-label>
+            <mat-label>{{'name.skills' | translate}} *</mat-label>
             <mat-chip-list #chipList formControlName="skills" >
               <mat-chip
                   *ngFor="let skill of selectedSkills"
@@ -152,15 +152,14 @@
             </mat-error>
           </mat-form-field>
           <!--Experience-->
-          <mat-form-field appearance="outline">
-            <mat-label> Experience (Years) </mat-label>
+          <mat-form-field appearance="outline" fxFlex="30%">
+            <mat-label> {{'name.experience' | translate}} </mat-label>
             <input type="number" min="0" formControlName="experience" matInput />
             <mat-error *ngIf="form.controls.experience.hasError('required')">
               {{ 'error.required' | translate }}
             </mat-error>
           </mat-form-field>
         </div>
-
       </form>
     </mat-card-content>
     <mat-card-actions>

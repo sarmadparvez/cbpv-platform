@@ -30,8 +30,7 @@ export class NavToolbarComponent {
   }
 
   async getUser() {
-    const user = await this.authService.getCurrentUser();
-    this.user.next(user);
+    this.user = await this.authService.getCurrentUser();
   }
 
   public onToggleSideNav() {
@@ -40,7 +39,10 @@ export class NavToolbarComponent {
 
   public onLogout() {
     this.authService.logout();
-    this.router.navigate(['login'], { replaceUrl: true });
+  }
+
+  showProfile() {
+    this.router.navigate(['profile']);
   }
 }
 

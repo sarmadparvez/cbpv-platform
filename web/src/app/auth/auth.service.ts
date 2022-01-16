@@ -24,7 +24,7 @@ export class AuthService {
   endpoint = 'auth';
   token: string;
   redirectUrl: string;
-  user: User;
+  user: ReplaySubject<User>;
   logoutObservable = new ReplaySubject<void>(1);
 
   constructor(
@@ -87,17 +87,27 @@ export class AuthService {
     throw new Error('Cannot login without a token');
   }
 
-  async getCurrentUser(forceFetch?: false) {
+  getCurrentUser(forceFetch?: boolean) {
     if (!forceFetch && this.user) {
       // return from cache
       return this.user;
     }
+
+    if (!this.user || forceFetch) {
+      this.user = new ReplaySubject<User>(1);
+    }
     const token: any = jwt_decode(this.getToken());
     if (token.sub) {
-      this.user = await firstValueFrom(this.userService.findOne(token.sub));
+      firstValueFrom(this.userService.findOne(token.sub)).then(resp => {
+        this.user.next(resp);
+      });
       return this.user;
     }
     throw new Error('unable to get user');
+  }
+
+  setCurrentUser(user: User) {
+    this.user.next(user);
   }
 
   public getToken(): string {
@@ -109,6 +119,7 @@ export class AuthService {
     this.user = null;
     this.logoutObservable.next(null);
     this.storage.remove(AUTH_TOKEN);
+    this.router.navigate(['login'], { replaceUrl: true });
   }
 
   public isLogged(): boolean {
