@@ -28,6 +28,7 @@
     "link": "Link",
     "image": "Image",
     "images": "Images",
+    "iframe": "Iframe",
     "text": "Text",
     "minExperience": "Min Experience (Years)",
     "maxExperience": "Max Experience (Years)",
@@ -41,9 +42,11 @@
     "crowdCriteria": "Crowd Matching Criteria",
     "skills": "Skills",
     "status": "Status",
+    "testType": "Test Type",
     "incentive": "Per Crowdworker incentive (€)",
     "draft": "Draft",
     "open": "Open",
+    "options": "Options",
     "closed": "Closed",
     "questionnaire": "Questionnaire",
     "question": "Question",
@@ -54,7 +57,9 @@
     "gender": "Gender",
     "roles": "Role(s)",
     "country": "Country",
-    "experience": "Experience (Years)"
+    "experience": "Experience (Years)",
+    "matchedSkills": "Matched Skills",
+    "matchedCountry": "Matched Country"
   },
   "notification": {
     "activate": "Task activated Successfully. You cannot edit the task anymore.",

@@ -1,6 +1,7 @@
 // Based on a motivation and solution form:
 // https://docs.nestjs.com/exception-filters#throwing-standard-exceptions
 // https://stackoverflow.com/questions/58993405/how-can-i-handle-typeorm-error-in-nestjs
+// The solution is copied and modified as per our requirement.
 import {
   ArgumentsHost,
   Catch,

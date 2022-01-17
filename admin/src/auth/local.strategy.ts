@@ -1,6 +1,7 @@
 /**
  * Based on the example and solution from nestjs documentation
  * https://docs.nestjs.com/security/authentication
+ * The solution is copied and modified as per our requirement.
  */
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';

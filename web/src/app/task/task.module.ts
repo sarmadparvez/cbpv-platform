@@ -1,26 +1,22 @@
-import { ProjectsComponent } from './projects/projects.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { AuthGuard } from '../auth/auth.guard';
-import { ProjectBuilderComponent } from './project-builder/project-builder.component';
+import { TasksComponent } from './tasks/tasks.component';
+import { TaskFeedbackComponent } from './task-feedback/task-feedback.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: ProjectsComponent,
+    component: TasksComponent,
     canActivate: [AuthGuard],
   },
   {
-    path: ':projectId',
-    component: ProjectBuilderComponent,
+    path: ':taskId',
+    component: TaskFeedbackComponent,
     canActivate: [AuthGuard],
   },
 ];
-
-/**
- * Project module
- * */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
 })
-export class ProjectModule {}
+export class TaskModule {}

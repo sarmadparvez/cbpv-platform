@@ -20,6 +20,8 @@ import {
 })
 export class TextPrototypeComponent {
   @Input() task: ReplaySubject<Task>;
+  @Input() readonly: boolean;
+
   TestTypeEnum = CreateTaskDto.TestTypeEnum;
   TaskStatusEnum = Task.StatusEnum;
   constructor(private readonly dialog: MatDialog) {}

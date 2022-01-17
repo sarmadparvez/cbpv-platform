@@ -20,8 +20,7 @@ const routes: Routes = [
   {
     path: 'home',
     component: NavComponent,
-    loadChildren: () =>
-      import('./home/home-page.module').then(m => m.HomePageModule),
+    loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
   },
   {
     path: 'projects',
@@ -33,6 +32,16 @@ const routes: Routes = [
     canActivate: [RouteGuard],
     loadChildren: () =>
       import('./project/project.module').then(m => m.ProjectModule),
+  },
+  {
+    path: 'tasks',
+    component: NavComponent,
+    data: {
+      permission: ActionEnum.Manage,
+      subject: 'Feedback',
+    },
+    canActivate: [RouteGuard],
+    loadChildren: () => import('./task/task.module').then(m => m.TaskModule),
   },
   {
     path: '**',

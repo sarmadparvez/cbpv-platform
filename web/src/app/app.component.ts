@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { PermissionsService } from './iam/permission.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-root',
@@ -9,16 +11,26 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  // test
-  title = 'CBPV Platform';
-
   constructor(
     private readonly matIconRegistry: MatIconRegistry,
     private readonly domSanitizer: DomSanitizer,
     private readonly translateService: TranslateService,
+    private readonly permService: PermissionsService,
+    private spinner: NgxSpinnerService,
   ) {
     this.translateService.setDefaultLang('en');
     this.addSVGIcons();
+    this.subscribeLoadingIndicator();
+  }
+
+  async subscribeLoadingIndicator() {
+    this.permService.loading.subscribe(loading => {
+      if (loading) {
+        this.spinner.show();
+      } else {
+        this.spinner.hide();
+      }
+    });
   }
 
   addSVGIcons() {

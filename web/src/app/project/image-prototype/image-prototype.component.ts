@@ -23,6 +23,7 @@ type GalleryImage = NgxGalleryImage & {
 })
 export class ImagePrototypeComponent implements OnInit {
   @Input() task: ReplaySubject<Task>;
+  @Input() readonly: boolean;
   TestTypeEnum = TestTypeEnum;
   TaskStatusEnum = Task.StatusEnum;
   images = new Map<number, ReplaySubject<GalleryImage[]>>();

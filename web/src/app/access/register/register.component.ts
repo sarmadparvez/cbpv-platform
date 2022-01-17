@@ -339,7 +339,7 @@ export class RegisterComponent implements OnInit {
 })
 export class RegisterModule {}
 
-// based on a solution from https://stackoverflow.com/questions/51605737/confirm-password-validation-in-angular-6/55929868
+// This solution is copied from https://stackoverflow.com/questions/51605737/confirm-password-validation-in-angular-6/55929868
 function matchPassword(group: AbstractControl): ValidationErrors | null {
   let pass = group.get('password').value;
   let confirmPass = group.get('repeatPassword').value;

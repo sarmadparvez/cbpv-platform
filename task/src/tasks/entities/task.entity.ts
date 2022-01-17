@@ -35,8 +35,7 @@ export enum TaskStatus {
 }
 
 // Typeorm return decimal values as string. Here is the workaround for that.
-// Based on solution from https://stackoverflow.com/questions/69872250/typeorm-decimal-column-values-returned-as-strings-instead-of-decimal-numbers
-
+// This solution is copied from https://stackoverflow.com/questions/69872250/typeorm-decimal-column-values-returned-as-strings-instead-of-decimal-numbers
 export class ColumnNumericTransformer {
   to(data: number): number {
     return data;

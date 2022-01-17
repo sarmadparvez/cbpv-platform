@@ -315,23 +315,18 @@ export class TasksService {
     if (task.questions.length === 0) {
       messages.push('Please provide questions.');
     }
-    if (task.minExperience) {
-      messages.push(
-        'Please provide a country for matching the Task with Crowdworkers.',
-      );
-    }
     if (this.isIframeFormat(task)) {
       if (
         (this.isBasicTest(task) && !task.iframeUrl1) ||
-        task.iframeUrl1.trim() === ''
+        task.iframeUrl1?.trim() === ''
       ) {
         messages.push('Task cannot be activated without a prototype link.');
       } else if (
         this.isSplitTest(task) &&
         (!task.iframeUrl1 ||
           !task.iframeUrl2 ||
-          task.iframeUrl1.trim() === '' ||
-          task.iframeUrl2.trim() === '')
+          task.iframeUrl1?.trim() === '' ||
+          task.iframeUrl2?.trim() === '')
       ) {
         messages.push('Please provide link for the both prototypes.');
       }
@@ -348,15 +343,15 @@ export class TasksService {
     } else if (this.isTextFormat(task)) {
       if (
         (this.isBasicTest(task) && !task.textualDescription1) ||
-        task.textualDescription1.trim() === ''
+        task.textualDescription1?.trim() === ''
       ) {
         messages.push('Task cannot be activated without textual description.');
       } else if (
         this.isSplitTest(task) &&
         (!task.textualDescription1 ||
-          task.textualDescription1.trim() === '' ||
+          task.textualDescription1?.trim() === '' ||
           !task.textualDescription2 ||
-          task.textualDescription2.trim() === '')
+          task.textualDescription2?.trim() === '')
       ) {
         messages.push(
           'Please provide textual description for both prototypes.',
@@ -456,12 +451,42 @@ export class TasksService {
   }
 
   async findAllImages(taskId: string, splitNumber: number) {
+    let hasPermission = false;
     // check if user have permission to Read Task
-    const task = await findWithPermissionCheck(
-      taskId,
-      Action.Read,
-      this.taskRepository,
-    );
+    const task = await this.taskRepository.findOneOrFail(taskId);
+    const ability = contextService.get('userAbility') as AppAbility;
+    if (ability.can(Action.Read, task)) {
+      // user have explicit permission to Read the task
+      hasPermission = true;
+    }
+
+    // Check if user implicitly have permission to Read the Task
+    // i.e if user have permission to create Feedback for this Task
+    // first fetch the user from admin service
+    if (!hasPermission && ability.can(Action.Create, Feedback)) {
+      const user = await this.userService.getUser(
+        contextService.get('user').id,
+      );
+      const query = this.getTaskMatchingQuery(user);
+      query.andWhere('task.id = :taskId', {
+        taskId,
+      });
+      const taskMatchedCount = await query.getCount();
+      if (taskMatchedCount > 0) {
+        hasPermission = true;
+      }
+    }
+    if (!hasPermission) {
+      // User does not have permission to read images for this Task
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'You do not have permission to access Images for this Task.',
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     const where = {
       taskId,
     };
@@ -473,7 +498,6 @@ export class TasksService {
     }) as Promise<Image[]>);
     // remove image extension to save transformations count on cloudinary.
     images.forEach((img) => (img.url = img.url.replace(/\.[^/.]+$/, '')));
-
     return images;
   }
 

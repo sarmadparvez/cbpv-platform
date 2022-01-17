@@ -1,5 +1,6 @@
 /**
  * Based on the opensource solution available on github https://gist.github.com/ZakiMohammed/9e5b88146a53570b120a4e9a1244fbeb
+ * The solution is copied and modified as per our requirement.
  */
 
 import {

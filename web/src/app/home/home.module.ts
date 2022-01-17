@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HomePageComponent } from './home-page.component';
+import { HomeComponent } from './home.component';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
 import { RolePipeModule } from '../iam/role.pipe';
@@ -12,13 +12,13 @@ import { TranslateModule } from '@ngx-translate/core';
 export const routes: Routes = [
   {
     path: '',
-    component: HomePageComponent,
+    component: HomeComponent,
     canActivate: [AuthGuard],
   },
 ];
 
 @NgModule({
-  declarations: [HomePageComponent],
+  declarations: [HomeComponent],
   imports: [
     RouterModule.forChild(routes),
     CommonModule,
@@ -26,4 +26,4 @@ export const routes: Routes = [
     TranslateModule,
   ],
 })
-export class HomePageModule {}
+export class HomeModule {}

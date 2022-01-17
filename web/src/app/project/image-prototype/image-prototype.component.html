@@ -5,7 +5,7 @@
   </mat-card-subtitle>
   <mat-card-content>
     <!--Prototype 1-->
-    <p class="text-note">
+    <p class="text-note" *ngIf="!readonly">
       <ng-container
         *ngIf="(task | async)?.testType === TestTypeEnum.Basic; else splitImageUploadNote"
       >
@@ -30,7 +30,7 @@
       }}</mat-card-title>
       <mat-card-subtitle>{{ 'name.prototype2' | translate }}</mat-card-subtitle>
 
-      <p class="text-note">
+      <p class="text-note"  *ngIf="!readonly">
         {{ 'note.splitImageUpload2' | translate }}
       </p>
 
@@ -47,14 +47,14 @@
 <!-- Image uploader and Viewer-->
 <ng-template #imageUploadViewer let-data="data">
   <app-image-upload
-      *ngIf="(task | async).status === TaskStatusEnum.Draft"
+      *ngIf="(task | async).status === TaskStatusEnum.Draft && !readonly"
     [uniqueId]="data.splitNumber"
     (completeEvent)="findAllImages(data.splitNumber)"
     [taskId]="(task | async)?.id"
   ></app-image-upload>
 
   <app-image-viewer
-      [readonly]="(task | async).status !== TaskStatusEnum.Draft"
+      [readonly]="(task | async).status !== TaskStatusEnum.Draft || readonly"
       [images]="(images.get(data.splitNumber) | async) || []"
       (deleteEvent)="deleteImage($event, data.splitNumber)"
   >

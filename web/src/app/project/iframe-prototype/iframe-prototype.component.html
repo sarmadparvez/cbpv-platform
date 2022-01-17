@@ -5,7 +5,7 @@
   </mat-card-subtitle>
   <mat-card-content>
     <!--Prototype 1-->
-    <p class="text-note">
+    <p class="text-note" *ngIf="!readonly">
       <ng-container
         *ngIf="
           (task | async)?.testType === TestTypeEnum.Basic;
@@ -23,7 +23,7 @@
         mat-button
         color="primary"
         (click)="openEditDialog(1)"
-        *ngIf="(task | async)?.status === TaskStatusEnum.Draft"
+        *ngIf="(task | async)?.status === TaskStatusEnum.Draft && !readonly"
         >{{ 'action.editPrototypeLink' | translate }}</a
       >
       <ng-container
@@ -42,14 +42,14 @@
       }}</mat-card-title>
       <mat-card-subtitle>{{ 'name.prototype2' | translate }}</mat-card-subtitle>
 
-      <p class="text-note">{{ 'note.splitIframeUpload2' | translate }}</p>
+      <p class="text-note" *ngIf="!readonly">{{ 'note.splitIframeUpload2' | translate }}</p>
 
       <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
         <a
           mat-button
           color="primary"
           (click)="openEditDialog(2)"
-          *ngIf="(task | async)?.status === TaskStatusEnum.Draft"
+          *ngIf="(task | async)?.status === TaskStatusEnum.Draft && !readonly"
           >{{ 'action.editPrototypeLink' | translate }}</a
         >
         <ng-container

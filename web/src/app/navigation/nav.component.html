@@ -16,7 +16,16 @@
         text="Projects"
         icon="account_tree"
         routerLink="/projects"
-        selectionTriggerRoute="projects"
+        selectionRoute="projects"
+      >
+      </app-nav-menu-item>
+      <!--Tasks-->
+      <app-nav-menu-item
+          *ngIf="Action.Manage | permission: 'Feedback' | async"
+          text="Evaluate"
+          icon="account_tree"
+          routerLink="/tasks"
+          selectionRoute="tasks"
       >
       </app-nav-menu-item>
     </mat-nav-list>

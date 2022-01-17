@@ -109,7 +109,10 @@ export class TasksController {
   }
 
   /**
-   * Get a Task. The calling user must have Read permission the Task.
+   * Get a Task. The calling user must have Read permission the Task either explicitly or implicitly.
+   * Explicit Permission: E.g Given by a role e.g developer role
+   * Implicit Permission: The task is open for evaluation and its criteria matches calling user profile.
+   * and calling user have permission to create Feedback.
    */
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -159,7 +162,10 @@ export class TasksController {
 
   /**
    * Get list of images for the Task.
-   * The caller must have read permission for the Task
+   * The caller must have read permission for the Task either explicitly or either implicitly.
+   * Explicit Permission: E.g Given by a role e.g developer role
+   * Implicit Permission: The task is open for evaluation and its criteria matches calling user profile.
+   * and calling user have permission to create Feedback.
    */
   @ApiBearerAuth()
   @ApiQuery({

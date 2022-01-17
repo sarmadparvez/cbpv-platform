@@ -32,6 +32,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 export function adminServiceConfigFactory(): AdminConfiguration {
   const params: AdminConfigurationParameters = {
@@ -75,6 +77,7 @@ export function taskServiceConfigFactory(): TaskConfiguration {
     MatSnackBarModule,
     MatDialogModule,
     MatPaginatorModule,
+    NgxSpinnerModule,
   ],
   providers: [
     {

@@ -34,11 +34,11 @@ const views = ['overview', 'sample'] as const;
 type View = typeof views[number];
 
 @Component({
-  selector: 'app-project-detail',
-  templateUrl: './project-detail.component.html',
-  styleUrls: ['./project-detail.component.scss'],
+  selector: 'app-project-builder',
+  templateUrl: './project-builder.component.html',
+  styleUrls: ['./project-builder.component.scss'],
 })
-export class ProjectDetailComponent {
+export class ProjectBuilderComponent {
   PrototypeFormatEnum = PrototypeFormatEnum;
   taskControl = new FormControl('');
   projectId: string;
@@ -190,7 +190,7 @@ export class ProjectDetailComponent {
  * Project module
  * */
 @NgModule({
-  declarations: [ProjectDetailComponent],
+  declarations: [ProjectBuilderComponent],
   imports: [
     CommonModule,
     MatSelectModule,
@@ -210,4 +210,4 @@ export class ProjectDetailComponent {
     QuestionnaireModule,
   ],
 })
-export class ProjectDetailModule {}
+export class ProjectBuilderModule {}

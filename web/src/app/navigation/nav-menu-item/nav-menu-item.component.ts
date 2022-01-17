@@ -11,7 +11,7 @@ export class NavMenuItemComponent {
   @Input() text: string;
   @Input() icon: string;
   @Input()
-  set selectionTriggerRoute(value: string) {
+  set selectionRoute(value: string) {
     this.active = this.currentRoute === value;
   }
   private readonly currentRoute: string;

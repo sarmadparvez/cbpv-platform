@@ -5,7 +5,7 @@
   </mat-card-subtitle>
   <mat-card-content>
     <!--Textual description 1-->
-    <p class="text-note">
+    <p class="text-note" *ngIf="!readonly">
       <ng-container
           *ngIf="
         (task | async)?.testType === TestTypeEnum.Basic;
@@ -20,7 +20,7 @@
     </p>
     <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
       <a mat-button color="primary" (click)="openEditDialog(1)"
-      *ngIf="(task | async)?.status === TaskStatusEnum.Draft"
+      *ngIf="(task | async)?.status === TaskStatusEnum.Draft && !readonly"
       >{{ 'action.editText' | translate }}</a>
       <ng-container
           *ngTemplateOutlet="textViewer; context: { data: { textualDescription: (task | async)?.textualDescription1 } }"
@@ -35,11 +35,11 @@
         }}</mat-card-title>
       <mat-card-subtitle>{{ 'name.prototype2' | translate }}</mat-card-subtitle>
 
-      <p class="text-note">{{ 'note.splitText2' | translate }}</p>
+      <p class="text-note"  *ngIf="!readonly">{{ 'note.splitText2' | translate }}</p>
 
       <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
         <a mat-button color="primary" (click)="openEditDialog(2)"
-           *ngIf="(task | async)?.status === TaskStatusEnum.Draft"
+           *ngIf="(task | async)?.status === TaskStatusEnum.Draft && !readonly"
         >{{ 'action.editText' | translate }}</a>
         <ng-container
             *ngTemplateOutlet="textViewer; context: { data: { textualDescription: (task | async )?.textualDescription2 }}"
