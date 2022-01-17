@@ -28,12 +28,10 @@ export class CountriesService {
       return;
     }
     const adminAPI = this.configService.get<string>('ADMIN_API');
-    const countriesEndpoint =
-      this.configService.get<string>('COUNTRIES_ENDPOINT');
-    if (adminAPI && countriesEndpoint) {
+    if (adminAPI) {
       try {
         const response = await firstValueFrom(
-          this.httpService.get<Country[]>(`${adminAPI}/${countriesEndpoint}`),
+          this.httpService.get<Country[]>(`${adminAPI}/countries`),
         );
         const countries = response.data;
         this.countryRepository.save(countries);

@@ -468,9 +468,13 @@ export class TasksService {
     if (splitNumber) {
       where['splitNumber'] = splitNumber;
     }
-    return this.taskRepository.manager.find(Image, {
+    const images = await (this.taskRepository.manager.find(Image, {
       where,
-    });
+    }) as Promise<Image[]>);
+    // remove image extension to save transformations count on cloudinary.
+    images.forEach((img) => (img.url = img.url.replace(/\.[^/.]+$/, '')));
+
+    return images;
   }
 
   async removeImage(taskId: string, imageId: string) {

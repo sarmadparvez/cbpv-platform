@@ -33,21 +33,18 @@ export class IamService {
    */
   async getUserPermissionsFromTaskService() {
     const taskApi = this.configService.get<string>('TASK_API');
-    const getPermissionsUrl = this.configService.get<string>(
-      'GET_PERMISSIONS_ENDPOINT',
-    );
-    if (!taskApi || !getPermissionsUrl) {
+    if (!taskApi) {
       throw new HttpException(
         {
           status: HttpStatus.SERVICE_UNAVAILABLE,
-          error: 'Task service get permissions endpoint url not found.',
+          error: 'Task service url not found.',
         },
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
     try {
       const response = await firstValueFrom(
-        this.httpService.get(`${taskApi}/${getPermissionsUrl}`, {
+        this.httpService.get(`${taskApi}/iam/getPermissions`, {
           headers: getAuthorizationHeader(),
         }),
       );

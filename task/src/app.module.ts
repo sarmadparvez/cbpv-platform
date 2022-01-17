@@ -20,10 +20,24 @@ import { IamModule } from './iam/iam.module';
   imports: [
     ConfigModule.forRoot({ load: [cloudinary] }),
     TypeOrmModule.forRootAsync({
-      useFactory: async () =>
-        Object.assign(await getConnectionOptions(), {
+      useFactory: async () => {
+        // for production, we have a remote database
+        if (process.env.DATABASE_URL) {
+          return {
+            url: process.env.DATABASE_URL,
+            type: 'postgres',
+            synchronize: true,
+            extra: { ssl: { rejectUnauthorized: false } },
+            autoLoadEntities: true,
+            migrationsRun: true,
+            migrations: ['dist/migration/**/*.js'],
+          };
+        }
+        return Object.assign(await getConnectionOptions(), {
           autoLoadEntities: true,
-        }),
+          migrationsRun: true,
+        });
+      },
     }),
     ScheduleModule.forRoot(),
     AuthModule,

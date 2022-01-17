@@ -29,11 +29,10 @@ export class SkillsService {
       return;
     }
     const adminAPI = this.configService.get<string>('ADMIN_API');
-    const skillsEndpoint = this.configService.get<string>('SKILLS_ENDPOINT');
-    if (adminAPI && skillsEndpoint) {
+    if (adminAPI) {
       try {
         const response = await firstValueFrom(
-          this.httpService.get<Skill[]>(`${adminAPI}/${skillsEndpoint}`),
+          this.httpService.get<Skill[]>(`${adminAPI}/skills`),
         );
         const skills = response.data;
         this.skillRepository.save(skills);

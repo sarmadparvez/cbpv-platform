@@ -134,6 +134,8 @@ export class TaskFormComponent implements OnInit {
       this.form.controls.testType.setValue(
         this.prototypeToTestTypeMap.get(prototypeFormat),
       );
+    } else {
+      this.form.controls.testType.setValue('');
     }
 
     if (this.form.invalid) {

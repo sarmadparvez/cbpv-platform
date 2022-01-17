@@ -29,11 +29,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import {
-  HttpClient,
-  HttpClientModule,
-  HttpHeaders,
-} from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { parseError } from '../../error/parse-error';
 
 @Component({
@@ -151,6 +147,7 @@ export class ImageUploadComponent {
       return;
     }
     file.inProgress = true;
+
     const formData = new FormData();
     formData.append('file', file.data);
     formData.append('api_key', this.uploadSignature.apiKey);
@@ -158,18 +155,12 @@ export class ImageUploadComponent {
     formData.append('signature', this.uploadSignature.signature);
     formData.append('folder', this.uploadSignature.folder);
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Access-Control-Allow-Origin': '*',
-      }),
-    };
+    let uploadUrl = this.uploadSignature.uploadUrl;
+    uploadUrl = 'https://add-cors.herokuapp.com/' + uploadUrl;
+
     try {
       const response: any = await firstValueFrom(
-        this.httpClient.post(
-          'https://add-cors.herokuapp.com/' + this.uploadSignature.uploadUrl,
-          formData,
-          httpOptions,
-        ),
+        this.httpClient.post(uploadUrl, formData),
       );
       file.inProgress = false;
       this.removeFileFromArray(file);

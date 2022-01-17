@@ -27,11 +27,7 @@ export class ImagePrototypeComponent implements OnInit {
   TaskStatusEnum = Task.StatusEnum;
   images = new Map<number, ReplaySubject<GalleryImage[]>>();
 
-  constructor(
-    private readonly taskService: TasksService,
-    private readonly snackbar: MatSnackBar,
-    private readonly translateService: TranslateService,
-  ) {
+  constructor(private readonly taskService: TasksService) {
     Window['ipself'] = this;
   }
 

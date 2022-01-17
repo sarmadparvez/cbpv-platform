@@ -18,8 +18,7 @@ export class UsersService {
    */
   async getUser(id: string) {
     const adminAPI = this.configService.get<string>('ADMIN_API');
-    const usersEndpoint = this.configService.get<string>('USERS_ENDPOINT');
-    if (!adminAPI || !usersEndpoint) {
+    if (!adminAPI) {
       throw new HttpException(
         {
           status: HttpStatus.SERVICE_UNAVAILABLE,
@@ -30,7 +29,7 @@ export class UsersService {
     }
     try {
       const response = await firstValueFrom(
-        this.httpService.get<User>(`${adminAPI}/${usersEndpoint}/${id}`, {
+        this.httpService.get<User>(`${adminAPI}/users/${id}`, {
           headers: getAuthorizationHeader(),
         }),
       );

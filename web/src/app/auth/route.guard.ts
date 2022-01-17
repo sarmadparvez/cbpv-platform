@@ -22,9 +22,15 @@ export class RouteGuard implements CanActivate {
     state: RouterStateSnapshot,
   ): Promise<boolean> {
     if (route.data && route.data.permission && route.data.subject) {
-      this.permService.fetchPermissions();
-      const ability = await firstValueFrom(this.permService.userAbility);
-      if (!ability.can(route.data.permission, route.data.subject)) {
+      try {
+        await this.permService.fetchPermissions();
+        const ability = await firstValueFrom(this.permService.userAbility);
+        if (!ability.can(route.data.permission, route.data.subject)) {
+          this.router.navigate(['']);
+          return false;
+        }
+      } catch (err) {
+        console.log('err checking route permissions ', err);
         this.router.navigate(['']);
         return false;
       }

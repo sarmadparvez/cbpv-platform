@@ -39,7 +39,7 @@ async function bootstrap() {
   // wrap requests in a middleware namespace 'request'.
   // thi is done to attach data to request context e.g currently logged in user
   app.use(contextService.middleware('request'));
-  await app.listen(3001);
+  await app.listen(process.env.PORT || 3001);
 }
 
 function saveSwaggerSpec(document: OpenAPIObject) {
