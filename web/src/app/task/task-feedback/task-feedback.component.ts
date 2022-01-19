@@ -2,13 +2,15 @@ import { Component, Input, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, ReplaySubject } from 'rxjs';
-import { Task, TasksService } from '../../../../gen/api/task';
+import { Feedback, Task, TasksService } from '../../../../gen/api/task';
 import { MatCardModule } from '@angular/material/card';
 import { TranslateModule } from '@ngx-translate/core';
 import { FlexModule } from '@angular/flex-layout';
 import { ImagePrototypeModule } from '../../project/image-prototype/image-prototype.component';
 import { IframePrototypeModule } from '../../project/iframe-prototype/iframe-prototype.component';
 import { TextPrototypeModule } from '../../project/text-prototype/text-prototype.component';
+import { QuestionnaireAnswerModule } from '../questionnaire-answer/questionnaire-answer.component';
+import { BasicTaskDetailModule } from '../basic-task-detail/basic-task-detail.component';
 
 @Component({
   selector: 'app-task-feedback',
@@ -17,6 +19,8 @@ import { TextPrototypeModule } from '../../project/text-prototype/text-prototype
 })
 export class TaskFeedbackComponent {
   @Input() task = new ReplaySubject<Task>(1);
+  @Input() feedback: Feedback;
+  @Input() readonly: boolean;
   PrototypeFormatEnum = Task.PrototypeFormatEnum;
   TestTypeEnum = Task.TestTypeEnum;
 
@@ -25,7 +29,9 @@ export class TaskFeedbackComponent {
     private readonly taskService: TasksService,
   ) {
     const taskId = this.route.snapshot.paramMap.get('taskId');
-    this.getTask(taskId);
+    if (taskId) {
+      this.getTask(taskId);
+    }
   }
 
   async getTask(taskId: string) {
@@ -43,7 +49,10 @@ export class TaskFeedbackComponent {
     ImagePrototypeModule,
     IframePrototypeModule,
     TextPrototypeModule,
+    QuestionnaireAnswerModule,
+    BasicTaskDetailModule,
   ],
   declarations: [TaskFeedbackComponent],
+  exports: [TaskFeedbackComponent],
 })
 export class TaskFeedbackModule {}

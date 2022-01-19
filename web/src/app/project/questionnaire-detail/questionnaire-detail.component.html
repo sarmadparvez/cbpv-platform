@@ -17,7 +17,6 @@
 
   <!--Radio answer-->
         <mat-radio-group fxLayout fxLayoutGap="10px"  *ngSwitchCase="QuestionType.Radio" [disabled]="readonly"
-                         [disabled]="readonly"
         >
           <mat-radio-button
               *ngFor="let option of question.radioOptions"
@@ -31,6 +30,7 @@
     <ngx-material-rating *ngSwitchCase="QuestionType.StarRating" [color]="'primary'" [disabled]="readonly"
                          [readonly]="readonly"  [max]="5">
     </ngx-material-rating>
+    <!--Thumbs up/down Rating-->
     <div fxLayout fxLayoutGap="10px" *ngSwitchCase="QuestionType.ThumbsRating">
       <mat-icon fontSet="material-icons-outlined">thumb_up</mat-icon>
       <mat-icon [fontSet]="'material-icons-outlined'">thumb_down</mat-icon>

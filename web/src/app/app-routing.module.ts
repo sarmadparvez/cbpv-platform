@@ -37,11 +37,22 @@ const routes: Routes = [
     path: 'tasks',
     component: NavComponent,
     data: {
-      permission: ActionEnum.Manage,
+      permission: ActionEnum.Create,
       subject: 'Feedback',
     },
     canActivate: [RouteGuard],
     loadChildren: () => import('./task/task.module').then(m => m.TaskModule),
+  },
+  {
+    path: 'feedbacks',
+    component: NavComponent,
+    data: {
+      permission: ActionEnum.Create,
+      subject: 'Feedback',
+    },
+    canActivate: [RouteGuard],
+    loadChildren: () =>
+      import('./feedback/feedback.module').then(m => m.FeedbackModule),
   },
   {
     path: '**',

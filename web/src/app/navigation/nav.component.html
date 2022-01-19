@@ -9,7 +9,7 @@
       />
     </div>
     <!--Items in the main sidebar-->
-    <mat-nav-list>
+    <mat-nav-list fxLayout="column" fxLayoutAlign="start center">
       <!--Projects-->
       <app-nav-menu-item
         *ngIf="Action.Read | permission: 'Project' | async"
@@ -19,15 +19,25 @@
         selectionRoute="projects"
       >
       </app-nav-menu-item>
-      <!--Tasks-->
+      <!--Evaluate-->
       <app-nav-menu-item
-          *ngIf="Action.Manage | permission: 'Feedback' | async"
+          *ngIf="Action.Create | permission: 'Feedback' | async"
           text="Evaluate"
           icon="account_tree"
           routerLink="/tasks"
           selectionRoute="tasks"
       >
       </app-nav-menu-item>
+        <!--Feedbacks-->
+        <app-nav-menu-item
+            *ngIf="Action.Create | permission: 'Feedback' | async"
+            text="Feedbacks"
+            icon="account_tree"
+            routerLink="/feedbacks"
+            selectionRoute="feedbacks"
+            [selectorStyle]="{ transform: 'translateX(-14px)' }"
+        >
+        </app-nav-menu-item>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content class="main-sidenav-content">

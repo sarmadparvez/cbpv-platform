@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { UpdateFeedbackDto } from './dto/update-feedback.dto';
 import { classToPlain, plainToClass } from 'class-transformer';
-import { Feedback } from './entities/feedback.entity';
+import { Feedback, PaymentStatus } from './entities/feedback.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
 import { FindAllFeedbackDto } from './dto/findAll-feedback.dto';
@@ -26,6 +26,7 @@ export class FeedbacksService {
     const existingFeedback = await this.feedbackRepository.findOne({
       where: {
         taskId: createFeedbackDto.taskId,
+        userId: contextService.get('user').id,
       },
     });
     if (existingFeedback) {
@@ -122,6 +123,41 @@ export class FeedbacksService {
   async remove(id: string) {
     await findWithPermissionCheck(id, Action.Delete, this.feedbackRepository);
     return this.feedbackRepository.delete(id);
+  }
+
+  searchAll() {
+    return this.feedbackRepository.find({
+      where: {
+        userId: contextService.get('user')?.id,
+      },
+      relations: ['task'],
+    });
+  }
+
+  async releasePayment(id: string) {
+    const feedback = await this.feedbackRepository.findOneOrFail(id, {
+      select: ['id', 'taskId', 'paymentStatus'],
+    });
+    // Check if user have Update permission on the Task for which the payment is to be released.
+    const task = await findWithPermissionCheck(
+      feedback.taskId,
+      Action.Update,
+      this.taskRepository,
+    );
+
+    if (feedback.paymentStatus === PaymentStatus.Completed) {
+      // Payment already completed
+      throw new HttpException(
+        {
+          status: HttpStatus.PRECONDITION_FAILED,
+          error: 'Payment for the Feedback is already completed.',
+        },
+        HttpStatus.PRECONDITION_FAILED,
+      );
+    }
+    return this.feedbackRepository.update(id, {
+      paymentStatus: PaymentStatus.Completed,
+    });
   }
 }
 

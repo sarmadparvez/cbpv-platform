@@ -6,6 +6,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "cancel": "Cancel",
+    "closeIteration": "Close Iteration",
     "prototypeLink": "Prototype Link",
     "upload": "Upload",
     "overview": "Overview",
@@ -18,12 +19,15 @@
   "name": {
     "answer": "Answer",
     "answerType": "Answer Type",
+    "additionalComment": "Additional Comment",
     "budget": "Total budget (€)",
     "basicTest": "Basic Test",
     "splitTest": "Split Test",
     "countries": "Countries",
     "dateCreated": "Creation date",
     "firstName": "First Name",
+    "feedbacks": "Feedbacks",
+    "feedbackProvider": "Feedback Provider",
     "lastName": "Last Name",
     "link": "Link",
     "image": "Image",
@@ -34,15 +38,20 @@
     "maxExperience": "Max Experience (Years)",
     "minAge": "Min Age",
     "maxAge": "Max Age",
+    "paymentStatus": "Payment Status",
     "title": "Title",
     "description": "Description",
     "prototypeFormat": "Prototype Format",
     "prototype1": "Prototype 1",
     "prototype2": "Prototype 2",
     "crowdCriteria": "Crowd Matching Criteria",
+    "releasePayment": "Release Payment",
     "skills": "Skills",
     "status": "Status",
+    "submitFeedback": "Submit Feedback",
     "testType": "Test Type",
+    "task": "Task",
+    "taskOwner": "Task Owner",
     "incentive": "Per Crowdworker incentive (€)",
     "draft": "Draft",
     "open": "Open",
@@ -59,7 +68,8 @@
     "country": "Country",
     "experience": "Experience (Years)",
     "matchedSkills": "Matched Skills",
-    "matchedCountry": "Matched Country"
+    "matchedCountry": "Matched Country",
+    "user": "User"
   },
   "notification": {
     "activate": "Task activated Successfully. You cannot edit the task anymore.",
@@ -67,11 +77,15 @@
     "create": "Created successfully",
     "update": "Updated Successfully",
     "delete": "Deleted Successfully",
+    "closeIteration": "Task iteration closed successfully",
     "imageUpload": "Image(s) uploaded successfully",
-    "rolesChangeReLogin": "You need to login again because you changed your Role(s)."
+    "rolesChangeReLogin": "You need to login again because you changed your Role(s).",
+    "submitFeedback": "Your feedback is submitted successfully.",
+    "paymentReleased": "Payment successfully released"
   },
   "error": {
     "activate": "Unable to activate Task. ",
+    "closeIteration": "Unable to close Task iteration",
     "required": "This field is required",
     "passwordMismatch": "The passwords do not match",
     "passwordPattern": "Password should be at-least 8 characters long, must contain one lower case and one upper case letter, and one digit.",
@@ -81,7 +95,9 @@
     "update": "Unable to update",
     "imageSignature": "Failed to get signature for Image upload",
     "uploadImage": "Failed uploading file to cloud storage.",
-    "saveImageUrls": "Unable to store image urls"
+    "saveImageUrls": "Unable to store image urls",
+    "submitFeedback": "Unable to submit feedback",
+    "paymentRelease": "Unable to release payment for the feedback"
   },
   "role": {
     "admin": "Administrator",
@@ -98,10 +114,17 @@
     "star-rating": "Start rating",
     "thumbs-rating": "Thumbs up/down rating"
   },
+  "paymentStatus": {
+    "pending": "Pending",
+    "completed": "Completed"
+  },
   "note": {
     "askQuestions": "Ask questions about your Prototype. This questionnaire will be presented to Crowdworkers to get feedback for your Prototype.",
+    "commentHint": "Here you can provide any additional feedback",
     "noData": "No data available",
     "crowdCriteria": "Set the criteria for matching this Task with Crowdworkers. Only the Crowdworkers matching the specified criteria will be able to see this Task.",
+    "closeIterationConfirmTitle": "Close Task Iteration",
+    "closeIterationConfirmMessage": "Please note that after closing the Task iteration you can no longer receive feedback on this iteration. This iteration will no longer be visible to Crowdworkers to provide feedback. Are you sure you want to close the Task iteration?",
     "enterQuestion": "Please enter your question and select the answer type.",
     "iframeTask": "The Prototype will be embedded as an iframe in the platform. You will need to provide a link for the prototype.",
     "iframeTaskSubtitle": "Link from a third party prototyping tool",
@@ -114,6 +137,9 @@
     "textTaskSubtitle": "Textual description",
     "basicText": "In a basic test, a single Prototype is evaluated.",
     "splitTest": "In a split test, two Prototypes of the same Application are evaluated with a comparison.",
+    "giveFeedback": "To give feedback on Prototypes, go to <em>Evaluate</em> from the side menu and open the Task you want to evaluate.",
+    "viewFeedbacks": "To view your given feedbacks, go to <em>Feedbacks</em> from the side menu.",
+    "createPrototypes": "To start creating your Prototypes, go to <em>Projects</em> from the side menu. Create a Project and start a new Task iteration in it",
     "basicImageUpload": "Please upload images of your Prototype.",
     "basicTextAdd": "Please provide text for your Prototype.",
     "basicIframeUpload": "Please add link to your Prototype.",

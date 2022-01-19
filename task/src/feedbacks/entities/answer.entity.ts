@@ -40,7 +40,8 @@ export class Answer {
     onDelete: 'CASCADE',
     orphanedRowAction: 'delete',
   })
-  feedback: string;
+  @JoinColumn({ name: 'feedbackId' })
+  feedbackId: string;
 
   @Column('uuid')
   @ManyToOne(() => Question)

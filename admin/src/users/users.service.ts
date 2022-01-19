@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateWithSSODto, SSOProvider } from './dto/create-with-sso.dto';
+import { BatchGetUserInfoDto } from './dto/batch-get-user-info.dto';
 
 @Injectable()
 export class UsersService {
@@ -121,6 +122,12 @@ export class UsersService {
 
   remove(id: string) {
     return this.userRepository.delete(id);
+  }
+
+  batchGetInfo(batchGetUserInfo: BatchGetUserInfoDto) {
+    return this.userRepository.findByIds(batchGetUserInfo.ids, {
+      select: ['id', 'firstName', 'lastName'],
+    });
   }
 }
 

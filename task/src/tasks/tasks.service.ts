@@ -220,6 +220,11 @@ export class TasksService {
         return task;
       }
     }
+    // user have access to Task if user have provided feedback on the task
+    if (await this.hasProvidedFeedbackOnTask(id)) {
+      return task;
+    }
+
     // User does not have access to this Task
     throw new HttpException(
       {
@@ -293,7 +298,7 @@ export class TasksService {
     if (task.status !== TaskStatus.Draft) {
       messages.push('Task can only be activated when in draft state.');
     }
-    if (!task.incentive || task.incentive < 1) {
+    if (!task.incentive || task.incentive < 0) {
       messages.push('Please set the incentive.');
     }
     if (!task.budget || task.budget < 1) {
@@ -476,6 +481,10 @@ export class TasksService {
         hasPermission = true;
       }
     }
+    if (!hasPermission && (await this.hasProvidedFeedbackOnTask(taskId))) {
+      // user have access to Task if user have provided feedback on the task
+      hasPermission = true;
+    }
     if (!hasPermission) {
       // User does not have permission to read images for this Task
       throw new HttpException(
@@ -499,6 +508,16 @@ export class TasksService {
     // remove image extension to save transformations count on cloudinary.
     images.forEach((img) => (img.url = img.url.replace(/\.[^/.]+$/, '')));
     return images;
+  }
+
+  private async hasProvidedFeedbackOnTask(taskId: string) {
+    const feedback = await this.taskRepository.manager.find(Feedback, {
+      where: {
+        userId: contextService.get('user')?.id,
+        taskId,
+      },
+    });
+    return feedback ? true : false;
   }
 
   async removeImage(taskId: string, imageId: string) {
@@ -537,6 +556,28 @@ export class TasksService {
       );
       throw err;
     }
+  }
+
+  async close(id: string) {
+    // check if user have permission to close Task
+    const task = await findWithPermissionCheck(
+      id,
+      Action.Update,
+      this.taskRepository,
+    );
+    // validate task first
+    if (task.status !== TaskStatus.Open) {
+      throw new HttpException(
+        {
+          status: HttpStatus.PRECONDITION_FAILED,
+          error: 'Task is not Open. Only Open Task can be closed',
+        },
+        HttpStatus.PRECONDITION_FAILED,
+      );
+    }
+    return this.taskRepository.update(id, {
+      status: TaskStatus.Closed,
+    });
   }
 }
 

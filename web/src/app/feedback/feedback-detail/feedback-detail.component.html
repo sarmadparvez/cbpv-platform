@@ -1,0 +1,9 @@
+<ng-container *ngIf="feedback | async as feedbackObj">
+    <app-task-feedback
+      [task]="task"
+      [feedback]="feedbackObj"
+      [readonly]="true"
+    >
+
+    </app-task-feedback>
+</ng-container>

@@ -8,7 +8,6 @@ import {
   Delete,
   UseInterceptors,
   ClassSerializerInterceptor,
-  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -20,6 +19,7 @@ import { ForbiddenError } from '@casl/ability';
 import * as contextService from 'request-context';
 import { User } from './entities/user.entity';
 import { CreateWithSSODto } from './dto/create-with-sso.dto';
+import { BatchGetUserInfoDto } from './dto/batch-get-user-info.dto';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('users')
@@ -72,6 +72,21 @@ export class UsersController {
       new User({ id }),
     );
     return this.usersService.findOne(id);
+  }
+
+  /**
+   * Batch get User info e.g name.
+   * The calling user must have Read permission for the Users.
+   */
+  @ApiBearerAuth()
+  @Post('batchGetInfo')
+  batchGetInfo(@Body() batchGetUserInfo: BatchGetUserInfoDto) {
+    // check permissions
+    ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
+      Action.Read,
+      User,
+    );
+    return this.usersService.batchGetInfo(batchGetUserInfo);
   }
 
   /**

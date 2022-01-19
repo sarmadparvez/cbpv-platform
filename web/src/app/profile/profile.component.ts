@@ -96,9 +96,6 @@ export class ProfileComponent extends RegisterComponent implements OnInit {
   }
 
   async save(form: FormGroup) {
-    console.log('form ', form);
-    let reLoginRequired = false;
-
     if (form.invalid) {
       return;
     }

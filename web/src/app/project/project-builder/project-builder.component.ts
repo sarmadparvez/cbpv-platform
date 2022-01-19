@@ -29,8 +29,13 @@ import { SamplePrototypeModule } from '../sample-prototype/sample-prototype.comp
 import { TextPrototypeModule } from '../text-prototype/text-prototype.component';
 import { QuestionnaireModule } from '../questionnaire/questionnaire.component';
 import { parseError } from '../../error/parse-error';
+import { TaskFeedbacksModule } from '../task-iteration-feedbacks/task-iteration-feedbacks.component';
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData,
+} from '../../template/confirmation-dialog/confirmation-dialog.component';
 
-const views = ['overview', 'sample'] as const;
+const views = ['overview', 'feedback', 'sample'] as const;
 type View = typeof views[number];
 
 @Component({
@@ -65,6 +70,12 @@ export class ProjectBuilderComponent {
     this.taskControl.valueChanges.subscribe((task: Task) =>
       this.task.next(task),
     );
+    this.task.subscribe(task => {
+      const index = this.tasks.findIndex(t => t.id === task.id);
+      if (index > -1) {
+        this.tasks[index] = task;
+      }
+    });
   }
 
   hanleQueryParamsChange() {
@@ -184,6 +195,36 @@ export class ProjectBuilderComponent {
       });
     }
   }
+
+  closeTask() {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: <ConfirmationDialogData>{
+        title: this.translateService.instant('note.closeIterationConfirmTitle'),
+        message: this.translateService.instant(
+          'note.closeIterationConfirmMessage',
+        ),
+      },
+      width: '50vw',
+    });
+    dialogRef.afterClosed().subscribe(async confirm => {
+      if (confirm) {
+        let message = 'notification.closeIteration';
+        try {
+          const task = await firstValueFrom(this.task);
+          await firstValueFrom(this.taskService.close(task.id));
+          task.status = Task.StatusEnum.Closed;
+          this.task.next(task);
+        } catch (err) {
+          message = 'error.closeIteration';
+          console.log('failed closing task', err);
+        } finally {
+          this.snackBar.open(this.translateService.instant(message), '', {
+            duration: 5000,
+          });
+        }
+      }
+    });
+  }
 }
 
 /**
@@ -208,6 +249,7 @@ export class ProjectBuilderComponent {
     SamplePrototypeModule,
     TextPrototypeModule,
     QuestionnaireModule,
+    TaskFeedbacksModule,
   ],
 })
 export class ProjectBuilderModule {}

@@ -34,10 +34,13 @@ export class Feedback {
   @JoinColumn({ name: 'taskId' })
   taskId: string;
 
+  @ManyToOne(() => Task, (task) => task.feedbacks)
+  task: Task;
+
   @Column('uuid')
   userId: string;
 
-  @OneToMany(() => Answer, (answer) => answer.feedback, {
+  @OneToMany(() => Answer, (answer) => answer.feedbackId, {
     cascade: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

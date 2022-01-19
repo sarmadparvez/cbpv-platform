@@ -15,6 +15,8 @@ export class NavMenuItemComponent {
     this.active = this.currentRoute === value;
   }
   private readonly currentRoute: string;
+  @Input() selectorStyle = {};
+  hover: boolean;
   constructor(private readonly route: ActivatedRoute) {
     this.currentRoute = route.snapshot.routeConfig?.path ?? '';
   }

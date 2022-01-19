@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   Query,
-  Req,
   Put,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
@@ -45,7 +44,7 @@ export class TasksController {
   /**
    * By default, Task is created as draft. Use this endpoint to Activate the task.
    * Activating a task changes its status to open, and it can no longer be edited.
-   *
+   * The calling user must have Update permission on the Task.
    * There are certain pre-requisites for activating a Task.
    *
    * 1. The Task must contain Questions
@@ -57,6 +56,16 @@ export class TasksController {
   @Put(':id/activate')
   activate(@Param('id') id: string) {
     return this.tasksService.activate(id);
+  }
+
+  /**
+   * Task can only be closed if it is in Open state.
+   * The calling user must have Update permission on the Task
+   */
+  @ApiBearerAuth()
+  @Put(':id/close')
+  close(@Param('id') id: string) {
+    return this.tasksService.close(id);
   }
 
   /**
@@ -111,8 +120,8 @@ export class TasksController {
   /**
    * Get a Task. The calling user must have Read permission the Task either explicitly or implicitly.
    * Explicit Permission: E.g Given by a role e.g developer role
-   * Implicit Permission: The task is open for evaluation and its criteria matches calling user profile.
-   * and calling user have permission to create Feedback.
+   * Implicit Permission: The task criteria matches calling user profile, and calling user have permission to create Feedback.
+   * Implicit Permission: This user has created Feedback for this Task
    */
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -164,8 +173,8 @@ export class TasksController {
    * Get list of images for the Task.
    * The caller must have read permission for the Task either explicitly or either implicitly.
    * Explicit Permission: E.g Given by a role e.g developer role
-   * Implicit Permission: The task is open for evaluation and its criteria matches calling user profile.
-   * and calling user have permission to create Feedback.
+   * Implicit Permission: The task's criteria matches calling user profile, and calling user have permission to create Feedback.
+   * Implicit Permission: This user has created Feedback for this Task
    */
   @ApiBearerAuth()
   @ApiQuery({

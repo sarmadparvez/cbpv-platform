@@ -11,6 +11,11 @@
   border-right: none !important;
   width: 93px;
 }
+
+:host::ng-deep .app-sidenav .mat-drawer-inner-container {
+  overflow: hidden;
+}
+
 .sidenav-logo-container {
   box-shadow: 0 10px 15px -10px #bbb;
   background: #2196f3;

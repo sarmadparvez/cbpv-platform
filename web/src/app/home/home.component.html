@@ -16,22 +16,14 @@
       <li class="list-item">
         You can create Prototypes as a Developer to get feedback on them.
       </li>
-
       <li class="list-item">
         You can also give feedback on other Prototypes as a Crowdworker.
       </li>
     </ul>
 
-    <p>
-      To start creating your Prototypes, go to Projects from the sidebar. Create
-      a Project and start a new Task iteration in it.
-    </p>
-    <p>
-      To give feedback on Prototypes, go to Evaluate from the sidebar and open the Task you want to evaluate.
-    </p>
-    <p>
-      <strong>Note:</strong> You cannot give feedbacks yet. This feature is under development.
-    </p>
+    <p [innerHTML]="'note.createPrototypes' | translate"></p>
+    <p [innerHTML]="'note.giveFeedback' | translate" ></p>
+    <p [innerHTML]="'note.viewFeedbacks' | translate"></p>
   </ng-container>
 
   <ng-template #singleRole>
@@ -44,10 +36,7 @@
         </li>
       </ul>
 
-      <p>
-        To start creating your Prototypes, go to Projects from the sidebar.
-        Create a Project and start a new Task iteration in it.
-      </p>
+      <p [innerHTML]="'note.createPrototypes' | translate"></p>
     </ng-container>
 
     <ng-container *ngIf="[RolesEnum.Crowdworker] | hasRoles | async">
@@ -58,12 +47,8 @@
           You can give feedback on other Prototypes as a Crowdworker.
         </li>
       </ul>
-      <p>
-        To give feedback on Prototypes, go to Evaluate from the sidebar and open the Task you want to evaluate.
-      </p>
-      <p>
-       <strong>Note:</strong> You cannot give feedbacks yet. This feature is under development.
-      </p>
+      <p [innerHTML]="'note.giveFeedback' | translate" ></p>
+      <p [innerHTML]="'note.viewFeedbacks' | translate"></p>
     </ng-container>
   </ng-template>
 </div>

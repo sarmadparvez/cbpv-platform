@@ -46,7 +46,8 @@ const rolePermissions: Record<Role, DefinePermissions> = {
     can(Action.Manage, Task, { userId: user.id });
   },
   crowdworker(user, { can }) {
-    can(Action.Manage, Feedback, { userId: user.id });
+    can(Action.Create, Feedback);
+    can(Action.Read, Feedback, { userId: user.id });
   },
 };
 

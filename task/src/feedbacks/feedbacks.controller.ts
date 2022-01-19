@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  Put,
 } from '@nestjs/common';
 import { FeedbacksService } from './feedbacks.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
@@ -52,6 +53,21 @@ export class FeedbacksController {
   }
 
   /**
+   * Get a list of Feedbacks on which the calling user have access to.
+   * The user must have Read permission on the Feedbacks.
+   */
+  @ApiBearerAuth()
+  @Get('search')
+  searchAll() {
+    // check if user have permission to read Feedbacks
+    ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
+      Action.Read,
+      Feedback,
+    );
+    return this.feedbacksService.searchAll();
+  }
+
+  /**
    * Get all Feedbacks for a Task. The user must have Read permission on the Task.
    */
   @ApiBearerAuth()
@@ -87,6 +103,15 @@ export class FeedbacksController {
     @Body() updateFeedbackDto: UpdateFeedbackDto,
   ) {
     return this.feedbacksService.update(id, updateFeedbackDto);
+  }
+
+  /**
+   * Release payment for the Feedback. User must have Update Permission on the Task related to Feedback.
+   */
+  @ApiBearerAuth()
+  @Put(':id/releasePayment')
+  releasePayment(@Param('id') id: string) {
+    return this.feedbacksService.releasePayment(id);
   }
 
   /**

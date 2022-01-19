@@ -1,40 +1,25 @@
 <ng-container *ngIf="task | async as taskObj">
   <div class="page-content">
-    <mat-card>
-      <mat-card-title>{{ taskObj.title }}</mat-card-title>
-      <mat-card-content>
-        <div class="field-container" fxLayout>
-          <!--Description-->
-          <div fxFlex="60%">
-            <div class="field-label field-name">
-              {{ 'name.description' | translate }}
-            </div>
-            <div>
-              <span>{{ taskObj.description }}</span>
-            </div>
-          </div>
-          <!--Status-->
-          <div fxFlex="20%">
-            <div class="field-label field-name">
-              {{ 'name.status' | translate }}
-            </div>
-            <div>
-              <span>{{ 'name.' + taskObj.status | translate }}</span>
-            </div>
-          </div>
+    <ng-container *ngIf="!readonly">
+      <p>
+        Please see the Task details below and fill out the Questionnaire.
+      </p>
 
-          <!--Creation Date -->
-          <div fxFlex="20%">
-            <div class="field-label field-name">
-              {{ 'name.dateCreated' | translate }}
-            </div>
-            <div>
-              <span>{{ taskObj.dateCreated | date: 'dd.MM.y HH:mm:ss' }}</span>
-            </div>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
+      <ul>
+        <li class="list-item">
+          After answering the questions press <em>{{'name.submitFeedback' | translate}}</em> button below.
+        </li>
+        <li class="list-item">
+          Please note that once submitted, you cannot change your answers later.
+        </li>
+        <li class="list-item">
+          You can see your submitted feedback form Feedbacks section in the side menu.
+        </li>
+      </ul>
+    </ng-container>
+
+    <!--Basic task details-->
+    <app-basic-task-detail [task]="task"></app-basic-task-detail>
     <div class="mt-30">
       <!--Image Prototype-->
       <app-image-prototype
@@ -60,6 +45,14 @@
       >
       </app-text-prototype>
     </div>
-
+    <!--Questionnaire-->
+    <div class="mt-30 mb-30">
+    <app-questionnaire-answer
+        [task]="taskObj"
+        [readonly]="readonly"
+        [feedback]="feedback"
+    >
+    </app-questionnaire-answer>
+    </div>
   </div>
 </ng-container>

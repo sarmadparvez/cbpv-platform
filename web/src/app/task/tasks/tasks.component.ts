@@ -1,7 +1,7 @@
 import { Component, NgModule, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Task } from 'gen/api/task/model/models';
+import { Feedback, Task } from 'gen/api/task/model/models';
 import { TasksService } from '../../../../gen/api/task';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -15,6 +15,11 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import {
+  BatchGetUserInfoDto,
+  User,
+  UsersService,
+} from '../../../../gen/api/admin';
 
 @Component({
   selector: 'app-tasks',
@@ -30,15 +35,18 @@ export class TasksComponent {
     'testType',
     'skills',
     'country',
+    'user',
     'options',
   ];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  userMap: { [key: string]: User } = {};
 
   constructor(
     private readonly taskService: TasksService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly userService: UsersService,
   ) {
     this.findOpenTasks();
     Window['tcself'] = this;
@@ -46,10 +54,24 @@ export class TasksComponent {
 
   async findOpenTasks() {
     const tasks = await firstValueFrom(this.taskService.findOpenTasks());
+    this.getUsersForTasks(tasks);
     this.dataSource = new MatTableDataSource(tasks);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.setFilterFunction();
+  }
+
+  async getUsersForTasks(tasks: Task[]) {
+    const ids = tasks.map(f => f.userId);
+    if (ids.length > 0) {
+      const request: BatchGetUserInfoDto = {
+        ids,
+      };
+      const users = await firstValueFrom(
+        this.userService.batchGetInfo(request),
+      );
+      users.forEach(user => (this.userMap[user.id] = user));
+    }
   }
 
   /**
