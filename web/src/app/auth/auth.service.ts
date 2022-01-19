@@ -26,6 +26,7 @@ export class AuthService {
   redirectUrl: string;
   user: ReplaySubject<User>;
   logoutObservable = new ReplaySubject<void>(1);
+  loading = new ReplaySubject<boolean>(1);
 
   constructor(
     http: HttpClient,
@@ -46,12 +47,14 @@ export class AuthService {
     password: string,
   ) {
     try {
+      this.loading.next(true);
       const response = await firstValueFrom(
         this.authService.login(<LoginDto>{
           username,
           password,
         }),
       );
+      this.loading.next(false);
       if (response.accessToken) {
         this.token = response.accessToken;
         this.storage.save(AUTH_TOKEN, this.token);
@@ -59,6 +62,7 @@ export class AuthService {
       }
       throw new Error(`unable to login`);
     } catch (e) {
+      this.loading.next(false);
       console.error('Error during login request', e);
       return Promise.reject(e.message);
     }

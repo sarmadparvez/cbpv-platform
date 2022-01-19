@@ -48,6 +48,19 @@
       <span>{{ 'name.feedbacks' | translate }}</span>
     </div>
 
+    <!--Visualization-->
+    <div
+        class="second-sidenav-options clickable mt-15"
+        (click)="openView('visualization')"
+        [ngClass]="{
+        'second-sidenav-selected': currentView === 'visualization'
+      }"
+    >
+      <mat-icon class="second-sidenav-icon"> insert_chart_outlined </mat-icon>
+
+      <span>{{ 'name.visualization' | translate }}</span>
+    </div>
+
     <!--Sample Prototypes-->
     <div
       class="second-sidenav-options clickable mt-15"
@@ -208,6 +221,12 @@
         <app-task-iteration-feedbacks
           [task]="task"
         ></app-task-iteration-feedbacks>
+      </ng-container>
+      <!-- Visualization -->
+      <ng-container *ngSwitchCase="'visualization'">
+        <app-feedback-visualization
+            [task]="task"
+        ></app-feedback-visualization>
       </ng-container>
 
       <!--Sample Prototypes-->

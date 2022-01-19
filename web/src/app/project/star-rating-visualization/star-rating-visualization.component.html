@@ -1,0 +1,40 @@
+<mat-card>
+  <mat-card-content>
+    <!--Question Row-->
+    <div fxLayout>
+      <div fxFlex="75%">
+        <div class="field-label field-name">
+          {{ 'name.question' | translate }}
+        </div>
+        <div>
+          <span><strong>Q{{questionStats?.question.order}}: </strong>{{ questionStats?.question?.description }}</span>
+        </div>
+      </div>
+      <div fxFlex="25%">
+        <div class="field-label field-name">
+          {{ 'name.questionType' | translate }}
+        </div>
+        <div>
+          <span>{{ 'questionType.' + questionStats?.question?.type | translate }}</span>
+        </div>
+      </div>
+    </div>
+    <!--Pie Chart-->
+    <div style="height: 400px" class="mt-30">
+      <ngx-charts-bar-horizontal
+          [view]="view"
+          [results]="chartData"
+          [gradient]="gradient"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [legend]="showLegend"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel"
+          [xAxisTickFormatting]="xAxisTickFormatting"
+      >
+      </ngx-charts-bar-horizontal>
+    </div>
+  </mat-card-content>
+</mat-card>

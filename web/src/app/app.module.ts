@@ -34,6 +34,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ConfirmationDialogComponent } from './template/confirmation-dialog/confirmation-dialog.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 export function adminServiceConfigFactory(): AdminConfiguration {
   const params: AdminConfigurationParameters = {
@@ -78,6 +79,7 @@ export function taskServiceConfigFactory(): TaskConfiguration {
     MatDialogModule,
     MatPaginatorModule,
     NgxSpinnerModule,
+    NgxChartsModule,
   ],
   providers: [
     {

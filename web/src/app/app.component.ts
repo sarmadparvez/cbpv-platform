@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
-import { PermissionsService } from './iam/permission.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +15,7 @@ export class AppComponent {
     private readonly matIconRegistry: MatIconRegistry,
     private readonly domSanitizer: DomSanitizer,
     private readonly translateService: TranslateService,
-    private readonly permService: PermissionsService,
+    private readonly authService: AuthService,
     private spinner: NgxSpinnerService,
   ) {
     this.translateService.setDefaultLang('en');
@@ -24,7 +24,7 @@ export class AppComponent {
   }
 
   async subscribeLoadingIndicator() {
-    this.permService.loading.subscribe(loading => {
+    this.authService.loading.subscribe(loading => {
       if (loading) {
         this.spinner.show();
       } else {

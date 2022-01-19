@@ -1,0 +1,34 @@
+<mat-card>
+  <mat-card-content>
+    <!--Question Row-->
+    <div fxLayout>
+      <div fxFlex="75%">
+        <div class="field-label field-name">
+          {{ 'name.question' | translate }}
+        </div>
+        <div>
+          <span><strong>Q{{question.order}}: </strong>{{ question?.description }}</span>
+        </div>
+      </div>
+      <div fxFlex="25%">
+        <div class="field-label field-name">
+          {{ 'name.questionType' | translate }}
+        </div>
+        <div>
+          <span>{{ 'questionType.' + question?.type | translate }}</span>
+        </div>
+      </div>
+      </div>
+    <!--Thumbs up down rating-->
+    <div fxLayout fxLayoutGap="50px" class="mt-30">
+      <!--Thumbs up selected-->
+      <div matBadge="{{thumbsUpCount}}" matBadgeSize="medium"  matBadgeOverlap="false">
+        <mat-icon class="thumbs-up-icon">thumb_up</mat-icon>
+      </div>
+      <!--Thumbs down selected-->
+      <div matBadge="{{thumbsDownCount}}" matBadgeOverlap="false">
+        <mat-icon class="thumbs-down-icon">thumb_down</mat-icon>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

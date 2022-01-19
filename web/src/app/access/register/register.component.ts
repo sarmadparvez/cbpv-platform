@@ -60,6 +60,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import SsoProviderEnum = CreateWithSSODto.SsoProviderEnum;
 import { parseError } from '../../error/parse-error';
+import { AuthService } from '../../auth/auth.service';
 
 export const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 
@@ -134,6 +135,7 @@ export class RegisterComponent implements OnInit {
     protected readonly userService: UsersService,
     protected readonly snackBar: MatSnackBar,
     protected readonly router: Router,
+    protected readonly authService: AuthService,
   ) {
     Window['rcself'] = this;
   }
@@ -200,9 +202,12 @@ export class RegisterComponent implements OnInit {
     this.fillDataInRequest(request);
     request.password = this.form.get('passwords').get('password').value;
     try {
+      this.authService.loading.next(true);
       await firstValueFrom(this.userService.create(request));
+      this.authService.loading.next(false);
       this.handleRegistrationSuccess();
     } catch (err) {
+      this.authService.loading.next(false);
       this.handleError(err);
     }
   }

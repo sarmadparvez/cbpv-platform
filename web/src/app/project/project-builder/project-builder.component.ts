@@ -34,8 +34,8 @@ import {
   ConfirmationDialogComponent,
   ConfirmationDialogData,
 } from '../../template/confirmation-dialog/confirmation-dialog.component';
-
-const views = ['overview', 'feedback', 'sample'] as const;
+import { FeedbackVisualizationModule } from '../feedback-visualization/feedback-visualization.component';
+const views = ['overview', 'feedback', 'visualization', 'sample'] as const;
 type View = typeof views[number];
 
 @Component({
@@ -250,6 +250,7 @@ export class ProjectBuilderComponent {
     TextPrototypeModule,
     QuestionnaireModule,
     TaskFeedbacksModule,
+    FeedbackVisualizationModule,
   ],
 })
 export class ProjectBuilderModule {}

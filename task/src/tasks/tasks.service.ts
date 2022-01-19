@@ -26,7 +26,12 @@ import { Feedback } from '../feedbacks/entities/feedback.entity';
 import { BatchCreateImagesDto } from './dto/batch-create-images.dto';
 import { Image } from './entities/image.entity';
 import cloudinaryConfig from '../config/cloudinary';
-import { Question } from './entities/question.entity';
+import { Question, QuestionType } from './entities/question.entity';
+import { Answer, ThumbsRating } from '../feedbacks/entities/answer.entity';
+import {
+  FeedbackStatsResponseDto,
+  QuestionAnswerStats,
+} from './dto/feedback-stats-response.dto';
 
 cloudinary.config(cloudinaryConfig().cloudinary.config);
 
@@ -578,6 +583,52 @@ export class TasksService {
     return this.taskRepository.update(id, {
       status: TaskStatus.Closed,
     });
+  }
+
+  async feedbackStats(id: string) {
+    // check if user has read permission on the Task
+    await findWithPermissionCheck(id, Action.Read, this.taskRepository);
+
+    const questionRepo = this.taskRepository.manager.getRepository(Question);
+    const records = await questionRepo
+      .createQueryBuilder('q')
+      .select([
+        'q.id as "questionId"',
+        'q.type as "questionType"',
+        'a.starRatingAnswer as "starRatingAnswer"',
+        'count(a.starRatingAnswer)::int as "starRatingAnswerCount"',
+        'a."radioAnswer"',
+        'count(a."radioAnswer")::int as "radioAnswerCount"',
+      ])
+      .addSelect(
+        'COUNT(CASE WHEN a.thumbsRatingAnswer = :ratingUp THEN 1 END )::int',
+        'thumbsUpCount',
+      )
+      .setParameter('ratingUp', ThumbsRating.Up)
+      .addSelect(
+        'COUNT(CASE WHEN a.thumbsRatingAnswer = :ratingDown THEN 1 END )::int',
+        'thumbsDownCount',
+      )
+      .setParameter('ratingDown', ThumbsRating.Down)
+      .innerJoin(
+        Answer,
+        'a',
+        'q.id = a."questionId" ' +
+          'AND ( q.type = :thumbsRating OR q.type = :starRating OR q.type = :radio)' +
+          'AND q.taskId = :taskId',
+        {
+          thumbsRating: QuestionType.ThumbsRating,
+          starRating: QuestionType.StarRating,
+          radio: QuestionType.Radio,
+          taskId: id,
+        },
+      )
+      .groupBy('q.id, a.starRatingAnswer, a.radioAnswer')
+      .getRawMany();
+
+    const response = new FeedbackStatsResponseDto();
+    response.stats = records as QuestionAnswerStats[];
+    return response;
   }
 }
 

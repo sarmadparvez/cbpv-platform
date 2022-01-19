@@ -61,7 +61,7 @@ export class ProfileComponent extends RegisterComponent implements OnInit {
     protected readonly userService: UsersService,
     protected readonly snackBar: MatSnackBar,
     protected readonly router: Router,
-    private readonly authService: AuthService,
+    protected readonly authService: AuthService,
   ) {
     super(
       route,
@@ -72,6 +72,7 @@ export class ProfileComponent extends RegisterComponent implements OnInit {
       userService,
       snackBar,
       router,
+      authService,
     );
     this.initializeFormWithUserData();
   }

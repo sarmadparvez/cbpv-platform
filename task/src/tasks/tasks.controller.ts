@@ -129,6 +129,15 @@ export class TasksController {
   }
 
   /**
+   * Get statistics for feedbacks e.g, no of each star rating answer, number of thumbs up/down, no of each radio option selections.
+   * The user must have Read Permission for the Task.
+   */
+  @Get(':id/feedbackStats')
+  feedbackStats(@Param('id') id: string) {
+    return this.tasksService.feedbackStats(id);
+  }
+
+  /**
    * Update a Task. The calling user must have Update permission the Task.
    */
   @ApiBearerAuth()

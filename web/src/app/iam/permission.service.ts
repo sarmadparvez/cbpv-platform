@@ -11,7 +11,6 @@ import { AuthService } from '../auth/auth.service';
 export class PermissionsService {
   private permissionsFetched = false;
   userAbility: ReplaySubject<Ability> = new ReplaySubject<Ability>(1);
-  loading = new ReplaySubject<boolean>(1);
 
   constructor(
     private readonly iamService: IAMService,
@@ -26,7 +25,7 @@ export class PermissionsService {
     if (this.permissionsFetched) {
       return;
     }
-    this.loading.next(true);
+    this.authService.loading.next(true);
     try {
       const response = (await firstValueFrom(
         this.iamService.getPermissions(),
@@ -35,9 +34,9 @@ export class PermissionsService {
       userAbility.update(unpackRules(response));
       this.userAbility.next(userAbility);
       this.permissionsFetched = true;
-      this.loading.next(false);
+      this.authService.loading.next(false);
     } catch (err) {
-      this.loading.next(false);
+      this.authService.loading.next(false);
       throw err;
     }
   }
