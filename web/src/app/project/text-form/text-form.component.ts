@@ -16,7 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 export interface TextFormData {
   task: Task;
-  splitNo: number;
+  prototypeNumber: number;
 }
 @Component({
   selector: 'app-text-form',
@@ -32,7 +32,7 @@ export class TextFormComponent {
     private dialog: MatDialogRef<TextFormComponent>,
     @Inject(MAT_DIALOG_DATA) private data: TextFormData,
   ) {
-    if (this.data.splitNo === 1) {
+    if (this.data.prototypeNumber === 1) {
       this.control.setValue(this.data.task.textualDescription1);
     } else {
       this.control.setValue(this.data.task.textualDescription2);
@@ -44,7 +44,7 @@ export class TextFormComponent {
       return;
     }
     const request = <UpdateTaskDto>{};
-    if (this.data.splitNo === 1) {
+    if (this.data.prototypeNumber === 1) {
       request.textualDescription1 = this.control.value;
     } else {
       request.textualDescription2 = this.control.value;

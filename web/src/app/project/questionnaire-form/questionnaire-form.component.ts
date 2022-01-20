@@ -18,6 +18,7 @@ import { FlexModule } from '@angular/flex-layout';
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
@@ -133,6 +134,9 @@ export class QuestionnaireFormComponent implements OnInit {
     const value = (event.value || '').trim();
 
     if (value) {
+      if (!control.value || typeof control.value !== 'object') {
+        control.setValue([]);
+      }
       control.value.push(value);
     }
     event.chipInput!.clear();
@@ -170,6 +174,14 @@ export class QuestionnaireFormComponent implements OnInit {
     if (event.value !== Question.TypeEnum.Radio) {
       this.formGroups[index].controls.radioOptions.updateValueAndValidity();
     }
+  }
+
+  getSelectedOptions(control: AbstractControl) {
+    if (control.value != null && typeof control.value === 'object') {
+      return control.value;
+    }
+    control.setValue([]);
+    return [];
   }
 }
 

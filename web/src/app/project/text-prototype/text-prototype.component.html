@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-title>{{ 'name.text' | translate }}</mat-card-title>
-  <mat-card-subtitle *ngIf="(task | async)?.testType === TestTypeEnum.Split">
+  <mat-card-subtitle *ngIf="(task | async)?.testType === TestTypeEnum.Comparison">
     {{ 'name.prototype1' | translate }}
   </mat-card-subtitle>
   <mat-card-content>
@@ -9,13 +9,13 @@
       <ng-container
           *ngIf="
         (task | async)?.testType === TestTypeEnum.Basic;
-        else splitTextNote
+        else comparisonTextNote
       "
       >
         {{ 'note.basicTextAdd' | translate }}
       </ng-container>
-      <ng-template #splitTextNote>
-        {{ 'note.splitText1' | translate }}
+      <ng-template #comparisonTextNote>
+        {{ 'note.comparisonText1' | translate }}
       </ng-template>
     </p>
     <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
@@ -28,14 +28,14 @@
     </div>
 
     <!--Prototype 2-->
-    <ng-container *ngIf="(task | async)?.testType === TestTypeEnum.Split">
+    <ng-container *ngIf="(task | async)?.testType === TestTypeEnum.Comparison">
       <mat-divider inset></mat-divider>
       <mat-card-title class="mt-15">{{
         'name.text' | translate
         }}</mat-card-title>
       <mat-card-subtitle>{{ 'name.prototype2' | translate }}</mat-card-subtitle>
 
-      <p class="text-note"  *ngIf="!readonly">{{ 'note.splitText2' | translate }}</p>
+      <p class="text-note"  *ngIf="!readonly">{{ 'note.comparisonText2' | translate }}</p>
 
       <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
         <a mat-button color="primary" (click)="openEditDialog(2)"

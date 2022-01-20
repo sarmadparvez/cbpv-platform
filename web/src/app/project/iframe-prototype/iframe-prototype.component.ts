@@ -79,7 +79,7 @@ export class IframePrototypeComponent implements OnInit {
     this.dialog
       .open(IframeFormComponent, {
         data: <IframeFormData>{
-          splitNo: urlNo,
+          prototypeNumber: urlNo,
           task: task,
         },
         disableClose: true,

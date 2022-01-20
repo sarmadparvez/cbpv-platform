@@ -332,7 +332,7 @@ export class TasksService {
       ) {
         messages.push('Task cannot be activated without a prototype link.');
       } else if (
-        this.isSplitTest(task) &&
+        this.isComparisonTest(task) &&
         (!task.iframeUrl1 ||
           !task.iframeUrl2 ||
           task.iframeUrl1?.trim() === '' ||
@@ -343,10 +343,14 @@ export class TasksService {
     } else if (this.isImageFormat(task)) {
       if (this.isBasicTest(task) && task.images.length === 0) {
         messages.push('At-least one image is required for the basic test.');
-      } else if (this.isSplitTest(task)) {
-        const imageForSplit1 = task.images.find((t) => t.splitNumber === 1);
-        const imageForSplit2 = task.images.find((t) => t.splitNumber === 2);
-        if (!imageForSplit1 || !imageForSplit2) {
+      } else if (this.isComparisonTest(task)) {
+        const imageForPrototype1 = task.images.find(
+          (t) => t.prototypeNumber === 1,
+        );
+        const imageForPrototype2 = task.images.find(
+          (t) => t.prototypeNumber === 2,
+        );
+        if (!imageForPrototype1 || !imageForPrototype2) {
           messages.push('Please provide images for both prototypes.');
         }
       }
@@ -357,7 +361,7 @@ export class TasksService {
       ) {
         messages.push('Task cannot be activated without textual description.');
       } else if (
-        this.isSplitTest(task) &&
+        this.isComparisonTest(task) &&
         (!task.textualDescription1 ||
           task.textualDescription1?.trim() === '' ||
           !task.textualDescription2 ||
@@ -388,8 +392,8 @@ export class TasksService {
     return task.testType === TestType.Basic;
   }
 
-  private isSplitTest(task: Task) {
-    return task.testType === TestType.Split;
+  private isComparisonTest(task: Task) {
+    return task.testType === TestType.Comparison;
   }
 
   private isImageFormat(task: Task) {
@@ -460,7 +464,7 @@ export class TasksService {
     }
   }
 
-  async findAllImages(taskId: string, splitNumber: number) {
+  async findAllImages(taskId: string, prototypeNumber: number) {
     let hasPermission = false;
     // check if user have permission to Read Task
     const task = await this.taskRepository.findOneOrFail(taskId);
@@ -504,8 +508,8 @@ export class TasksService {
     const where = {
       taskId,
     };
-    if (splitNumber) {
-      where['splitNumber'] = splitNumber;
+    if (prototypeNumber) {
+      where['prototypeNumber'] = prototypeNumber;
     }
     const images = await (this.taskRepository.manager.find(Image, {
       where,

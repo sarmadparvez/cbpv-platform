@@ -51,7 +51,7 @@
           <mat-label>Radio button options</mat-label>
           <mat-chip-list #chipList formControlName="radioOptions">
             <mat-chip
-              *ngFor="let option of form.controls.radioOptions.value"
+              *ngFor="let option of getSelectedOptions(form.controls.radioOptions)"
               (removed)="removeRadioOption(option, form.controls.radioOptions)"
             >
               {{ option }}

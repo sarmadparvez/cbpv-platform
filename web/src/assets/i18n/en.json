@@ -22,7 +22,7 @@
     "additionalComment": "Additional Comment",
     "budget": "Total budget (€)",
     "basicTest": "Basic Test",
-    "splitTest": "Split Test",
+    "comparisonTest": "Comparison Test",
     "countries": "Countries",
     "dateCreated": "Creation date",
     "firstName": "First Name",
@@ -108,7 +108,7 @@
   },
   "testType": {
     "basic": "Basic",
-    "split": "Split"
+    "comparison": "Comparison"
   },
   "questionType": {
     "text": "Text",
@@ -141,8 +141,8 @@
     "textDescription": "Please provide textual description of your idea.",
     "textTask": "The Prototype will be added as Text. You can provide textual description of your Application idea.",
     "textTaskSubtitle": "Textual description",
-    "basicTest": "In a basic test, a single Prototype is evaluated.",
-    "splitTest": "In a split test, two Prototypes of the same Application are evaluated with a comparison.",
+    "basicTest": "In a basic test, a single prototype is evaluated.",
+    "comparisonTest": "In a comparison test, two prototypes of the same Application are evaluated with a comparison.",
     "skillsHint": "Your Professional skills. You can only evaluate Prototypes which match your skills.",
     "giveFeedback": "To give feedback on Prototypes, go to <em>Evaluate</em> from the side menu and open the Task you want to evaluate.",
     "viewFeedbacks": "To view your given feedbacks, go to <em>Feedbacks</em> from the side menu.",
@@ -150,12 +150,12 @@
     "basicImageUpload": "Please upload images of your Prototype.",
     "basicTextAdd": "Please provide text for your Prototype.",
     "basicIframeUpload": "Please add link to your Prototype.",
-    "splitImageUpload1": "Please upload images of your Prototype 1.",
-    "splitImageUpload2": "Please upload images of your Prototype 2.",
-    "splitIframeUpload1": "Please provide link for your Prototype 1.",
-    "splitIframeUpload2": "Please provide link for your Prototype 2.",
-    "splitText1": "Please provide textual description of your Prototype 1.",
-    "splitText2": "Please provide textual description of your Prototype 2.",
+    "comparisonImageUpload1": "Please upload images of your Prototype 1.",
+    "comparisonImageUpload2": "Please upload images of your Prototype 2.",
+    "comparisonIframeUpload1": "Please provide link for your Prototype 1.",
+    "comparisonIframeUpload2": "Please provide link for your Prototype 2.",
+    "comparisonText1": "Please provide textual description of your Prototype 1.",
+    "comparisonText2": "Please provide textual description of your Prototype 2.",
     "questionnaire": "Add a Questionnaire to get feedback on your Prototype.",
     "radioOptionsHint": "Provide radio button options. Each entry in this field will be a radio button available as an option to be selected when answering this question. To create an option, enter text in this field and press enter button."
   }

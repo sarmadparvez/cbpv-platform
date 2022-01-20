@@ -187,17 +187,17 @@ export class TasksController {
    */
   @ApiBearerAuth()
   @ApiQuery({
-    name: 'splitNumber',
+    name: 'prototypeNumber',
     required: false,
-    description: 'Optional filtering by splitNumber',
+    description: 'Optional filtering by prototypeNumber',
     type: 'number',
   })
   @Get(':id/images')
   findAllImages(
     @Param('id') id: string,
-    @Query('splitNumber') splitNumber?: number,
+    @Query('prototypeNumber') prototypeNumber?: number,
   ) {
-    return this.tasksService.findAllImages(id, splitNumber);
+    return this.tasksService.findAllImages(id, prototypeNumber);
   }
 
   /**

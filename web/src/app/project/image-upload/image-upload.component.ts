@@ -167,7 +167,7 @@ export class ImageUploadComponent {
       this.removeFileFromArray(file);
       return <Image>{
         url: response.secure_url,
-        splitNumber: this.uniqueId,
+        prototypeNumber: this.uniqueId,
         cloudId: response.public_id,
       };
     } catch (err) {

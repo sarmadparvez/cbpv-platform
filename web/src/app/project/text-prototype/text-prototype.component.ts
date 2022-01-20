@@ -26,13 +26,13 @@ export class TextPrototypeComponent {
   TaskStatusEnum = Task.StatusEnum;
   constructor(private readonly dialog: MatDialog) {}
 
-  async openEditDialog(splitNum: number) {
+  async openEditDialog(prototypeNumber: number) {
     const task = await firstValueFrom(this.task);
 
     this.dialog
       .open(TextFormComponent, {
         data: <TextFormData>{
-          splitNo: splitNum,
+          prototypeNumber: prototypeNumber,
           task: task,
         },
         disableClose: true,
@@ -41,7 +41,7 @@ export class TextPrototypeComponent {
       .afterClosed()
       .subscribe((text: string) => {
         if (text) {
-          if (splitNum === 1) {
+          if (prototypeNumber === 1) {
             task.textualDescription1 = text;
             this.task.next(task);
           } else {

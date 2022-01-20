@@ -27,49 +27,56 @@ export class ImagePrototypeComponent implements OnInit {
   TestTypeEnum = TestTypeEnum;
   TaskStatusEnum = Task.StatusEnum;
   images = new Map<number, ReplaySubject<GalleryImage[]>>();
+  showViewer = false;
 
   constructor(private readonly taskService: TasksService) {
     Window['ipself'] = this;
   }
 
   ngOnInit() {
-    this.findAllImages();
+    if (this.task) {
+      this.task.subscribe(async task => {
+        this.showViewer = false;
+        await this.findAllImages();
+        this.showViewer = true;
+      });
+    }
   }
 
-  async findAllImages(splitNumber?: number) {
+  async findAllImages(prototypeNumber?: number) {
     const task = await firstValueFrom(this.task);
     try {
       const images = await firstValueFrom(
-        this.taskService.findAllImages(task.id, splitNumber),
+        this.taskService.findAllImages(task.id, prototypeNumber),
       );
-      this.splitImagesInMap(images, splitNumber);
+      this.divideImagesInMap(images, prototypeNumber);
     } catch (err) {
       console.log('unable to fetch images ', err);
     }
   }
 
-  async splitImagesInMap(images: Image[], splitNumber?: number) {
-    if (!splitNumber) {
-      const firstSplitImages = images.filter(i => i.splitNumber === 1);
-      // first split should always exist if images exist because default split number is 1
-      this.setImagesInMap(firstSplitImages, 1);
-      const secondSplitImages = images.filter(i => i.splitNumber === 2);
+  async divideImagesInMap(images: Image[], prototypeNumber?: number) {
+    if (!prototypeNumber) {
+      const firstPrototypeImages = images.filter(i => i.prototypeNumber === 1);
+      // first comparison should always exist if images exist because default comparison number is 1
+      this.setImagesInMap(firstPrototypeImages, 1);
+      const secondPrototypeImages = images.filter(i => i.prototypeNumber === 2);
       const task = await firstValueFrom(this.task);
-      if (task.testType === TestTypeEnum.Split) {
-        // only set second split images if they exist
-        this.setImagesInMap(secondSplitImages, 2);
+      if (task.testType === TestTypeEnum.Comparison) {
+        // only set second comparison images if they exist
+        this.setImagesInMap(secondPrototypeImages, 2);
       }
     } else {
-      this.setImagesInMap(images, splitNumber);
+      this.setImagesInMap(images, prototypeNumber);
     }
   }
 
-  setImagesInMap(images: Image[], splitNumber: number) {
-    if (!this.images.has(splitNumber)) {
-      this.initializeImageMapFor(splitNumber);
+  setImagesInMap(images: Image[], prototypeNumber: number) {
+    if (!this.images.has(prototypeNumber)) {
+      this.initializeImageMapFor(prototypeNumber);
     }
     const galleryImages = this.imagesToGalleryImages(images);
-    this.images.get(splitNumber).next(galleryImages);
+    this.images.get(prototypeNumber).next(galleryImages);
   }
 
   imagesToGalleryImages(images: Image[]) {
@@ -85,17 +92,17 @@ export class ImagePrototypeComponent implements OnInit {
     );
   }
 
-  initializeImageMapFor(splitNumber) {
-    this.images.set(splitNumber, new ReplaySubject<Image[]>(1));
+  initializeImageMapFor(prototypeNumber: number) {
+    this.images.set(prototypeNumber, new ReplaySubject<Image[]>(1));
   }
 
-  async deleteImage(deleteIndex: number, splitNumber: number) {
+  async deleteImage(deleteIndex: number, prototypeNumber: number) {
     const task = await firstValueFrom(this.task);
     if (task.status !== Task.StatusEnum.Draft) {
       return;
     }
 
-    const imagesSubject = this.images.get(splitNumber);
+    const imagesSubject = this.images.get(prototypeNumber);
     const images = await firstValueFrom(imagesSubject);
 
     if (images[deleteIndex]) {

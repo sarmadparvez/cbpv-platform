@@ -19,7 +19,7 @@ import { Feedback } from '../../feedbacks/entities/feedback.entity';
 
 export enum TestType {
   Basic = 'basic',
-  Split = 'split',
+  Comparison = 'comparison',
 }
 
 export enum PrototypeFormat {

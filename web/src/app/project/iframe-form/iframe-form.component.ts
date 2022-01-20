@@ -16,7 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 
 export interface IframeFormData {
   task: Task;
-  splitNo: number;
+  prototypeNumber: number;
 }
 
 @Component({
@@ -34,7 +34,7 @@ export class IframeFormComponent {
     private dialog: MatDialogRef<IframeFormComponent>,
     @Inject(MAT_DIALOG_DATA) private data: IframeFormData,
   ) {
-    if (this.data.splitNo === 1) {
+    if (this.data.prototypeNumber === 1) {
       this.control.setValue(this.data.task.iframeUrl1);
     } else {
       this.control.setValue(this.data.task.iframeUrl2);
@@ -46,7 +46,7 @@ export class IframeFormComponent {
       return;
     }
     const request = <UpdateTaskDto>{};
-    if (this.data.splitNo === 1) {
+    if (this.data.prototypeNumber === 1) {
       request.iframeUrl1 = this.control.value;
     } else {
       request.iframeUrl2 = this.control.value;

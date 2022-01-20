@@ -22,7 +22,7 @@ export class Image {
   @Min(1)
   @Max(2)
   @Column({ default: 1 })
-  splitNumber: number;
+  prototypeNumber: number;
 
   @ManyToOne(() => Task, (task) => task.images, {
     onDelete: 'CASCADE',

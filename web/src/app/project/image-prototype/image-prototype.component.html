@@ -1,29 +1,29 @@
 <mat-card>
   <mat-card-title>{{ 'name.images' | translate }}</mat-card-title>
-  <mat-card-subtitle *ngIf="(task | async)?.testType === TestTypeEnum.Split">
+  <mat-card-subtitle *ngIf="(task | async)?.testType === TestTypeEnum.Comparison">
     {{ 'name.prototype1' | translate }}
   </mat-card-subtitle>
   <mat-card-content>
     <!--Prototype 1-->
     <p class="text-note" *ngIf="!readonly">
       <ng-container
-        *ngIf="(task | async)?.testType === TestTypeEnum.Basic; else splitImageUploadNote"
+        *ngIf="(task | async)?.testType === TestTypeEnum.Basic; else comparisonImageUploadNote"
       >
         {{ 'note.basicImageUpload' | translate }}
       </ng-container>
-      <ng-template #splitImageUploadNote>
-        {{ 'note.splitImageUpload1' | translate }}
+      <ng-template #comparisonImageUploadNote>
+        {{ 'note.comparisonImageUpload1' | translate }}
       </ng-template>
     </p>
     <ng-container
       *ngTemplateOutlet="
         imageUploadViewer;
-        context: { data: { splitNumber: 1 } }
+        context: { data: { prototypeNumber: 1 } }
       "
     ></ng-container>
 
     <!--Prototype 2-->
-    <ng-container *ngIf="(task | async)?.testType === TestTypeEnum.Split">
+    <ng-container *ngIf="(task | async)?.testType === TestTypeEnum.Comparison">
       <mat-divider inset></mat-divider>
       <mat-card-title class="mt-15">{{
         'name.images' | translate
@@ -31,13 +31,13 @@
       <mat-card-subtitle>{{ 'name.prototype2' | translate }}</mat-card-subtitle>
 
       <p class="text-note"  *ngIf="!readonly">
-        {{ 'note.splitImageUpload2' | translate }}
+        {{ 'note.comparisonImageUpload2' | translate }}
       </p>
 
       <ng-container
         *ngTemplateOutlet="
           imageUploadViewer;
-          context: { data: { splitNumber: 2 } }
+          context: { data: { prototypeNumber: 2 } }
         "
       ></ng-container>
     </ng-container>
@@ -48,15 +48,16 @@
 <ng-template #imageUploadViewer let-data="data">
   <app-image-upload
       *ngIf="(task | async).status === TaskStatusEnum.Draft && !readonly"
-    [uniqueId]="data.splitNumber"
-    (completeEvent)="findAllImages(data.splitNumber)"
+    [uniqueId]="data.prototypeNumber"
+    (completeEvent)="findAllImages(data.prototypeNumber)"
     [taskId]="(task | async)?.id"
   ></app-image-upload>
 
   <app-image-viewer
+      *ngIf="showViewer"
       [readonly]="(task | async).status !== TaskStatusEnum.Draft || readonly"
-      [images]="(images.get(data.splitNumber) | async) || []"
-      (deleteEvent)="deleteImage($event, data.splitNumber)"
+      [images]="(images.get(data.prototypeNumber) | async) || []"
+      (deleteEvent)="deleteImage($event, data.prototypeNumber)"
   >
   </app-image-viewer>
 </ng-template>
