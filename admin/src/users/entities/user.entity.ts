@@ -54,14 +54,14 @@ export class User {
   @Exclude()
   passwordHash: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
   birthDate: Date;
 
-  @Column({ type: 'enum', enum: Gender })
+  @Column({ type: 'enum', enum: Gender, nullable: true })
   gender: Gender;
 
   @Min(0)
-  @Column()
+  @Column({ nullable: true })
   experience: number;
 
   @Column({

@@ -119,12 +119,12 @@ export class RegisterComponent implements OnInit {
         validators: matchPassword,
       },
     ),
-    birthDate: ['', Validators.required],
-    gender: ['', Validators.required],
+    birthDate: [null],
+    // gender: ['', Validators.required],
     roles: ['', Validators.required],
-    country: ['', Validators.required],
+    country: [null],
     skills: ['', [() => this.skillsValid()]],
-    experience: [null, Validators.required],
+    experience: [null],
   });
   constructor(
     protected readonly route: ActivatedRoute,
@@ -230,10 +230,16 @@ export class RegisterComponent implements OnInit {
   protected fillDataInRequest(
     request: CreateUserDto | CreateWithSSODto | UpdateUserDto,
   ) {
-    request.birthDate = dateToDBDateString(
-      new Date(this.form.controls.birthDate.value),
-    );
-    request.country = this.form.controls.country.value.id;
+    if (this.form.controls.birthDate.value) {
+      request.birthDate = dateToDBDateString(
+        new Date(this.form.controls.birthDate.value),
+      );
+    }
+    if (this.form.controls.country.value) {
+      request.country = this.form.controls.country.value.id;
+    } else {
+      request.country = null;
+    }
     request.skills = this.selectedSkills.map(skill => skill.id);
   }
 

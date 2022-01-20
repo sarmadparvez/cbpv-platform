@@ -87,7 +87,7 @@
   },
   "error": {
     "activate": "Unable to activate Task. ",
-    "closeIteration": "Unable to close Task iteration",
+    "closeIteration": "Unable to close prototype iteration",
     "required": "This field is required",
     "passwordMismatch": "The passwords do not match",
     "passwordPattern": "Password should be at-least 8 characters long, must contain one lower case and one upper case letter, and one digit.",
@@ -112,9 +112,9 @@
   },
   "questionType": {
     "text": "Text",
-    "radio": "Radio buttons",
-    "star-rating": "Start rating",
-    "thumbs-rating": "Thumbs up/down rating"
+    "radio": "Radio Buttons",
+    "star-rating": "5-Stars Rating",
+    "thumbs-rating": "Thumbs Up/Down Rating"
   },
   "paymentStatus": {
     "pending": "Pending",
@@ -122,11 +122,14 @@
   },
   "note": {
     "askQuestions": "Ask questions about your Prototype. This questionnaire will be presented to Crowdworkers to get feedback for your Prototype.",
+    "birthdayHint": "Optional but Prototypes may have age requirement for evaluation.",
+    "countryHint": "Optional but Prototypes may have matching country as a requirement for evaluation.",
     "commentHint": "Here you can provide any additional feedback",
+    "experienceHint": "Your total experience in the specified skills. Optional but Prototypes may have experience requirement for evaluation.",
     "noData": "No data available",
     "crowdCriteria": "Set the criteria for matching this Task with Crowdworkers. Only the Crowdworkers matching the specified criteria will be able to see this Task.",
-    "closeIterationConfirmTitle": "Close Task Iteration",
-    "closeIterationConfirmMessage": "Please note that after closing the Task iteration you can no longer receive feedback on this iteration. This iteration will no longer be visible to Crowdworkers to provide feedback. Are you sure you want to close the Task iteration?",
+    "closeIterationConfirmTitle": "Close Prototype Iteration",
+    "closeIterationConfirmMessage": "Please note that after closing the prototype iteration you can no longer receive feedback on this iteration. This iteration will no longer be visible to Crowdworkers to provide feedback. Are you sure you want to close the prototype iteration?",
     "enterQuestion": "Please enter your question and select the answer type.",
     "iframeTask": "The Prototype will be embedded as an iframe in the platform. You will need to provide a link for the prototype.",
     "iframeTaskSubtitle": "Link from a third party prototyping tool",
@@ -134,11 +137,13 @@
     "imageTaskSubtitle": "Images of your Application's User Interface",
     "prototype": "Select the Prototype format and Test type.",
     "prototypeLink": "Please add a link for your prototype. Please not that it should be a link and not an embed code. If the Prototyping tool that you used provides an embed code for the Iframe, get the link out of that code and paste it here.",
+    "rolesHint": "Developer role can create Prototypes. Crowdworker role can evaluate Prototypes. You can do both.",
     "textDescription": "Please provide textual description of your idea.",
     "textTask": "The Prototype will be added as Text. You can provide textual description of your Application idea.",
     "textTaskSubtitle": "Textual description",
     "basicTest": "In a basic test, a single Prototype is evaluated.",
     "splitTest": "In a split test, two Prototypes of the same Application are evaluated with a comparison.",
+    "skillsHint": "Your Professional skills. You can only evaluate Prototypes which match your skills.",
     "giveFeedback": "To give feedback on Prototypes, go to <em>Evaluate</em> from the side menu and open the Task you want to evaluate.",
     "viewFeedbacks": "To view your given feedbacks, go to <em>Feedbacks</em> from the side menu.",
     "createPrototypes": "To start creating your Prototypes, go to <em>Projects</em> from the side menu. Create a Project and start a new Task iteration in it",

@@ -10,7 +10,7 @@
     <mat-select
       [formControl]="taskControl"
       class="task-iterations-select"
-      placeholder="Task Iterations"
+      placeholder="Prototype Iterations"
     >
       <mat-select-trigger>{{
         'Iteration ' + (tasks.length - tasks.indexOf(taskControl.value))
@@ -154,7 +154,7 @@
           class="margin-right-auto"
           *ngIf="tasks[0]?.status === StatusEnum.Closed || tasks.length === 0"
         >
-          You can create new task from <em>Start New Iteration</em> button.
+          You can create new prototype from <em>Start New Iteration</em> button.
         </p>
         <ng-container *ngIf="task | async as t">
           <p

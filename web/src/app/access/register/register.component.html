@@ -57,7 +57,7 @@
             </mat-form-field>
           </ng-container>
         </div>
-        <div fxLayout fxLayoutGap="10px">
+        <div fxLayout fxLayoutGap="10px" class="mb-20">
           <!--Birthdate-->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>{{'name.birthdate' | translate}}</mat-label>
@@ -67,10 +67,19 @@
             <mat-error *ngIf="form.get('birthDate').hasError('required')">
               {{ 'error.required' | translate }}
             </mat-error>
+            <mat-hint class="hint-text">{{'note.birthdayHint' | translate }}</mat-hint>
           </mat-form-field>
-
-          <!--Gender-->
+          <!--Experience-->
           <mat-form-field appearance="outline" class="full-width">
+            <mat-label> {{'name.experience' | translate}} </mat-label>
+            <input type="number" min="0" formControlName="experience" matInput />
+            <mat-error *ngIf="form.controls.experience.hasError('required')">
+              {{ 'error.required' | translate }}
+            </mat-error>
+            <mat-hint class="hint-text">{{'note.experienceHint' | translate }}</mat-hint>
+          </mat-form-field>
+          <!--Gender-->
+<!--          <mat-form-field appearance="outline" class="full-width">
             <mat-label>{{'name.gender' | translate}}</mat-label>
             <mat-select formControlName="gender" >
               <mat-option [value]="GenderEnum.Male">
@@ -83,9 +92,9 @@
             <mat-error *ngIf="form.get('gender').hasError('required')">
               {{ 'error.required' | translate }}
             </mat-error>
-          </mat-form-field>
+          </mat-form-field>-->
         </div>
-        <div fxLayout fxLayoutGap="10px">
+        <div fxLayout fxLayoutGap="10px" class="mb-20">
           <!--Roles-->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>{{'name.roles' | translate}}</mat-label>
@@ -100,6 +109,7 @@
             <mat-error *ngIf="form.get('roles').hasError('required')">
               {{ 'error.required' | translate }}
             </mat-error>
+            <mat-hint class="hint-text">{{'note.rolesHint' | translate }}</mat-hint>
           </mat-form-field>
           <!-- Country -->
           <mat-form-field class="full-width" appearance="outline">
@@ -117,11 +127,12 @@
             <mat-error *ngIf="form.controls.country.hasError('required')">
               {{ 'error.required' | translate }}
             </mat-error>
+            <mat-hint class="hint-text">{{'note.countryHint' | translate }}</mat-hint>
           </mat-form-field>
         </div>
         <div fxLayout fxLayoutGap="10px">
           <!--Skills-->
-          <mat-form-field class="full-width" appearance="outline" fxFlex="70%">
+          <mat-form-field class="full-width" appearance="outline">
             <mat-label>{{'name.skills' | translate}} *</mat-label>
             <mat-chip-list #chipList formControlName="skills" >
               <mat-chip
@@ -150,14 +161,7 @@
             <mat-error *ngIf="skillsControl.hasError('required')">
               {{ 'error.required' | translate }}
             </mat-error>
-          </mat-form-field>
-          <!--Experience-->
-          <mat-form-field appearance="outline" fxFlex="30%">
-            <mat-label> {{'name.experience' | translate}} </mat-label>
-            <input type="number" min="0" formControlName="experience" matInput />
-            <mat-error *ngIf="form.controls.experience.hasError('required')">
-              {{ 'error.required' | translate }}
-            </mat-error>
+            <mat-hint class="hint-text">{{'note.skillsHint' | translate }}</mat-hint>
           </mat-form-field>
         </div>
       </form>

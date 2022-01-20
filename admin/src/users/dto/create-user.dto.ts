@@ -1,16 +1,15 @@
 import {
   ArrayNotEmpty,
   IsArray,
-  IsDate,
   IsDateString,
   IsEnum,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
   IsUUID,
   Matches,
   Min,
-  MinLength,
 } from 'class-validator';
 import { Gender, Role } from '../entities/user.entity';
 
@@ -43,17 +42,17 @@ export class CreateUserDto {
   password: string;
 
   @IsDateString()
-  @IsNotEmpty()
-  birthDate: Date;
+  @IsOptional()
+  birthDate?: Date;
 
   @IsEnum(Gender)
-  @IsNotEmpty()
-  gender: Gender;
+  @IsOptional()
+  gender?: Gender;
 
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(0)
-  experience: number;
+  experience?: number;
 
   @IsArray()
   @IsEnum(Role, { each: true })
@@ -61,8 +60,8 @@ export class CreateUserDto {
   roles: Role[];
 
   @IsUUID()
-  @IsNotEmpty()
-  country: string;
+  @IsOptional()
+  country?: string;
 
   @IsArray()
   @IsUUID('all', { each: true })

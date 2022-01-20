@@ -75,6 +75,7 @@ export class ProfileComponent extends RegisterComponent implements OnInit {
       authService,
     );
     this.initializeFormWithUserData();
+    Window['pself'] = this;
   }
 
   async initializeFormWithUserData() {
@@ -86,12 +87,12 @@ export class ProfileComponent extends RegisterComponent implements OnInit {
       firstName: [user.firstName, Validators.required],
       lastName: [user.lastName, Validators.required],
       username: [user.username, Validators.required],
-      birthDate: [user.birthDate, Validators.required],
-      gender: [user.gender, Validators.required],
+      birthDate: [user.birthDate],
+      // gender: [user.gender, Validators.required],
       roles: [user.roles, Validators.required],
-      country: [user.country, Validators.required],
+      country: [user.country],
       skills: ['', [() => this.skillsValid()]],
-      experience: [user.experience, Validators.required],
+      experience: [user.experience],
     });
     this.form.controls.username.disable();
   }
