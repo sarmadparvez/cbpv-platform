@@ -104,7 +104,7 @@
   "role": {
     "admin": "Administrator",
     "developer": "Developer",
-    "crowdworker": "Crowdworker"
+    "crowdworker": "Crowd-Worker"
   },
   "testType": {
     "basic": "Basic",
@@ -146,7 +146,7 @@
     "skillsHint": "Your Professional skills. You can only evaluate Prototypes which match your skills.",
     "giveFeedback": "To give feedback on Prototypes, go to <em>Evaluate</em> from the side menu and open the Task you want to evaluate.",
     "viewFeedbacks": "To view your given feedbacks, go to <em>Feedbacks</em> from the side menu.",
-    "createPrototypes": "To start creating your Prototypes, go to <em>Projects</em> from the side menu. Create a Project and start a new Task iteration in it",
+    "createPrototypes": "To start creating your Prototypes, go to <em>Projects</em> from the side menu. Create a Project and start a new Task iteration in it.",
     "basicImageUpload": "Please upload images of your Prototype.",
     "basicTextAdd": "Please provide text for your Prototype.",
     "basicIframeUpload": "Please add link to your Prototype.",

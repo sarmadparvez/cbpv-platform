@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../auth/auth.guard';
 import { RolePipeModule } from '../iam/role.pipe';
 import { TranslateModule } from '@ngx-translate/core';
+import { FlexModule } from '@angular/flex-layout';
 
 /**
  * Routes inside the home module
@@ -24,6 +25,7 @@ export const routes: Routes = [
     CommonModule,
     RolePipeModule,
     TranslateModule,
+    FlexModule,
   ],
 })
 export class HomeModule {}
