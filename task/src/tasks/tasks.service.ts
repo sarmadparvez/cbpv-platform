@@ -163,14 +163,17 @@ export class TasksService {
    * @private
    */
   private getTaskMatchingQuery(user: User) {
-    const birthDate = new Date(user.birthDate);
-    const now = new Date();
-    let age = now.getFullYear() - birthDate.getFullYear();
-    const month = now.getMonth() - birthDate.getMonth();
-    if (month < 0 || (month == 0 && now.getDate() < birthDate.getDate())) {
-      age--;
+    let age = null;
+    if (user.birthDate) {
+      const birthDate = new Date(user.birthDate);
+      const now = new Date();
+      age = now.getFullYear() - birthDate.getFullYear();
+      const month = now.getMonth() - birthDate.getMonth();
+      if (month < 0 || (month == 0 && now.getDate() < birthDate.getDate())) {
+        age--;
+      }
     }
-    return this.taskRepository
+    const query = this.taskRepository
       .createQueryBuilder('task')
       .innerJoinAndSelect(
         'task.skills',
@@ -180,22 +183,20 @@ export class TasksService {
           skills: user.skills.map((skill) => skill.id),
         },
       )
-      .innerJoinAndSelect(
-        'task.countries',
-        'countries',
-        'countries.id = :countryId',
-        {
-          countryId: user.country.id,
-        },
-      )
+      .leftJoinAndSelect('task.countries', 'countries')
       .where(
-        'task.maxExperience >= :userExperience AND task.minExperience <= :userExperience ' +
-          'AND task.maxAge >= :userAge AND task.minAge <= :userAge',
+        '(task.maxExperience >= :userExperience OR task.maxExperience IS NULL) ' +
+          'AND (task.minExperience <= :userExperience OR task.minExperience IS NULL) ' +
+          'AND (task.maxAge >= :userAge OR task.maxAge IS NULL ) ' +
+          'AND (task.minAge <= :userAge OR task.minAge IS NULL ) ' +
+          'AND (countries.id = :countryId OR countries.id IS NULL)',
         {
           userExperience: user.experience,
           userAge: age,
+          countryId: user.country?.id || null,
         },
       );
+    return query;
   }
 
   async findOne(id: string) {
@@ -311,11 +312,6 @@ export class TasksService {
     }
     if (task.incentive > task.budget) {
       messages.push('Incentive cannot be greater than budget.');
-    }
-    if (task.countries.length === 0) {
-      messages.push(
-        'Please provide a country for matching the Task with Crowdworkers.',
-      );
     }
     if (task.skills.length === 0) {
       messages.push(
