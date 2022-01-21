@@ -47,7 +47,6 @@ export class FeedbacksService {
         relations: ['questions'],
       },
     );
-    console.log('task ', task);
     const taskQuestionIds = task.questions.map((question) => question.id);
     const allAnswersBelongToTaskQuesitons = createFeedbackDto.answers.every(
       (answer) => taskQuestionIds.includes(answer.questionId),

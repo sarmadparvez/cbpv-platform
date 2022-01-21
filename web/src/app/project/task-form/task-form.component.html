@@ -86,7 +86,7 @@
       </div>
 
 
-      <div fxLayout fxLayoutGap="10px">
+      <div fxLayout fxLayoutGap="10px" class="mb-20">
         <!--Min Experience-->
         <mat-form-field class="full-width" appearance="outline">
           <mat-label> {{ 'name.minExperience' | translate }} </mat-label>
@@ -100,7 +100,7 @@
           <mat-error *ngIf="form.controls.minExperience.hasError('required')">
             {{ 'error.required' | translate }}
           </mat-error>
-          <mat-hint>The minimum experience limit for a Crowdworker to work on this Task</mat-hint>
+          <mat-hint>The minimum experience limit for a Crowdworker to work on this Task. Possible values range 0-49.</mat-hint>
         </mat-form-field>
 
         <!--Max Experience-->
@@ -116,11 +116,11 @@
           <mat-error *ngIf="form.controls.maxExperience.hasError('required')">
             {{ 'error.required' | translate }}
           </mat-error>
-          <mat-hint>The maximum experience limit for a Crowdworker to work on this Task</mat-hint>
+          <mat-hint>The maximum experience limit for a Crowdworker to work on this Task. Possible values range 0-49.</mat-hint>
         </mat-form-field>
       </div>
 
-      <div fxLayout fxLayoutGap="10px">
+      <div fxLayout fxLayoutGap="10px" class="mb-20">
         <!--Min Age-->
         <mat-form-field class="full-width" appearance="outline">
           <mat-label> {{ 'name.minAge' | translate }} </mat-label>
@@ -134,7 +134,7 @@
           <mat-error *ngIf="form.controls.minAge.hasError('required')">
             {{ 'error.required' | translate }}
           </mat-error>
-          <mat-hint>The minimum age limit for a Crowdworker to work on this Task</mat-hint>
+          <mat-hint>The minimum age limit for a Crowdworker to work on this Task. Possible values range 18-67.</mat-hint>
         </mat-form-field>
 
         <!--Max Age-->
@@ -150,10 +150,10 @@
           <mat-error *ngIf="form.controls.maxAge.hasError('required')">
             {{ 'error.required' | translate }}
           </mat-error>
-          <mat-hint>The maximum age limit for a Crowdworker to work on this Task</mat-hint>
+          <mat-hint>The maximum age limit for a Crowdworker to work on this Task. Possible values range 18-67.</mat-hint>
         </mat-form-field>
       </div>
-      <div fxLayout class="full-width" fxLayoutGap="10px">
+      <div fxLayout class="full-width" fxLayoutGap="10px" class="mb-20">
         <!--Skills-->
         <mat-form-field class="full-width" appearance="outline">
           <mat-label>{{'name.skills' | translate}} *</mat-label>
@@ -189,7 +189,7 @@
 
         <!--Countries-->
         <mat-form-field class="full-width" class="full-width" appearance="outline">
-          <mat-label>{{'name.countries' | translate}} *</mat-label>
+          <mat-label>{{'name.countries' | translate}}</mat-label>
           <mat-chip-list #countryChipList formControlName="countries" >
             <mat-chip
                 *ngFor="let country of selectedCountries"

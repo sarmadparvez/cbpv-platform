@@ -85,22 +85,22 @@ export class Task {
 
   @Min(18)
   @Max(67)
-  @Column({ default: 18 })
+  @Column({ nullable: true })
   minAge: number;
 
   @Min(18)
   @Max(67)
-  @Column({ default: 67 })
+  @Column({ nullable: true })
   maxAge: number;
 
   @Min(0)
   @Max(49)
-  @Column({ default: 0 })
+  @Column({ nullable: true })
   minExperience: number;
 
   @Min(0)
   @Max(49)
-  @Column({ default: 49 })
+  @Column({ nullable: true })
   maxExperience: number;
 
   @Column('decimal', {

@@ -70,7 +70,7 @@
     "country": "Country",
     "experience": "Experience (Years)",
     "matchedSkills": "Matched Skills",
-    "matchedCountry": "Matched Country",
+    "matchedCountry": "Country",
     "user": "User"
   },
   "notification": {
@@ -127,7 +127,7 @@
     "commentHint": "Here you can provide any additional feedback",
     "experienceHint": "Your total experience in the specified skills. Optional but Prototypes may have experience requirement for evaluation.",
     "noData": "No data available",
-    "crowdCriteria": "Set the criteria for matching this Task with Crowdworkers. Only the Crowdworkers matching the specified criteria will be able to see this Task.",
+    "crowdCriteria": "Set the criteria for matching this Task with Crowdworkers. Only the Crowdworkers matching the specified criteria will be able to see this Task. Leave the optional fields empty if you don't want to filter by them.",
     "closeIterationConfirmTitle": "Close Prototype Iteration",
     "closeIterationConfirmMessage": "Please note that after closing the prototype iteration you can no longer receive feedback on this iteration. This iteration will no longer be visible to Crowdworkers to provide feedback. Are you sure you want to close the prototype iteration?",
     "enterQuestion": "Please enter your question and select the answer type.",

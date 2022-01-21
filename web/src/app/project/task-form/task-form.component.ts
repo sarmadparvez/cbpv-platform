@@ -77,11 +77,11 @@ export class TaskFormComponent implements OnInit {
     prototypeFormat: ['', Validators.required],
     budget: [null, Validators.required],
     incentive: [null, Validators.required],
-    minExperience: [0, Validators.required],
-    maxExperience: [49, Validators.required],
-    minAge: [18, Validators.required],
-    maxAge: [67, Validators.required],
-    countries: ['', [() => this.countriesValid()]],
+    minExperience: [null],
+    maxExperience: [null],
+    minAge: [null],
+    maxAge: [null],
+    countries: [''],
     skills: ['', [() => this.skillsValid()]],
   });
 
@@ -287,15 +287,6 @@ export class TaskFormComponent implements OnInit {
 
   skillsValid(): ValidationErrors | null {
     if (this.selectedSkills.length === 0) {
-      return {
-        required: true,
-      };
-    }
-    return null;
-  }
-
-  countriesValid(): ValidationErrors | null {
-    if (this.selectedCountries.length === 0) {
       return {
         required: true,
       };
