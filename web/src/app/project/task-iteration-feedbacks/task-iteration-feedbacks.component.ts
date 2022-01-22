@@ -32,6 +32,7 @@ import {
 } from '../task-iteration-feedback-preview/task-iteration-feedback-preview.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import PaymentStatusEnum = UpdateFeedbackDto.PaymentStatusEnum;
+import { ReportMisuseComponent } from '../report-misuse/report-misuse.component';
 
 @Component({
   selector: 'app-task-iteration-feedbacks',
@@ -125,6 +126,16 @@ export class TaskIterationFeedbacksComponent implements OnInit {
         duration: 5000,
       });
     }
+  }
+
+  report(id: string) {
+    this.dialog
+      .open(ReportMisuseComponent, {
+        width: '50vw',
+        disableClose: true,
+      })
+      .afterClosed()
+      .subscribe(() => {});
   }
 }
 

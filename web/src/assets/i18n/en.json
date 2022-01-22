@@ -13,11 +13,13 @@
     "editPrototypeLink": "Edit Prototype Link",
     "editText": "Edit Prototype Text",
     "editQuestionnaire": "Edit Questionnaire",
+    "reportMisuse": "Report Misuse",
     "samplePrototypes": "Sample Prototypes",
     "textDescription": "Text Description"
   },
   "name": {
     "answer": "Answer",
+    "comment": "Comment",
     "answerType": "Answer Type",
     "additionalComment": "Additional Comment",
     "budget": "Total budget (€)",
@@ -84,6 +86,7 @@
     "closeIteration": "Task iteration closed successfully",
     "imageUpload": "Image(s) uploaded successfully",
     "rolesChangeReLogin": "You need to login again because you changed your Role(s).",
+    "reportMisuseSuccess": "Your report is submitted",
     "submitFeedback": "Your feedback is submitted successfully.",
     "paymentReleased": "Payment successfully released"
   },

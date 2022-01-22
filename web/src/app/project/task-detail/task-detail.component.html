@@ -124,7 +124,7 @@
           {{ 'name.incentive' | translate }}
         </div>
         <div>
-          <span>{{ task?.incentive }}</span>
+          <span>{{ task?.incentive | currency: 'EUR' }}</span>
         </div>
       </div>
 
@@ -134,7 +134,7 @@
           {{ 'name.budget' | translate }}
         </div>
         <div>
-          <span>{{ task?.budget }}</span>
+          <span>{{ task?.budget | currency: 'EUR'}}</span>
         </div>
       </div>
     </div>
