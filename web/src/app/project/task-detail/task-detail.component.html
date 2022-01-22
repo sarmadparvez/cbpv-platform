@@ -31,6 +31,16 @@
           <span>{{ task?.dateCreated | date: 'dd.MM.y HH:mm:ss' }}</span>
         </div>
       </div>
+      <!--Access Type-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.taskAccess' | translate }}
+        </div>
+        <div>
+          <span>{{ 'accessType.' + task?.accessType | translate }}</span>
+        </div>
+      </div>
+
     </div>
     <mat-divider inset></mat-divider>
 

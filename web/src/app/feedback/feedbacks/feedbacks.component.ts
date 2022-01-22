@@ -1,7 +1,11 @@
 import { Component, NgModule, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Feedback, FeedbacksService } from '../../../../gen/api/task';
+import {
+  Feedback,
+  FeedbacksService,
+  UpdateFeedbackDto,
+} from '../../../../gen/api/task';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { NoDataModule } from '../../template/no-data/no-data.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import PaymentStatusEnum = UpdateFeedbackDto.PaymentStatusEnum;
 
 @Component({
   selector: 'app-feedbacks',
@@ -28,10 +33,12 @@ export class FeedbacksComponent implements OnInit {
     'comment',
     'dateCreated',
     'paymentStatus',
+    'incentive',
     'options',
   ];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  PaymentStatus = PaymentStatusEnum;
 
   constructor(
     private readonly feedbackService: FeedbacksService,

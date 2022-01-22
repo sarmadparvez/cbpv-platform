@@ -64,6 +64,16 @@
           {{ 'paymentStatus.' + element.paymentStatus | translate }}
         </td>
       </ng-container>
+      <ng-container matColumnDef="incentive">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'name.incentiveAmount' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="element.paymentStatus === PaymentStatus.Completed" >
+            {{ element.task?.incentive }} €
+          </ng-container>
+        </td>
+      </ng-container>
       <!-- Options Column -->
       <ng-container matColumnDef="options">
         <th mat-header-cell *matHeaderCellDef>

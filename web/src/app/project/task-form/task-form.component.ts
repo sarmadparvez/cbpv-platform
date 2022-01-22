@@ -47,6 +47,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { firstValueFrom, map, Observable, startWith } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { parseError } from '../../error/parse-error';
+import { MatRadioModule } from '@angular/material/radio';
 
 export interface TaskFormDialogData {
   task?: Task;
@@ -59,6 +60,7 @@ export interface TaskFormDialogData {
 })
 export class TaskFormComponent implements OnInit {
   PrototypeFormatEnum = PrototypeFormatEnum;
+  AccessType = Task.AccessTypeEnum;
   prototypeToTestTypeMap = new Map<PrototypeFormatEnum, TestTypeEnum>();
   task: Task;
   separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -83,6 +85,7 @@ export class TaskFormComponent implements OnInit {
     maxAge: [null],
     countries: [''],
     skills: ['', [() => this.skillsValid()]],
+    accessType: [null, Validators.required],
   });
 
   @ViewChild('skillsInput') skillsInput: ElementRef<HTMLInputElement>;
@@ -309,6 +312,7 @@ export class TaskFormComponent implements OnInit {
     MatChipsModule,
     MatAutocompleteModule,
     MatIconModule,
+    MatRadioModule,
   ],
 })
 export class TaskFormModule {}

@@ -11,7 +11,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { PrototypeFormat, TestType } from '../entities/task.entity';
+import { AccessType, PrototypeFormat, TestType } from '../entities/task.entity';
 import { Question } from '../entities/question.entity';
 
 export class CreateTaskDto {
@@ -30,6 +30,10 @@ export class CreateTaskDto {
   @IsEnum(PrototypeFormat)
   @IsNotEmpty()
   prototypeFormat: PrototypeFormat;
+
+  @IsEnum(AccessType)
+  @IsOptional()
+  accessType: AccessType;
 
   @IsUrl()
   @IsOptional()
