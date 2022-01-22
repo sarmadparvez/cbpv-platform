@@ -8,6 +8,9 @@
       <mat-label>{{'name.comment' | translate}}</mat-label>
       <textarea formControlName="description" matInput>
           </textarea>
+      <mat-error *ngIf="form.controls.description.errors?.required">
+        {{ 'error.required' | translate }}
+      </mat-error>
     </mat-form-field>
   </form>
 

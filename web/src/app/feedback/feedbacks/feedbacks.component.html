@@ -64,6 +64,7 @@
           {{ 'paymentStatus.' + element.paymentStatus | translate }}
         </td>
       </ng-container>
+      <!--Incentive-->
       <ng-container matColumnDef="incentive">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ 'name.incentiveAmount' | translate }}
@@ -71,6 +72,26 @@
         <td mat-cell *matCellDef="let element">
           <ng-container *ngIf="element.paymentStatus === PaymentStatus.Completed" >
             {{ element.task?.incentive | currency: 'EUR' }}
+          </ng-container>
+        </td>
+      </ng-container>
+      <!-- Rating -->
+      <ng-container matColumnDef="feedbackRating">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'name.feedbackRating' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.feedbackRating }}
+        </td>
+      </ng-container>
+      <!-- User Column -->
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'name.taskOwner' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="userMap[element.task?.userId]">
+            {{ userMap[element.task.userId]?.firstName + ' ' + userMap[element.task.userId]?.lastName }}
           </ng-container>
         </td>
       </ng-container>

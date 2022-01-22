@@ -59,7 +59,7 @@ export class ProjectsComponent {
       .open(ProjectFormComponent, {
         data: project,
         disableClose: true,
-        width: '35vw',
+        width: '45vw',
       })
       .afterClosed()
       .subscribe((created: boolean) => {

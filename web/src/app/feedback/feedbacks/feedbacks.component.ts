@@ -1,11 +1,7 @@
 import { Component, NgModule, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import {
-  Feedback,
-  FeedbacksService,
-  UpdateFeedbackDto,
-} from '../../../../gen/api/task';
+import { Feedback, FeedbacksService, Task } from '../../../../gen/api/task';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,7 +14,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { NoDataModule } from '../../template/no-data/no-data.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import PaymentStatusEnum = UpdateFeedbackDto.PaymentStatusEnum;
+import PaymentStatusEnum = Feedback.PaymentStatusEnum;
+import {
+  BatchGetUserInfoDto,
+  User,
+  UsersService,
+} from '../../../../gen/api/admin';
 
 @Component({
   selector: 'app-feedbacks',
@@ -34,22 +35,27 @@ export class FeedbacksComponent implements OnInit {
     'dateCreated',
     'paymentStatus',
     'incentive',
+    'feedbackRating',
+    'user',
     'options',
   ];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   PaymentStatus = PaymentStatusEnum;
+  userMap: { [key: string]: User } = {};
 
   constructor(
     private readonly feedbackService: FeedbacksService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly userService: UsersService,
   ) {
     Window['fcself'] = this;
   }
 
   async findFeedbacks() {
     const feedbacks = await firstValueFrom(this.feedbackService.searchAll());
+    this.getUsersForTasks(feedbacks);
     this.dataSource = new MatTableDataSource(feedbacks);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -60,6 +66,19 @@ export class FeedbacksComponent implements OnInit {
     this.router.navigate([feedback], {
       relativeTo: this.route,
     });
+  }
+
+  async getUsersForTasks(feedbacks: Feedback[]) {
+    const ids = feedbacks.map(f => f.task.userId);
+    if (ids.length > 0) {
+      const request: BatchGetUserInfoDto = {
+        ids,
+      };
+      const users = await firstValueFrom(
+        this.userService.batchGetInfo(request),
+      );
+      users.forEach(user => (this.userMap[user.id] = user));
+    }
   }
 
   ngOnInit(): void {

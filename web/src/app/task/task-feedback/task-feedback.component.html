@@ -1,5 +1,5 @@
 <ng-container *ngIf="task | async as taskObj">
-  <div class="page-content">
+  <div [ngClass]="applyContainerClass? 'page-content' : ''">
     <ng-container *ngIf="!readonly">
       <p>
         Please see the Task details below and fill out the Questionnaire.
