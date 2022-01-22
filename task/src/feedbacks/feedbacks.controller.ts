@@ -18,6 +18,7 @@ import { ForbiddenError } from '@casl/ability';
 import { Action } from '../iam/policy';
 import { Feedback } from './entities/feedback.entity';
 import * as contextService from 'request-context';
+import { RateFeedbackDto } from './dto/rate-feedback.dto';
 
 @ApiTags('feedbacks')
 @Controller('feedbacks')
@@ -112,6 +113,18 @@ export class FeedbacksController {
   @Put(':id/releasePayment')
   releasePayment(@Param('id') id: string) {
     return this.feedbacksService.releasePayment(id);
+  }
+
+  /**
+   * Rate a feedback. User must have Update Permission on the Task related to Feedback.
+   */
+  @ApiBearerAuth()
+  @Put(':id/rate')
+  rateFeedback(
+    @Param('id') id: string,
+    @Body() rateFeedbackDto: RateFeedbackDto,
+  ) {
+    return this.feedbacksService.rateFeedback(id, rateFeedbackDto);
   }
 
   /**

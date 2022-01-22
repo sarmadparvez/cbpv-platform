@@ -16,6 +16,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NoDataModule } from '../../template/no-data/no-data.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData,
+} from '../../template/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-projects',
@@ -55,7 +59,7 @@ export class ProjectsComponent {
       .open(ProjectFormComponent, {
         data: project,
         disableClose: true,
-        width: '35vw',
+        width: '45vw',
       })
       .afterClosed()
       .subscribe((created: boolean) => {
@@ -80,15 +84,32 @@ export class ProjectsComponent {
   }
 
   async deleteProject(project: string) {
-    try {
-      await firstValueFrom(this.projectService.remove(project));
-      this.searchProjects();
-    } catch (err) {
-      console.log('Unable to delete project');
-      this.snackBar.open(this.translateService.instant('error.delete'), '', {
-        duration: 5000,
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: <ConfirmationDialogData>{
+        title: this.translateService.instant('note.deleteProjectConfirmTitle'),
+        message: this.translateService.instant(
+          'note.deleteProjectConfirmMessage',
+        ),
+      },
+      width: '50vw',
+    });
+    dialogRef.afterClosed().subscribe(async confirm => {
+      if (confirm) {
+        try {
+          await firstValueFrom(this.projectService.remove(project));
+          this.searchProjects();
+        } catch (err) {
+          console.log('Unable to delete project');
+          this.snackBar.open(
+            this.translateService.instant('error.delete'),
+            '',
+            {
+              duration: 5000,
+            },
+          );
+        }
+      }
+    });
   }
 }
 

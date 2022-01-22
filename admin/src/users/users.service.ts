@@ -127,6 +127,7 @@ export class UsersService {
   batchGetInfo(batchGetUserInfo: BatchGetUserInfoDto) {
     return this.userRepository.findByIds(batchGetUserInfo.ids, {
       select: ['id', 'firstName', 'lastName'],
+      loadEagerRelations: false,
     });
   }
 }

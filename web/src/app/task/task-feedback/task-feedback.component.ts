@@ -21,6 +21,7 @@ export class TaskFeedbackComponent {
   @Input() task = new ReplaySubject<Task>(1);
   @Input() feedback: Feedback;
   @Input() readonly: boolean;
+  @Input() applyContainerClass = true;
   PrototypeFormatEnum = Task.PrototypeFormatEnum;
   TestTypeEnum = Task.TestTypeEnum;
 

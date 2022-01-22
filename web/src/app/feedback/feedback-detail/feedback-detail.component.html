@@ -1,9 +1,55 @@
 <ng-container *ngIf="feedback | async as feedbackObj">
-    <app-task-feedback
-      [task]="task"
-      [feedback]="feedbackObj"
-      [readonly]="true"
+  <div class="page-content">
+    <app-task-feedback [task]="task" [feedback]="feedbackObj" [readonly]="true"
+    [applyContainerClass]="false"
     >
-
     </app-task-feedback>
+    <!--Feedback rating-->
+    <div class="mt-30 mb-30">
+      <mat-card>
+        <mat-card-title>{{ 'name.feedbackRating' | translate }}</mat-card-title>
+        <mat-card-content>
+          <p class="text-note">Rating for your Feedback. The Rating is provided by Task/Prototype owner.</p>
+          <div class="field-container" fxLayout>
+            <!-- Task Owner -->
+            <div fxFlex="50%">
+              <div class="field-label field-name">
+                {{ 'name.taskOwner' | translate }}
+              </div>
+              <div *ngIf="taskOwner | async as user">
+                {{user.firstName + ' ' + user.lastName}}
+              </div>
+            </div>
+
+            <!--Feedback Rating-->
+            <div fxFlex="50%">
+              <!--Star rating-->
+              <ngx-material-rating
+                  *ngIf="feedbackObj.feedbackRating; else noRating"
+                  [readonly]="true"
+                  [color]="'primary'"
+                  [value]="feedbackObj.feedbackRating"
+                  [max]="5"
+              >
+              </ngx-material-rating>
+              <ng-template #noRating>
+                {{'note.noRating' | translate}}
+              </ng-template>
+            </div>
+          </div>
+          <div class="field-container" fxLayout>
+            <!--Rating Comment-->
+            <div class="full-width">
+              <div class="field-label field-name">
+                {{ 'name.comment' | translate }}
+              </div>
+              <div>
+                <span>{{ feedbackObj.feedbackRatingComment }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
 </ng-container>

@@ -34,6 +34,12 @@ export enum TaskStatus {
   Closed = 'closed',
 }
 
+export enum AccessType {
+  Open = 'open',
+  Nda = 'nda',
+  Request = 'request',
+}
+
 // Typeorm return decimal values as string. Here is the workaround for that.
 // This solution is copied from https://stackoverflow.com/questions/69872250/typeorm-decimal-column-values-returned-as-strings-instead-of-decimal-numbers
 export class ColumnNumericTransformer {
@@ -70,6 +76,13 @@ export class Task {
 
   @Column({ type: 'enum', enum: TaskStatus, default: TaskStatus.Draft })
   status: TaskStatus;
+
+  @Column({
+    type: 'enum',
+    enum: AccessType,
+    default: AccessType.Open,
+  })
+  accessType: AccessType;
 
   @Column({ type: 'text', nullable: true })
   iframeUrl1: string;

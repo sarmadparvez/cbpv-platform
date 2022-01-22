@@ -13,7 +13,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import {
   Feedback,
   FeedbacksService,
-  UpdateFeedbackDto,
+  RateFeedbackDto,
 } from '../../../../gen/api/task';
 import { MatSort } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,7 +31,12 @@ import {
   TaskFeedbackPreviewDialogData,
 } from '../task-iteration-feedback-preview/task-iteration-feedback-preview.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import PaymentStatusEnum = UpdateFeedbackDto.PaymentStatusEnum;
+import { ReportMisuseComponent } from '../report-misuse/report-misuse.component';
+import {
+  RatingDialogComponent,
+  RatingDialogData,
+} from '../../template/rating-dialog/rating-dialog.component';
+import PaymentStatusEnum = Feedback.PaymentStatusEnum;
 
 @Component({
   selector: 'app-task-iteration-feedbacks',
@@ -47,6 +52,7 @@ export class TaskIterationFeedbacksComponent implements OnInit {
     'comment',
     'dateCreated',
     'paymentStatus',
+    'feedbackRating',
     'options',
   ];
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -125,6 +131,53 @@ export class TaskIterationFeedbacksComponent implements OnInit {
         duration: 5000,
       });
     }
+  }
+
+  report(feedbackId: string) {
+    this.dialog.open(ReportMisuseComponent, {
+      width: '50vw',
+      disableClose: true,
+    });
+  }
+
+  rateFeedback(feedback: Feedback) {
+    this.dialog
+      .open(RatingDialogComponent, {
+        width: '50vw',
+        disableClose: true,
+        autoFocus: 'dialog',
+        data: <RatingDialogData>{
+          title: this.translateService.instant('name.rateFeedback'),
+          note: this.translateService.instant('note.rateFeedback'),
+          rating: feedback.feedbackRating,
+          ratingComment: feedback.feedbackRatingComment,
+        },
+      })
+      .afterClosed()
+      .subscribe(async (data: RatingDialogData) => {
+        if (data) {
+          let message = '';
+          try {
+            const request: RateFeedbackDto = {
+              feedbackRating: data.rating,
+              feedbackRatingComment: data.ratingComment,
+            };
+            await firstValueFrom(
+              this.feedbackService.rateFeedback(feedback.id, request),
+            );
+            feedback.feedbackRating = data.rating;
+            feedback.feedbackRatingComment = data.ratingComment;
+            message = this.translateService.instant(
+              'notification.rateFeedback',
+            );
+          } catch (err) {
+            message = this.translateService.instant('error.save');
+            console.log('unable to save feedback rating ', err);
+          } finally {
+            this.snackbar.open(message, '', { duration: 5000 });
+          }
+        }
+      });
   }
 }
 

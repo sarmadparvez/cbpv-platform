@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Task } from '../../tasks/entities/task.entity';
 import { Answer } from './answer.entity';
+import { Max, Min } from 'class-validator';
 
 export enum PaymentStatus {
   Pending = 'pending',
@@ -28,6 +29,18 @@ export class Feedback {
 
   @Column({ type: 'enum', enum: PaymentStatus, default: PaymentStatus.Pending })
   paymentStatus: PaymentStatus;
+
+  @Column({ nullable: true })
+  feedbackRating: number;
+
+  @Column({ type: 'text', nullable: true })
+  feedbackRatingComment: string;
+
+  @Column({ nullable: true })
+  taskRating: number;
+
+  @Column({ type: 'text', nullable: true })
+  taskRatingComment: string;
 
   @Column('uuid')
   @ManyToOne(() => Task)

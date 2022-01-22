@@ -10,6 +10,7 @@ import { findWithPermissionCheck } from '../iam/utils';
 import { Action, AppAbility } from '../iam/policy';
 import * as contextService from 'request-context';
 import { Task } from '../tasks/entities/task.entity';
+import { RateFeedbackDto } from './dto/rate-feedback.dto';
 
 @Injectable()
 export class FeedbacksService {
@@ -138,7 +139,7 @@ export class FeedbacksService {
       select: ['id', 'taskId', 'paymentStatus'],
     });
     // Check if user have Update permission on the Task for which the payment is to be released.
-    const task = await findWithPermissionCheck(
+    await findWithPermissionCheck(
       feedback.taskId,
       Action.Update,
       this.taskRepository,
@@ -156,6 +157,22 @@ export class FeedbacksService {
     }
     return this.feedbackRepository.update(id, {
       paymentStatus: PaymentStatus.Completed,
+    });
+  }
+
+  async rateFeedback(id: string, rateFeedbackDto: RateFeedbackDto) {
+    const feedback = await this.feedbackRepository.findOneOrFail(id, {
+      select: ['id', 'taskId'],
+    });
+    // Check if user have Update permission on the Task for which the rating is to be given.
+    await findWithPermissionCheck(
+      feedback.taskId,
+      Action.Update,
+      this.taskRepository,
+    );
+    return this.feedbackRepository.update(id, {
+      feedbackRating: rateFeedbackDto.feedbackRating,
+      feedbackRatingComment: rateFeedbackDto.feedbackRatingComment,
     });
   }
 }

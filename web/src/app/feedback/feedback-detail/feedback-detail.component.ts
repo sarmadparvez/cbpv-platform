@@ -9,6 +9,15 @@ import {
   TasksService,
 } from '../../../../gen/api/task';
 import { TaskFeedbackModule } from '../../task/task-feedback/task-feedback.component';
+import { MatCardModule } from '@angular/material/card';
+import { TranslateModule } from '@ngx-translate/core';
+import { FlexModule } from '@angular/flex-layout';
+import { NgxMaterialRatingModule } from 'ngx-material-rating';
+import {
+  BatchGetUserInfoDto,
+  User,
+  UsersService,
+} from '../../../../gen/api/admin';
 
 @Component({
   selector: 'app-feedback-detail',
@@ -18,14 +27,17 @@ import { TaskFeedbackModule } from '../../task/task-feedback/task-feedback.compo
 export class FeedbackDetailComponent {
   feedback = new ReplaySubject<Feedback>(1);
   task = new ReplaySubject<Task>(1);
+  taskOwner = new ReplaySubject<User>(1);
   constructor(
     private readonly route: ActivatedRoute,
     private readonly feedbackService: FeedbacksService,
     private readonly taskService: TasksService,
+    private readonly userService: UsersService,
   ) {
     const feedbackId = this.route.snapshot.paramMap.get('feedbackId');
     if (feedbackId) {
       this.getFeedback(feedbackId);
+      this.getUserInfo();
     }
   }
 
@@ -41,10 +53,28 @@ export class FeedbackDetailComponent {
     const task = await firstValueFrom(this.taskService.findOne(taskId));
     this.task.next(task);
   }
+
+  async getUserInfo() {
+    const task = await firstValueFrom(this.task);
+    const request: BatchGetUserInfoDto = {
+      ids: [task.userId],
+    };
+    const users = await firstValueFrom(this.userService.batchGetInfo(request));
+    if (users.length > 0) {
+      this.taskOwner.next(users[0]);
+    }
+  }
 }
 
 @NgModule({
-  imports: [CommonModule, TaskFeedbackModule],
+  imports: [
+    CommonModule,
+    TaskFeedbackModule,
+    MatCardModule,
+    TranslateModule,
+    FlexModule,
+    NgxMaterialRatingModule,
+  ],
   declarations: [FeedbackDetailComponent],
 })
 export class FeedbackDetailModule {}
