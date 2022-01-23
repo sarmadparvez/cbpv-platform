@@ -19,7 +19,8 @@ import { Gender, Role } from '../entities/user.entity';
  * at-lest one lower and upper case character
  * At-least 8 characters
  */
-const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+const PASSWORD_REGEX =
+  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#\$%\^\&*\)\(+=._-]{8,}$/;
 const PASSWORD_REGX_MSG =
   'Password should be at-least 8 characters long, must contain one lower case and one upper case letter, and one digit.';
 

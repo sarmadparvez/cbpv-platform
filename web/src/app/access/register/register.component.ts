@@ -62,7 +62,7 @@ import SsoProviderEnum = CreateWithSSODto.SsoProviderEnum;
 import { parseError } from '../../error/parse-error';
 import { AuthService } from '../../auth/auth.service';
 
-export const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+export const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#\$%\^\&*\)\(+=._-]{8,}$/;
 
 @Component({
   selector: 'app-register',
