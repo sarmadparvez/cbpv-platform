@@ -6,7 +6,12 @@
       {{ 'name.feedbackProvider' | translate }}
     </div>
     <div>
-      <span>{{ user?.firstName + ' ' + user?.lastName }}</span>
+      <span *ngIf="user; else userDeleted">{{
+        user?.firstName + ' ' + user?.lastName
+      }}</span>
+      <ng-template #userDeleted>
+        {{ 'note.userDeleted' | translate }}
+      </ng-template>
     </div>
   </div>
 

@@ -8,9 +8,13 @@ import { ImageUploadModule } from '../image-upload/image-upload.component';
 import TestTypeEnum = CreateTaskDto.TestTypeEnum;
 import { TasksService } from '../../../../gen/api/task';
 import { firstValueFrom, ReplaySubject } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgxGalleryImage } from '@kolkov/ngx-gallery';
 import { ImageViewerModule } from '../image-viewer/image-viewer.component';
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData,
+} from '../../template/confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 type GalleryImage = NgxGalleryImage & {
   id: string;
@@ -29,7 +33,11 @@ export class ImagePrototypeComponent implements OnInit {
   images = new Map<number, ReplaySubject<GalleryImage[]>>();
   showViewer = false;
 
-  constructor(private readonly taskService: TasksService) {
+  constructor(
+    private readonly taskService: TasksService,
+    private readonly translateService: TranslateService,
+    private readonly dialog: MatDialog,
+  ) {
     Window['ipself'] = this;
   }
 
@@ -102,20 +110,33 @@ export class ImagePrototypeComponent implements OnInit {
       return;
     }
 
-    const imagesSubject = this.images.get(prototypeNumber);
-    const images = await firstValueFrom(imagesSubject);
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: <ConfirmationDialogData>{
+        title: this.translateService.instant('note.deleteImageConfirmTitle'),
+        message: this.translateService.instant(
+          'note.deleteImageConfirmMessage',
+        ),
+      },
+      width: '50vw',
+    });
+    dialogRef.afterClosed().subscribe(async confirm => {
+      if (confirm) {
+        const imagesSubject = this.images.get(prototypeNumber);
+        const images = await firstValueFrom(imagesSubject);
 
-    if (images[deleteIndex]) {
-      try {
-        const response = await firstValueFrom(
-          this.taskService.removeImage(task.id, images[deleteIndex].id),
-        );
-        images.splice(deleteIndex, 1);
-        imagesSubject.next([...images]);
-      } catch (err) {
-        console.log('failed deleting image ', err);
+        if (images[deleteIndex]) {
+          try {
+            const response = await firstValueFrom(
+              this.taskService.removeImage(task.id, images[deleteIndex].id),
+            );
+            images.splice(deleteIndex, 1);
+            imagesSubject.next([...images]);
+          } catch (err) {
+            console.log('failed deleting image ', err);
+          }
+        }
       }
-    }
+    });
   }
 }
 

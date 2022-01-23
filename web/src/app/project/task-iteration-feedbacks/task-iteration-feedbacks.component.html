@@ -9,11 +9,19 @@
   </li>
   <ng-container *ngIf="dataSource?.data?.length > 0">
     <li class="list-item">
-      To release Payment (Crowdworker incentive), click Release Payment form the
+      To see the detailed feedback please click on it or open it from
       <em>Options</em> column menu in the table.
     </li>
     <li class="list-item">
-      To see the detailed feedback please click on it or open it from
+      To release Payment (Crowdworker incentive), click Release Payment in
+      <em>Options</em> column menu in the table.
+    </li>
+    <li class="list-item">
+      To rate the feedback please click on <em>Rate Feedback</em> in
+      <em>Options</em> column menu in the table.
+    </li>
+    <li class="list-item">
+      To report misuse, please click on <em>Report Misuse</em> in
       <em>Options</em> column menu in the table.
     </li>
   </ng-container>
@@ -34,13 +42,16 @@
         {{ 'name.feedbackProvider' | translate }}
       </th>
       <td mat-cell *matCellDef="let element">
-        <ng-container *ngIf="userMap[element.userId]">
+        <ng-container *ngIf="userMap[element.userId]; else userDeleted">
           {{
             userMap[element.userId]?.firstName +
               ' ' +
               userMap[element.userId]?.lastName
           }}
         </ng-container>
+        <ng-template #userDeleted>
+          {{ 'note.userDeleted' | translate }}
+        </ng-template>
       </td>
     </ng-container>
 

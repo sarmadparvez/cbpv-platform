@@ -14,6 +14,7 @@ import {
   NgxGalleryAction,
   NgxGalleryAnimation,
   NgxGalleryImage,
+  NgxGalleryImageSize,
   NgxGalleryModule,
   NgxGalleryOptions,
 } from '@kolkov/ngx-gallery';
@@ -64,6 +65,7 @@ export class ImageViewerComponent implements OnInit {
         thumbnailsColumns: 5,
         imageAnimation: NgxGalleryAnimation.Slide,
         previewCloseOnClick: true,
+        imageSize: NgxGalleryImageSize.Contain,
         ...options,
       },
       // max-width 1000
@@ -77,6 +79,7 @@ export class ImageViewerComponent implements OnInit {
         thumbnailsMargin: 20,
         thumbnailMargin: 20,
         previewCloseOnClick: true,
+        imageSize: NgxGalleryImageSize.Contain,
         ...options,
       },
       // max-width 400

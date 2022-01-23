@@ -13,3 +13,10 @@
   // border: none !important;
   box-sizing: border-box;
 }
+.ngx-gallery ::ng-deep .ngx-gallery-icon .fa.fa-trash {
+  color: black;
+}
+
+.ngx-gallery ::ng-deep .ngx-gallery-arrow {
+  color: $primaryColor;
+}

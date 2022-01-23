@@ -27,7 +27,7 @@ export class QuestionnaireComponent {
       .open(QuestionnaireFormComponent, {
         data: task,
         disableClose: true,
-        width: '55vw',
+        width: '75vw',
       })
       .afterClosed()
       .subscribe((questions: Question[]) => {
