@@ -18,7 +18,7 @@
           <!--Question-->
           <mat-form-field class="full-width" fxFlex="75%" appearance="fill">
             <mat-label>{{ 'name.question' | translate }}</mat-label>
-            <textarea formControlName="question" matInput></textarea>
+            <textarea formControlName="question" matInput rows="4"></textarea>
             <mat-error *ngIf="form.controls.question.hasError('required')">
               {{ 'error.required' | translate }}
             </mat-error>

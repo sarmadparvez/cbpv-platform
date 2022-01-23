@@ -8,9 +8,11 @@
           {{ 'name.description' | translate }}
         </div>
         <div>
-          <span>{{ task?.description }}</span>
+          <span class="multiline">{{ task?.description }}</span>
         </div>
       </div>
+    </div>
+    <div class="field-container" fxLayout>
       <!--Status-->
       <div class="full-width">
         <div class="field-label field-name">
@@ -18,17 +20,6 @@
         </div>
         <div>
           <span>{{ 'name.' + task?.status | translate }}</span>
-        </div>
-      </div>
-    </div>
-    <div class="field-container" fxLayout>
-      <!--Creation Date -->
-      <div class="full-width">
-        <div class="field-label field-name">
-          {{ 'name.dateCreated' | translate }}
-        </div>
-        <div>
-          <span>{{ task?.dateCreated | date: 'dd.MM.y HH:mm:ss' }}</span>
         </div>
       </div>
       <!--Access Type-->
@@ -40,7 +31,15 @@
           <span>{{ 'accessType.' + task?.accessType | translate }}</span>
         </div>
       </div>
-
+      <!--Creation Date -->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.dateCreated' | translate }}
+        </div>
+        <div>
+          <span>{{ task?.dateCreated | date: 'dd.MM.y HH:mm:ss' }}</span>
+        </div>
+      </div>
     </div>
     <mat-divider inset></mat-divider>
 

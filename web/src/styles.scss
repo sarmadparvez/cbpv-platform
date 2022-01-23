@@ -137,3 +137,7 @@ body {
 li.list-item:not(:last-child) {
   margin-bottom: 10px;
 }
+
+.multiline {
+  white-space: pre-line;
+}

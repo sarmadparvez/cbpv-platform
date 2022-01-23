@@ -10,7 +10,7 @@
           <div fxLayout fxLayoutGap="10px" class="mt-20">
             <strong>Q{{ i + 1 }}: </strong>
             <!--Question-->
-            <span>{{ question.description | translate }}</span>
+            <span class="multiline">{{ question.description | translate }}</span>
           </div>
           <!--Answer-->
           <div class="answer-container mt-10" [ngSwitch]="question.type">
@@ -22,13 +22,13 @@
                   *ngIf="!readonly; else textAnswer"
               >
                 <mat-label>{{ 'name.answer' | translate }}</mat-label>
-                <textarea matInput [formControlName]="question.id"> </textarea>
+                <textarea matInput [formControlName]="question.id" rows="5"> </textarea>
                 <mat-error *ngIf="!form.controls[question.id].hasError('required')">
                   {{ 'error.required' | translate }}
                 </mat-error>
               </mat-form-field>
               <ng-template #textAnswer>
-                <p>{{form.controls[question.id]?.value}} </p>
+                <p class="multiline">{{form.controls[question.id]?.value}} </p>
               </ng-template>
             </ng-container>
 
@@ -118,7 +118,7 @@
             *ngIf="!readonly"
         >
           <mat-label>{{ 'name.additionalComment' | translate }}</mat-label>
-          <textarea matInput formControlName="comment"> </textarea>
+          <textarea matInput formControlName="comment" rows="5"> </textarea>
           <mat-hint class="normal-font-size">{{'note.commentHint' | translate}}</mat-hint>
         </mat-form-field>
 
@@ -128,7 +128,7 @@
         <div class="field-label field-name">
           {{ 'name.additionalComment' | translate }}
         </div>
-        <p>{{form.controls.comment?.value}} </p>
+        <p class="multiline">{{form.controls.comment?.value}} </p>
       </div>
 
     </div>

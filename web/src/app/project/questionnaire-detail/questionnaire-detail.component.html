@@ -5,7 +5,7 @@
   >
     <strong>Q{{ i + 1 }}: </strong>
     <!--Question-->
-    <span>{{ question.description | translate }}</span>
+    <span class="multiline">{{ question.description | translate }}</span>
   </div>
   <!--Answer-->
   <div class="answer-container mt-10" [ngSwitch]="question.type">

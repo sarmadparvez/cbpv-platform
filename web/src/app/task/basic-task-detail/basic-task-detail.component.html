@@ -3,16 +3,18 @@
   <mat-card-content>
     <div class="field-container" fxLayout>
       <!--Description-->
-      <div fxFlex="60%">
+      <div class="full-width">
         <div class="field-label field-name">
           {{ 'name.description' | translate }}
         </div>
         <div>
-          <span>{{ taskObj.description }}</span>
+          <span class="multiline">{{ taskObj.description }}</span>
         </div>
       </div>
+    </div>
+    <div class="field-container" fxLayout>
       <!--Status-->
-      <div fxFlex="20%">
+      <div class="full-width">
         <div class="field-label field-name">
           {{ 'name.status' | translate }}
         </div>
@@ -22,7 +24,7 @@
       </div>
 
       <!--Creation Date -->
-      <div fxFlex="20%">
+      <div class="full-width">
         <div class="field-label field-name">
           {{ 'name.dateCreated' | translate }}
         </div>

@@ -145,7 +145,7 @@
     "activateTaskConfirmMessage": "Please note that after activating the Task you can no longer edit or delete it. Please review all the data before activating it. The activated Task will be immediately available to the crowd-workers. Are you sure you want to activate the Task?",
     "birthdayHint": "Optional but Prototypes may have age requirement for evaluation.",
     "countryHint": "Optional but Prototypes may have matching country as a requirement for evaluation.",
-    "commentHint": "Here you can provide any additional feedback",
+    "commentHint": "Here you can provide any additional feedback (Optional)",
     "crowdCriteria": "Set the criteria for matching this Task with Crowd-Workers. Only the Crowd-Workers matching the specified criteria will be able to see this Task. Leave the optional fields empty if you don't want to filter by them.",
     "closeIterationConfirmTitle": "Close Prototype Iteration",
     "closeIterationConfirmMessage": "Please note that after closing the prototype iteration you can no longer receive feedback on this iteration. This iteration will no longer be visible to Crowdworkers to provide feedback. Are you sure you want to close the prototype iteration?",
