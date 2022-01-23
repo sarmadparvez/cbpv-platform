@@ -7,14 +7,14 @@ import {
   Min,
 } from 'class-validator';
 
-export class RateFeedbackDto {
+export class RateTaskDto {
   @IsInt()
   @Min(1)
   @Max(5)
   @IsNotEmpty()
-  feedbackRating: number;
+  taskRating: number;
 
   @IsString()
   @IsOptional()
-  feedbackRatingComment?: string;
+  taskRatingComment?: string;
 }

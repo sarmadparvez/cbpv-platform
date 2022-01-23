@@ -75,13 +75,22 @@
           </ng-container>
         </td>
       </ng-container>
-      <!-- Rating -->
+      <!-- Feedback Rating -->
       <ng-container matColumnDef="feedbackRating">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ 'name.feedbackRating' | translate }}
         </th>
         <td mat-cell *matCellDef="let element">
           {{ element.feedbackRating }}
+        </td>
+      </ng-container>
+      <!-- Task Rating -->
+      <ng-container matColumnDef="taskRating">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'name.taskRating' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.taskRating }}
         </td>
       </ng-container>
       <!-- User Column -->
@@ -110,12 +119,18 @@
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu>
+            <!--Open-->
             <a
               mat-menu-item
-              href="{{ element.name }}"
               (click)="openFeedback($event, element.id)"
             >
               Open
+            </a>
+            <a
+                mat-menu-item
+                (click)="rateTask(element)"
+            >
+              Rate Task
             </a>
           </mat-menu>
         </td>

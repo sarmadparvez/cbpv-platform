@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Patch } from '@nestjs/common';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { UpdateFeedbackDto } from './dto/update-feedback.dto';
 import { classToPlain, plainToClass } from 'class-transformer';
@@ -11,6 +11,8 @@ import { Action, AppAbility } from '../iam/policy';
 import * as contextService from 'request-context';
 import { Task } from '../tasks/entities/task.entity';
 import { RateFeedbackDto } from './dto/rate-feedback.dto';
+import { RateTaskDto } from './dto/rate-task.dto';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
 export class FeedbacksService {
@@ -170,15 +172,28 @@ export class FeedbacksService {
       Action.Update,
       this.taskRepository,
     );
-    return this.feedbackRepository.update(id, {
-      feedbackRating: rateFeedbackDto.feedbackRating,
-      feedbackRatingComment: rateFeedbackDto.feedbackRatingComment,
-    });
+
+    const updatedFeedback = feedbackDtoToEntity(rateFeedbackDto);
+    updatedFeedback.id = id;
+    return this.feedbackRepository.save(updatedFeedback);
+  }
+
+  async rateTask(feedbackId: string, rateTaskDto: RateTaskDto) {
+    // Check if user have Read permission on the Feedback
+    await findWithPermissionCheck(
+      feedbackId,
+      Action.Read,
+      this.feedbackRepository,
+    );
+
+    const updatedFeedback = feedbackDtoToEntity(rateTaskDto);
+    updatedFeedback.id = feedbackId;
+    return this.feedbackRepository.save(updatedFeedback);
   }
 }
 
 function feedbackDtoToEntity(
-  dto: CreateFeedbackDto | UpdateFeedbackDto,
+  dto: CreateFeedbackDto | UpdateFeedbackDto | RateFeedbackDto | RateTaskDto,
 ): Feedback {
   const data = classToPlain(dto);
   return plainToClass(Feedback, data);

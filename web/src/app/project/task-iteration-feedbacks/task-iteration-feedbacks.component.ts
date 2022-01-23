@@ -53,6 +53,7 @@ export class TaskIterationFeedbacksComponent implements OnInit {
     'dateCreated',
     'paymentStatus',
     'feedbackRating',
+    'taskRating',
     'options',
   ];
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -113,6 +114,7 @@ export class TaskIterationFeedbacksComponent implements OnInit {
         user: this.userMap[feedback.userId],
       },
       disableClose: true,
+      autoFocus: 'dialog',
       width: '75vw',
     });
   }
