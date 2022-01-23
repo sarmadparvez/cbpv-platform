@@ -1,14 +1,18 @@
 import { Component, NgModule, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Feedback, FeedbacksService, Task } from '../../../../gen/api/task';
+import {
+  Feedback,
+  FeedbacksService,
+  RateTaskDto,
+} from '../../../../gen/api/task';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +24,12 @@ import {
   User,
   UsersService,
 } from '../../../../gen/api/admin';
+import {
+  RatingDialogComponent,
+  RatingDialogData,
+} from '../../template/rating-dialog/rating-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-feedbacks',
@@ -36,6 +46,7 @@ export class FeedbacksComponent implements OnInit {
     'paymentStatus',
     'incentive',
     'feedbackRating',
+    'taskRating',
     'user',
     'options',
   ];
@@ -49,6 +60,9 @@ export class FeedbacksComponent implements OnInit {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly userService: UsersService,
+    private readonly dialog: MatDialog,
+    private readonly translateService: TranslateService,
+    private readonly snackbar: MatSnackBar,
   ) {
     Window['fcself'] = this;
   }
@@ -83,6 +97,46 @@ export class FeedbacksComponent implements OnInit {
 
   ngOnInit(): void {
     this.findFeedbacks();
+  }
+
+  rateTask(feedback: Feedback) {
+    this.dialog
+      .open(RatingDialogComponent, {
+        width: '50vw',
+        disableClose: true,
+        autoFocus: 'dialog',
+        data: <RatingDialogData>{
+          title: this.translateService.instant('name.rateTask'),
+          note: this.translateService.instant('note.rateTask'),
+          rating: feedback.taskRating,
+          ratingComment: feedback.taskRatingComment,
+        },
+      })
+      .afterClosed()
+      .subscribe(async (data: RatingDialogData) => {
+        if (data) {
+          let message = '';
+          try {
+            const request: RateTaskDto = {
+              taskRating: data.rating,
+              taskRatingComment: data.ratingComment,
+            };
+            await firstValueFrom(
+              this.feedbackService.rateTask(feedback.id, request),
+            );
+            feedback.taskRating = data.rating;
+            feedback.taskRatingComment = data.ratingComment;
+            message = this.translateService.instant(
+              'notification.rateFeedback',
+            );
+          } catch (err) {
+            message = this.translateService.instant('error.save');
+            console.log('unable to save feedback rating ', err);
+          } finally {
+            this.snackbar.open(message, '', { duration: 5000 });
+          }
+        }
+      });
   }
 }
 @NgModule({

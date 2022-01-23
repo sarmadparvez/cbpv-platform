@@ -6,6 +6,8 @@ import { QuestionnaireAnswerModule } from '../../task/questionnaire-answer/quest
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
 import { User } from '../../../../gen/api/admin';
+import { NgxMaterialRatingModule } from 'ngx-material-rating';
+import { FlexModule } from '@angular/flex-layout';
 
 export interface TaskFeedbackPreviewDialogData {
   task: Task;
@@ -41,6 +43,8 @@ export class TaskIterationFeedbackPreviewComponent {
     QuestionnaireAnswerModule,
     MatButtonModule,
     TranslateModule,
+    NgxMaterialRatingModule,
+    FlexModule,
   ],
   declarations: [TaskIterationFeedbackPreviewComponent],
 })

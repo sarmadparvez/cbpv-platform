@@ -19,6 +19,7 @@ import { Action } from '../iam/policy';
 import { Feedback } from './entities/feedback.entity';
 import * as contextService from 'request-context';
 import { RateFeedbackDto } from './dto/rate-feedback.dto';
+import { RateTaskDto } from './dto/rate-task.dto';
 
 @ApiTags('feedbacks')
 @Controller('feedbacks')
@@ -119,12 +120,21 @@ export class FeedbacksController {
    * Rate a feedback. User must have Update Permission on the Task related to Feedback.
    */
   @ApiBearerAuth()
-  @Put(':id/rate')
+  @Patch(':id/rateFeedback')
   rateFeedback(
     @Param('id') id: string,
     @Body() rateFeedbackDto: RateFeedbackDto,
   ) {
     return this.feedbacksService.rateFeedback(id, rateFeedbackDto);
+  }
+
+  /**
+   * Rate a Task related to feedback. User must have Read Permission on the Feedback.
+   */
+  @ApiBearerAuth()
+  @Patch(':id/rateTask')
+  rateTask(@Param('id') id: string, @Body() rateTaskDto: RateTaskDto) {
+    return this.feedbacksService.rateTask(id, rateTaskDto);
   }
 
   /**
