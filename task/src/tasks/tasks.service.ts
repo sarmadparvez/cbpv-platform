@@ -511,7 +511,7 @@ export class TasksService {
       where,
     }) as Promise<Image[]>);
     // remove image extension to save transformations count on cloudinary.
-    images.forEach((img) => (img.url = img.url.replace(/\.[^/.]+$/, '')));
+    // images.forEach((img) => (img.url = img.url.replace(/\.[^/.]+$/, '')));
     return images;
   }
 
