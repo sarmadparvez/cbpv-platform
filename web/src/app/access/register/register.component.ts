@@ -63,6 +63,7 @@ import { parseError } from '../../error/parse-error';
 import { AuthService } from '../../auth/auth.service';
 
 export const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#\$%\^\&*\)\(+=._-]{8,}$/;
+export const USERNAME_REGEX = /^\S*$/; // username should not contain spaces
 
 @Component({
   selector: 'app-register',
@@ -106,7 +107,7 @@ export class RegisterComponent implements OnInit {
   form = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
-    username: ['', Validators.required],
+    username: ['', [Validators.required, Validators.pattern(USERNAME_REGEX)]],
     passwords: this.fb.group(
       {
         password: [

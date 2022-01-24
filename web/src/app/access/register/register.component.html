@@ -31,6 +31,9 @@
             <mat-error *ngIf="form.get('username').hasError('required')">
               {{ 'error.required' | translate }}
             </mat-error>
+            <mat-error *ngIf="form.get('username').hasError('pattern')">
+              {{ 'error.usernamePattern' | translate }}
+            </mat-error>
           </mat-form-field>
           <ng-container formGroupName="passwords">
             <!--Password-->
