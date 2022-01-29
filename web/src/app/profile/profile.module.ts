@@ -14,6 +14,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { PermissionPipeModule } from '../iam/permission.pipe';
+import { RolePipeModule } from '../iam/role.pipe';
 
 const routes: Routes = [
   {
@@ -39,6 +41,7 @@ const routes: Routes = [
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    RolePipeModule,
   ],
 })
 export class ProfileModule {}

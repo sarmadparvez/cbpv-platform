@@ -25,7 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent {
-  dataSource: MatTableDataSource<User>;
+  dataSource: MatTableDataSource<User> = new MatTableDataSource<User>([]);
   displayedColumns: string[] = [
     'firstName',
     'lastName',

@@ -13,3 +13,9 @@ table {
   white-space: nowrap;
   overflow: hidden;
 }
+
+@media (max-width: 1600px) {
+  .manager-comment-column {
+    max-width: 200px;
+  }
+}

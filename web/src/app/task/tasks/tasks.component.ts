@@ -25,7 +25,7 @@ import { UserMap, UserService } from '../../user/user.service';
   providers: [UserService],
 })
 export class TasksComponent {
-  dataSource: MatTableDataSource<Task>;
+  dataSource: MatTableDataSource<Task> = new MatTableDataSource<Task>([]);
   displayedColumns: string[] = [
     'title',
     'dateCreated',

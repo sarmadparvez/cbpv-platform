@@ -54,6 +54,20 @@
         </ng-template>
       </td>
     </ng-container>
+    <!-- Username Column -->
+    <ng-container
+        matColumnDef="username"
+        *ngIf="Action.Manage | permission: 'all' | async"
+    >
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'name.feedbackUsername' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <ng-container *ngIf="userMap[element.userId]">
+          {{ userMap[element.userId]?.username }}
+        </ng-container>
+      </td>
+    </ng-container>
 
     <!-- Comment Column -->
     <ng-container matColumnDef="comment">

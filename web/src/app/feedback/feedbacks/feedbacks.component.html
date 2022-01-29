@@ -1,5 +1,9 @@
 <div class="page-content">
-  <div>Here you can see all feedbacks that you provided.</div>
+  <div>
+    <ng-container *ngIf="[RolesEnum.Crowdworker] | hasRoles | async">
+      Here you can see all feedbacks that you provided.
+    </ng-container>
+  </div>
   <div [hidden]="dataSource?.data?.length < 1">
     <!--Tasks table-->
     <h2>Feedbacks</h2>
@@ -8,10 +12,43 @@
       <em>Options</em> column menu in the table.
     </p>
     <p>
-      To rate the Task please click on <em>Rate Task</em> option in the <em>Options</em> column menu in the table.
+      To rate the Task please click on <em>Rate Task</em> option in the
+      <em>Options</em> column menu in the table.
     </p>
 
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+      <!-- Feedback provider Column -->
+      <ng-container
+        matColumnDef="feedbackUser"
+        *ngIf="Action.Manage | permission: 'all' | async"
+      >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'name.feedbackProvider' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="userMap[element.userId]">
+            {{
+              userMap[element.userId]?.firstName +
+                ' ' +
+                userMap[element.userId]?.lastName
+            }}
+          </ng-container>
+        </td>
+      </ng-container>
+      <!-- Feedback provider username -->
+      <ng-container
+        matColumnDef="feedbackUsername"
+        *ngIf="Action.Manage | permission: 'all' | async"
+      >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'name.feedbackUsername' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element" class="center-text">
+          <ng-container *ngIf="userMap[element.userId]">
+            {{ userMap[element.userId]?.username }}
+          </ng-container>
+        </td>
+      </ng-container>
       <!-- Task Column -->
       <ng-container matColumnDef="task">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -25,7 +62,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ 'name.prototypeFormat' | translate }}
         </th>
-        <td mat-cell *matCellDef="let element">
+        <td mat-cell *matCellDef="let element" class="center-text">
           {{ 'name.' + element.task?.prototypeFormat | translate }}
         </td>
       </ng-container>
@@ -41,6 +78,7 @@
           [matTooltipPosition]="'before'"
           *matCellDef="let element"
           class="comment-column"
+          [ngClass]="(Action.Manage | permission: 'all' | async) ? 'manager-comment-column' : ''"
         >
           <span>
             {{ element.comment }}
@@ -72,8 +110,10 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ 'name.incentiveAmount' | translate }}
         </th>
-        <td mat-cell *matCellDef="let element">
-          <ng-container *ngIf="element.paymentStatus === PaymentStatus.Completed" >
+        <td mat-cell *matCellDef="let element" class="center-text">
+          <ng-container
+            *ngIf="element.paymentStatus === PaymentStatus.Completed"
+          >
             {{ element.task?.incentive | currency: 'EUR' }}
           </ng-container>
         </td>
@@ -83,7 +123,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ 'name.feedbackRating' | translate }}
         </th>
-        <td mat-cell *matCellDef="let element">
+        <td mat-cell *matCellDef="let element" class="center-text">
           {{ element.feedbackRating }}
         </td>
       </ng-container>
@@ -92,18 +132,36 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ 'name.taskRating' | translate }}
         </th>
-        <td mat-cell *matCellDef="let element">
+        <td mat-cell *matCellDef="let element" class="center-text">
           {{ element.taskRating }}
         </td>
       </ng-container>
-      <!-- User Column -->
-      <ng-container matColumnDef="user">
+      <!-- Task Owner Column -->
+      <ng-container matColumnDef="taskUser">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ 'name.taskOwner' | translate }}
         </th>
         <td mat-cell *matCellDef="let element">
           <ng-container *ngIf="userMap[element.task?.userId]">
-            {{ userMap[element.task.userId]?.firstName + ' ' + userMap[element.task.userId]?.lastName }}
+            {{
+              userMap[element.task.userId]?.firstName +
+                ' ' +
+                userMap[element.task.userId]?.lastName
+            }}
+          </ng-container>
+        </td>
+      </ng-container>
+      <!-- Task Owner Username -->
+      <ng-container
+        matColumnDef="taskUsername"
+        *ngIf="Action.Manage | permission: 'all' | async"
+      >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'name.taskUsername' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="userMap[element.task?.userId]">
+            {{ userMap[element.task.userId]?.username }}
           </ng-container>
         </td>
       </ng-container>
@@ -123,18 +181,13 @@
           </button>
           <mat-menu #menu>
             <!--Open-->
-            <a
-              mat-menu-item
-              (click)="openFeedback($event, element.id)"
-            >
+            <a mat-menu-item (click)="openFeedback($event, element.id)">
               Open
             </a>
-            <a
-                mat-menu-item
-                (click)="rateTask(element)"
-            >
-              Rate Task
-            </a>
+            <a mat-menu-item (click)="rateTask(element)"> Rate Task </a>
+            <a mat-menu-item (click)="deleteFeedback(element.id)"
+               *ngIf="Action.Manage | permission: 'all' | async"
+            > Delete </a>
           </mat-menu>
         </td>
       </ng-container>
@@ -148,6 +201,7 @@
     </table>
     <mat-paginator
       class="mat-elevation-z8"
+      [pageSize]="25"
       [pageSizeOptions]="[10, 25, 50, 100]"
       showFirstLastButtons="true"
     ></mat-paginator>

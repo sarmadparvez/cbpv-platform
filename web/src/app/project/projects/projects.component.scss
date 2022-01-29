@@ -6,3 +6,10 @@ table {
 .mat-cell {
   cursor: pointer;
 }
+
+.description {
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 450px;
+  text-overflow: ellipsis;
+}

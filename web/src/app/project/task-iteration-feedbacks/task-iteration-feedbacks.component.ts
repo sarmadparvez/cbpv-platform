@@ -33,6 +33,9 @@ import {
 } from '../../template/rating-dialog/rating-dialog.component';
 import PaymentStatusEnum = Feedback.PaymentStatusEnum;
 import { UserMap, UserService } from '../../user/user.service';
+import { PermissionsService } from '../../iam/permission.service';
+import { Action } from '../../../../gen/api/admin';
+import { PermissionPipeModule } from '../../iam/permission.pipe';
 
 @Component({
   selector: 'app-task-iteration-feedbacks',
@@ -43,7 +46,9 @@ import { UserMap, UserService } from '../../user/user.service';
 export class TaskIterationFeedbacksComponent implements OnInit {
   @Input() task = new ReplaySubject<Task>(1);
   PaymentStatusEnum = PaymentStatusEnum;
-  dataSource: MatTableDataSource<Feedback>;
+  dataSource: MatTableDataSource<Feedback> = new MatTableDataSource<Feedback>(
+    [],
+  );
   displayedColumns: string[] = [
     'user',
     'comment',
@@ -56,6 +61,7 @@ export class TaskIterationFeedbacksComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   userMap: UserMap = {};
+  Action = Action.ActionEnum;
 
   constructor(
     private readonly feedbackService: FeedbacksService,
@@ -65,7 +71,10 @@ export class TaskIterationFeedbacksComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly translateService: TranslateService,
     private readonly snackbar: MatSnackBar,
-  ) {}
+    private readonly permService: PermissionsService,
+  ) {
+    this.setColumns();
+  }
 
   ngOnInit(): void {
     this.task.subscribe(task => {
@@ -73,6 +82,14 @@ export class TaskIterationFeedbacksComponent implements OnInit {
         this.findFeedbacks(task.id);
       }
     });
+  }
+
+  async setColumns() {
+    const ability = await firstValueFrom(this.permService.userAbility);
+    if (ability.can(Action.ActionEnum.Manage, 'all')) {
+      // Insert feedback provider name in the start
+      this.displayedColumns.splice(1, 0, 'username');
+    }
   }
 
   async findFeedbacks(taskId: string) {
@@ -188,6 +205,7 @@ export class TaskIterationFeedbacksComponent implements OnInit {
     MatCardModule,
     FlexModule,
     BasicTaskDetailModule,
+    PermissionPipeModule,
   ],
   declarations: [TaskIterationFeedbacksComponent],
   exports: [TaskIterationFeedbacksComponent],

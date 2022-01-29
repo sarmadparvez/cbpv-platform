@@ -25,6 +25,7 @@ import { Action, User } from '../../../../gen/api/admin';
 import { UserMap, UserService } from '../../user/user.service';
 import { PermissionPipeModule } from '../../iam/permission.pipe';
 import ActionEnum = Action.ActionEnum;
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-projects',
@@ -33,7 +34,7 @@ import ActionEnum = Action.ActionEnum;
   providers: [UserService],
 })
 export class ProjectsComponent {
-  dataSource: MatTableDataSource<Project>;
+  dataSource: MatTableDataSource<Project> = new MatTableDataSource<Project>([]);
   displayedColumns: string[] = [
     'title',
     'description',
@@ -63,11 +64,11 @@ export class ProjectsComponent {
 
   async setColumns() {
     const ability = await firstValueFrom(this.permService.userAbility);
-    if (ability.can(Action.ActionEnum.Manage, 'User')) {
+    if (ability.can(Action.ActionEnum.Manage, 'all')) {
       this.displayedColumns.splice(
         this.displayedColumns.length - 1,
         0,
-        'name',
+        'user',
         'username',
       );
     }
@@ -94,9 +95,11 @@ export class ProjectsComponent {
 
   async getProjects() {
     const ability = await firstValueFrom(this.permService.userAbility);
-    if (ability.can(Action.ActionEnum.Manage, 'User')) {
+    if (ability.can(Action.ActionEnum.Manage, 'all')) {
+      // user can see all projects
       this.findAllProjects();
     } else {
+      // user can only see its own projects
       this.searchProjects();
     }
   }
@@ -177,6 +180,7 @@ export class ProjectsComponent {
     MatPaginatorModule,
     MatSortModule,
     PermissionPipeModule,
+    MatTooltipModule,
   ],
 })
 export class ProjectsModule {}
