@@ -20,21 +20,18 @@ import { NoDataModule } from '../../template/no-data/no-data.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import PaymentStatusEnum = Feedback.PaymentStatusEnum;
 import {
-  BatchGetUserInfoDto,
-  User,
-  UsersService,
-} from '../../../../gen/api/admin';
-import {
   RatingDialogComponent,
   RatingDialogData,
 } from '../../template/rating-dialog/rating-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserMap, UserService } from '../../user/user.service';
 
 @Component({
   selector: 'app-feedbacks',
   templateUrl: './feedbacks.component.html',
   styleUrls: ['./feedbacks.component.scss'],
+  providers: [UserService],
 })
 export class FeedbacksComponent implements OnInit {
   dataSource: MatTableDataSource<Feedback>;
@@ -53,16 +50,16 @@ export class FeedbacksComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   PaymentStatus = PaymentStatusEnum;
-  userMap: { [key: string]: User } = {};
+  userMap: UserMap = {};
 
   constructor(
     private readonly feedbackService: FeedbacksService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly userService: UsersService,
     private readonly dialog: MatDialog,
     private readonly translateService: TranslateService,
     private readonly snackbar: MatSnackBar,
+    private readonly userService: UserService,
   ) {
     Window['fcself'] = this;
   }
@@ -85,13 +82,7 @@ export class FeedbacksComponent implements OnInit {
   async getUsersForTasks(feedbacks: Feedback[]) {
     const ids = feedbacks.map(f => f.task.userId);
     if (ids.length > 0) {
-      const request: BatchGetUserInfoDto = {
-        ids,
-      };
-      const users = await firstValueFrom(
-        this.userService.batchGetInfo(request),
-      );
-      users.forEach(user => (this.userMap[user.id] = user));
+      this.userMap = await this.userService.getUserMap(ids);
     }
   }
 

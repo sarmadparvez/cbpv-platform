@@ -6,10 +6,12 @@ import { User } from './entities/user.entity';
 import { Skill } from '../skills/entities/skill.entity';
 import { Country } from '../countries/entities/country.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateWithSSODto, SSOProvider } from './dto/create-with-sso.dto';
 import { BatchGetUserInfoDto } from './dto/batch-get-user-info.dto';
+import * as contextService from 'request-context';
+import { Action, AppAbility } from '../iam/policy';
 
 @Injectable()
 export class UsersService {
@@ -125,8 +127,14 @@ export class UsersService {
   }
 
   batchGetInfo(batchGetUserInfo: BatchGetUserInfoDto) {
+    const cols: any = ['id', 'firstName', 'lastName'];
+
+    const ability = contextService.get('userAbility') as AppAbility;
+    if (ability.can(Action.Manage, new User())) {
+      cols.push('username');
+    }
     return this.userRepository.findByIds(batchGetUserInfo.ids, {
-      select: ['id', 'firstName', 'lastName'],
+      select: cols,
       loadEagerRelations: false,
     });
   }

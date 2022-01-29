@@ -20,11 +20,17 @@ import {
   ConfirmationDialogComponent,
   ConfirmationDialogData,
 } from '../../template/confirmation-dialog/confirmation-dialog.component';
+import { PermissionsService } from '../../iam/permission.service';
+import { Action, User } from '../../../../gen/api/admin';
+import { UserMap, UserService } from '../../user/user.service';
+import { PermissionPipeModule } from '../../iam/permission.pipe';
+import ActionEnum = Action.ActionEnum;
 
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss'],
+  providers: [UserService],
 })
 export class ProjectsComponent {
   dataSource: MatTableDataSource<Project>;
@@ -35,8 +41,10 @@ export class ProjectsComponent {
     'status',
     'options',
   ];
+  userMap: UserMap = {};
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  Action = ActionEnum;
 
   constructor(
     private readonly dialog: MatDialog,
@@ -45,9 +53,24 @@ export class ProjectsComponent {
     private readonly snackBar: MatSnackBar,
     private readonly translateService: TranslateService,
     private readonly route: ActivatedRoute,
+    private readonly permService: PermissionsService,
+    private readonly userService: UserService,
   ) {
-    this.searchProjects();
     Window['pself'] = this;
+    this.setColumns();
+    this.getProjects();
+  }
+
+  async setColumns() {
+    const ability = await firstValueFrom(this.permService.userAbility);
+    if (ability.can(Action.ActionEnum.Manage, 'User')) {
+      this.displayedColumns.splice(
+        this.displayedColumns.length - 1,
+        0,
+        'name',
+        'username',
+      );
+    }
   }
 
   openProjectFormDialog(projectId?: string) {
@@ -64,16 +87,42 @@ export class ProjectsComponent {
       .afterClosed()
       .subscribe((created: boolean) => {
         if (created) {
-          this.searchProjects();
+          this.getProjects();
         }
       });
   }
 
+  async getProjects() {
+    const ability = await firstValueFrom(this.permService.userAbility);
+    if (ability.can(Action.ActionEnum.Manage, 'User')) {
+      this.findAllProjects();
+    } else {
+      this.searchProjects();
+    }
+  }
+
   async searchProjects() {
     const projects = await firstValueFrom(this.projectService.searchAll());
+    this.setDataSource(projects);
+  }
+
+  async findAllProjects() {
+    const projects = await firstValueFrom(this.projectService.findAll());
+    this.getUsersForProjects(projects);
+    this.setDataSource(projects);
+  }
+
+  setDataSource(projects: Project[]) {
     this.dataSource = new MatTableDataSource(projects);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  async getUsersForProjects(projects: Project[]) {
+    const ids = projects.map(f => f.userId);
+    if (ids.length > 0) {
+      this.userMap = await this.userService.getUserMap(ids);
+    }
   }
 
   openProject(event: MouseEvent, project: string) {
@@ -97,7 +146,7 @@ export class ProjectsComponent {
       if (confirm) {
         try {
           await firstValueFrom(this.projectService.remove(project));
-          this.searchProjects();
+          this.getProjects();
         } catch (err) {
           console.log('Unable to delete project');
           this.snackBar.open(
@@ -127,6 +176,7 @@ export class ProjectsComponent {
     MatFormFieldModule,
     MatPaginatorModule,
     MatSortModule,
+    PermissionPipeModule,
   ],
 })
 export class ProjectsModule {}
