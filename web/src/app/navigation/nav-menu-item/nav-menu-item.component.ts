@@ -7,16 +7,15 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./nav-menu-item.component.scss'],
 })
 export class NavMenuItemComponent {
-  active: boolean;
   @Input() text: string;
-  @Input() icon: string;
   @Input()
   set selectionRoute(value: string) {
     this.active = this.currentRoute === value;
   }
   private readonly currentRoute: string;
   @Input() selectorStyle = {};
-  hover: boolean;
+  active: boolean;
+  hovered: boolean;
   constructor(private readonly route: ActivatedRoute) {
     this.currentRoute = route.snapshot.routeConfig?.path ?? '';
   }

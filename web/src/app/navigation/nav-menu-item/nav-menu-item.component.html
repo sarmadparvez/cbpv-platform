@@ -3,10 +3,12 @@
   class="sidenav-item"
   [ngClass]="active ? 'selected' : ''"
   disableRipple
-  (mouseover)="hover=true" (mouseleave)="hover=false"
+  (mouseleave)="hovered = false"
+  (mouseover)="hovered = true"
 >
-  <div class="item-selector"
-  [ngStyle]="selectorStyle && (active || hover ) ? selectorStyle: {}"
+  <div
+    class="item-selector"
+    [ngStyle]="selectorStyle && (active || hovered) ? selectorStyle : {}"
   ></div>
   <div fxFlex="100%">{{ text }}</div>
 </a>
