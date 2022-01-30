@@ -20,24 +20,32 @@ import { NoDataModule } from '../../template/no-data/no-data.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import PaymentStatusEnum = Feedback.PaymentStatusEnum;
 import {
-  BatchGetUserInfoDto,
-  User,
-  UsersService,
-} from '../../../../gen/api/admin';
-import {
   RatingDialogComponent,
   RatingDialogData,
 } from '../../template/rating-dialog/rating-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserMap, UserService } from '../../user/user.service';
+import { RolePipeModule } from '../../iam/role.pipe';
+import { Action, User } from '../../../../gen/api/admin';
+import { PermissionsService } from '../../iam/permission.service';
+import ActionEnum = Action.ActionEnum;
+import { PermissionPipeModule } from '../../iam/permission.pipe';
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData,
+} from '../../template/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-feedbacks',
   templateUrl: './feedbacks.component.html',
   styleUrls: ['./feedbacks.component.scss'],
+  providers: [UserService],
 })
 export class FeedbacksComponent implements OnInit {
-  dataSource: MatTableDataSource<Feedback>;
+  dataSource: MatTableDataSource<Feedback> = new MatTableDataSource<Feedback>(
+    [],
+  );
   displayedColumns: string[] = [
     'task',
     'prototypeFormat',
@@ -47,29 +55,56 @@ export class FeedbacksComponent implements OnInit {
     'incentive',
     'feedbackRating',
     'taskRating',
-    'user',
+    'taskUser',
     'options',
   ];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   PaymentStatus = PaymentStatusEnum;
-  userMap: { [key: string]: User } = {};
+  userMap: UserMap = {};
+  RolesEnum = User.RolesEnum;
+  Action = ActionEnum;
 
   constructor(
     private readonly feedbackService: FeedbacksService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly userService: UsersService,
     private readonly dialog: MatDialog,
     private readonly translateService: TranslateService,
     private readonly snackbar: MatSnackBar,
+    private readonly userService: UserService,
+    private readonly permService: PermissionsService,
+    private readonly snackBar: MatSnackBar,
   ) {
     Window['fcself'] = this;
+    this.setColumns();
+  }
+
+  async setColumns() {
+    const ability = await firstValueFrom(this.permService.userAbility);
+    if (ability.can(Action.ActionEnum.Manage, 'all')) {
+      // Insert feedback provider name in the start
+      this.displayedColumns.splice(0, 0, 'feedbackUser', 'feedbackUsername');
+      // Insert task owner username at the end.
+      this.displayedColumns.splice(
+        this.displayedColumns.length - 1,
+        0,
+        'taskUsername',
+      );
+    }
   }
 
   async findFeedbacks() {
-    const feedbacks = await firstValueFrom(this.feedbackService.searchAll());
-    this.getUsersForTasks(feedbacks);
+    const ability = await firstValueFrom(this.permService.userAbility);
+    let feedbacks: Feedback[];
+    if (ability.can(Action.ActionEnum.Manage, 'all')) {
+      // user can see all feedbacks
+      feedbacks = await firstValueFrom(this.feedbackService.findAll());
+    } else {
+      // user can only see its own feedbacks
+      feedbacks = await firstValueFrom(this.feedbackService.searchAll());
+    }
+    this.getUsers(feedbacks);
     this.dataSource = new MatTableDataSource(feedbacks);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -82,16 +117,16 @@ export class FeedbacksComponent implements OnInit {
     });
   }
 
-  async getUsersForTasks(feedbacks: Feedback[]) {
-    const ids = feedbacks.map(f => f.task.userId);
-    if (ids.length > 0) {
-      const request: BatchGetUserInfoDto = {
-        ids,
-      };
-      const users = await firstValueFrom(
-        this.userService.batchGetInfo(request),
-      );
-      users.forEach(user => (this.userMap[user.id] = user));
+  async getUsers(feedbacks: Feedback[]) {
+    let taskUserIds = feedbacks.map(f => f.task.userId);
+    // if user have permission to see all feedbacks, also get feedback provider
+    const ability = await firstValueFrom(this.permService.userAbility);
+    if (ability.can(Action.ActionEnum.Manage, 'all')) {
+      const feedbackUserIds = feedbacks.map(f => f.userId);
+      taskUserIds = [...new Set(taskUserIds.concat(feedbackUserIds))];
+    }
+    if (taskUserIds.length > 0) {
+      this.userMap = await this.userService.getUserMap(taskUserIds);
     }
   }
 
@@ -138,6 +173,34 @@ export class FeedbacksComponent implements OnInit {
         }
       });
   }
+
+  deleteFeedback(feedbackId: string) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: <ConfirmationDialogData>{
+        title: this.translateService.instant('action.deleteFeedback'),
+        message: this.translateService.instant(
+          'note.deleteFeedbackConfirmMessage',
+        ),
+      },
+      width: '50vw',
+    });
+    dialogRef.afterClosed().subscribe(async confirm => {
+      if (confirm) {
+        let message = 'notification.delete';
+        try {
+          await firstValueFrom(this.feedbackService.remove(feedbackId));
+          this.findFeedbacks();
+        } catch (err) {
+          console.log('unable to delete feedback ', err);
+          message = 'error.delete';
+        } finally {
+          this.snackBar.open(this.translateService.instant(message), '', {
+            duration: 5000,
+          });
+        }
+      }
+    });
+  }
 }
 @NgModule({
   imports: [
@@ -153,6 +216,8 @@ export class FeedbacksComponent implements OnInit {
     MatPaginatorModule,
     NoDataModule,
     MatTooltipModule,
+    RolePipeModule,
+    PermissionPipeModule,
   ],
   declarations: [FeedbacksComponent],
 })

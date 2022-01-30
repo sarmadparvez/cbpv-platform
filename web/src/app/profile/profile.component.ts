@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
+  Action,
   CountriesService,
   SkillsService,
   UpdateUserDto,
@@ -22,6 +23,7 @@ import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
+import ActionEnum = Action.ActionEnum;
 
 @Component({
   selector: 'app-profile',
@@ -51,6 +53,7 @@ import {
 })
 export class ProfileComponent extends RegisterComponent implements OnInit {
   user = new ReplaySubject<User>(1);
+  Action = ActionEnum;
 
   constructor(
     protected readonly route: ActivatedRoute,

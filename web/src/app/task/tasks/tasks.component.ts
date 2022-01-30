@@ -1,7 +1,7 @@
 import { Component, NgModule, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Feedback, Task } from 'gen/api/task/model/models';
+import { Task } from 'gen/api/task/model/models';
 import { TasksService } from '../../../../gen/api/task';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -15,19 +15,17 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import {
-  BatchGetUserInfoDto,
-  User,
-  UsersService,
-} from '../../../../gen/api/admin';
+import { User } from '../../../../gen/api/admin';
+import { UserMap, UserService } from '../../user/user.service';
 
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss'],
+  providers: [UserService],
 })
 export class TasksComponent {
-  dataSource: MatTableDataSource<Task>;
+  dataSource: MatTableDataSource<Task> = new MatTableDataSource<Task>([]);
   displayedColumns: string[] = [
     'title',
     'dateCreated',
@@ -40,13 +38,13 @@ export class TasksComponent {
   ];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  userMap: { [key: string]: User } = {};
+  userMap: UserMap = {};
 
   constructor(
     private readonly taskService: TasksService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly userService: UsersService,
+    private readonly userService: UserService,
   ) {
     this.findOpenTasks();
     Window['tcself'] = this;
@@ -64,13 +62,7 @@ export class TasksComponent {
   async getUsersForTasks(tasks: Task[]) {
     const ids = tasks.map(f => f.userId);
     if (ids.length > 0) {
-      const request: BatchGetUserInfoDto = {
-        ids,
-      };
-      const users = await firstValueFrom(
-        this.userService.batchGetInfo(request),
-      );
-      users.forEach(user => (this.userMap[user.id] = user));
+      this.userMap = await this.userService.getUserMap(ids);
     }
   }
 

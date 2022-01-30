@@ -1,5 +1,5 @@
 import { Component, Input, NgModule, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { firstValueFrom, ReplaySubject } from 'rxjs';
 import { Task } from 'gen/api/task/model/task';
@@ -20,11 +20,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { FlexModule } from '@angular/flex-layout';
 import { BasicTaskDetailModule } from '../../task/basic-task-detail/basic-task-detail.component';
-import {
-  BatchGetUserInfoDto,
-  User,
-  UsersService,
-} from '../../../../gen/api/admin';
 import { MatDialog } from '@angular/material/dialog';
 import {
   TaskIterationFeedbackPreviewComponent,
@@ -37,16 +32,23 @@ import {
   RatingDialogData,
 } from '../../template/rating-dialog/rating-dialog.component';
 import PaymentStatusEnum = Feedback.PaymentStatusEnum;
+import { UserMap, UserService } from '../../user/user.service';
+import { PermissionsService } from '../../iam/permission.service';
+import { Action } from '../../../../gen/api/admin';
+import { PermissionPipeModule } from '../../iam/permission.pipe';
 
 @Component({
   selector: 'app-task-iteration-feedbacks',
   templateUrl: './task-iteration-feedbacks.component.html',
   styleUrls: ['./task-iteration-feedbacks.component.scss'],
+  providers: [UserService],
 })
 export class TaskIterationFeedbacksComponent implements OnInit {
   @Input() task = new ReplaySubject<Task>(1);
   PaymentStatusEnum = PaymentStatusEnum;
-  dataSource: MatTableDataSource<Feedback>;
+  dataSource: MatTableDataSource<Feedback> = new MatTableDataSource<Feedback>(
+    [],
+  );
   displayedColumns: string[] = [
     'user',
     'comment',
@@ -58,17 +60,21 @@ export class TaskIterationFeedbacksComponent implements OnInit {
   ];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  userMap: { [key: string]: User } = {};
+  userMap: UserMap = {};
+  Action = Action.ActionEnum;
 
   constructor(
     private readonly feedbackService: FeedbacksService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly userService: UsersService,
+    private readonly userService: UserService,
     private readonly dialog: MatDialog,
     private readonly translateService: TranslateService,
     private readonly snackbar: MatSnackBar,
-  ) {}
+    private readonly permService: PermissionsService,
+  ) {
+    this.setColumns();
+  }
 
   ngOnInit(): void {
     this.task.subscribe(task => {
@@ -76,6 +82,14 @@ export class TaskIterationFeedbacksComponent implements OnInit {
         this.findFeedbacks(task.id);
       }
     });
+  }
+
+  async setColumns() {
+    const ability = await firstValueFrom(this.permService.userAbility);
+    if (ability.can(Action.ActionEnum.Manage, 'all')) {
+      // Insert feedback provider name in the start
+      this.displayedColumns.splice(1, 0, 'username');
+    }
   }
 
   async findFeedbacks(taskId: string) {
@@ -91,13 +105,7 @@ export class TaskIterationFeedbacksComponent implements OnInit {
   async getUsersForFeedbacks(feedbacks: Feedback[]) {
     const ids = feedbacks.map(f => f.userId);
     if (ids.length > 0) {
-      const request: BatchGetUserInfoDto = {
-        ids,
-      };
-      const users = await firstValueFrom(
-        this.userService.batchGetInfo(request),
-      );
-      users.forEach(user => (this.userMap[user.id] = user));
+      this.userMap = await this.userService.getUserMap(ids);
     }
   }
 
@@ -197,6 +205,7 @@ export class TaskIterationFeedbacksComponent implements OnInit {
     MatCardModule,
     FlexModule,
     BasicTaskDetailModule,
+    PermissionPipeModule,
   ],
   declarations: [TaskIterationFeedbacksComponent],
   exports: [TaskIterationFeedbacksComponent],

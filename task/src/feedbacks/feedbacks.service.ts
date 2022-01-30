@@ -12,7 +12,6 @@ import * as contextService from 'request-context';
 import { Task } from '../tasks/entities/task.entity';
 import { RateFeedbackDto } from './dto/rate-feedback.dto';
 import { RateTaskDto } from './dto/rate-task.dto';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
 export class FeedbacksService {
@@ -72,7 +71,9 @@ export class FeedbacksService {
   }
 
   findAll(query?: FindAllFeedbackDto) {
-    const options: FindManyOptions = {};
+    const options: FindManyOptions = {
+      relations: ['task'],
+    };
     if (query && query.taskId) {
       options.where = {
         taskId: query.taskId,

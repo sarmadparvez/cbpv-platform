@@ -1,0 +1,18 @@
+table {
+  width: 100%;
+}
+
+.center {
+  text-align: center;
+}
+
+.skills {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+@media (max-width: 1600px) {
+  .skills {
+    max-width: 300px;
+  }
+}

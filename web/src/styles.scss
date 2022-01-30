@@ -48,6 +48,10 @@ body {
   transform: translate(-50%, -50%);
 }
 
+.center-text {
+  text-align: center
+}
+
 .second-sidenav-container {
   min-height: calc(100vh - #{$app-toolbar-height});
 }

@@ -55,6 +55,16 @@ const routes: Routes = [
       import('./feedback/feedback.module').then(m => m.FeedbackModule),
   },
   {
+    path: 'users',
+    component: NavComponent,
+    data: {
+      permission: ActionEnum.Manage,
+      subject: 'User',
+    },
+    canActivate: [RouteGuard],
+    loadChildren: () => import('./user/user.module').then(m => m.UserModule),
+  },
+  {
     path: '**',
     redirectTo: '/access/login',
     pathMatch: 'full',
