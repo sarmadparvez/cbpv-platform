@@ -28,6 +28,7 @@ export class StarRatingVisualizationComponent implements OnInit {
   yAxisLabel = 'Star Rating';
   showYAxisLabel = true;
   xAxisLabel: string = 'Number of Users';
+  averageRating = 0;
 
   constructor() {
     Window['srself'] = this;
@@ -39,15 +40,19 @@ export class StarRatingVisualizationComponent implements OnInit {
 
   formatStatsForChart() {
     this.initializeData();
-
+    let totalStars = 0;
+    let totalUsers = 0;
     this.questionStats.stats.forEach(stat => {
       const data = this.chartData.find(
         d => d.name === stat.starRatingAnswer.toString() + ' star',
       );
       if (data) {
+        totalStars += stat.starRatingAnswerCount * stat.starRatingAnswer;
+        totalUsers += stat.starRatingAnswerCount;
         data.value = stat.starRatingAnswerCount;
       }
     });
+    this.averageRating = +(totalStars / totalUsers).toFixed(2);
   }
   xAxisTickFormatting(xTick: number) {
     if (xTick % 1 === 0) {
