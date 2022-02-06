@@ -44,6 +44,7 @@ export class QuestionnaireAnswerComponent implements OnInit {
   starRatingAnswers: { [key: string]: number } = {};
   thumbsRatingAnswers: { [key: string]: ThumbsRatingAnswerEnum } = {};
   submitted = false;
+  processingRequest = false;
 
   constructor(
     private readonly feedbackService: FeedbacksService,
@@ -119,6 +120,9 @@ export class QuestionnaireAnswerComponent implements OnInit {
   }
 
   async saveAnswers() {
+    if (this.processingRequest) {
+      return;
+    }
     this.submitted = true;
     let valid = true;
     this.task.questions.forEach(q => {
@@ -163,6 +167,7 @@ export class QuestionnaireAnswerComponent implements OnInit {
     });
     let message = 'notification.submitFeedback';
     try {
+      this.processingRequest = true;
       await firstValueFrom(this.feedbackService.create(request));
       this.router.navigate(['tasks']);
     } catch (err) {
@@ -172,6 +177,7 @@ export class QuestionnaireAnswerComponent implements OnInit {
       this.snackbar.open(this.translateService.instant(message), '', {
         duration: 5000,
       });
+      this.processingRequest = false;
     }
   }
 
