@@ -15,7 +15,7 @@ import {
   FeedbacksService,
   RateFeedbackDto,
 } from '../../../../gen/api/task';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { FlexModule } from '@angular/flex-layout';
@@ -206,6 +206,7 @@ export class TaskIterationFeedbacksComponent implements OnInit {
     FlexModule,
     BasicTaskDetailModule,
     PermissionPipeModule,
+    MatSortModule,
   ],
   declarations: [TaskIterationFeedbacksComponent],
   exports: [TaskIterationFeedbacksComponent],

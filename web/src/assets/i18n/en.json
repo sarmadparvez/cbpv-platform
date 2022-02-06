@@ -21,6 +21,7 @@
   },
   "name": {
     "answer": "Answer",
+    "averageRating": "Average Rating",
     "comment": "Comment",
     "answerType": "Answer Type",
     "additionalComment": "Additional Comment",
