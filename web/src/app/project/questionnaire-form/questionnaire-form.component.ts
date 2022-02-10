@@ -18,7 +18,6 @@ import { FlexModule } from '@angular/flex-layout';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
@@ -32,6 +31,11 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { firstValueFrom } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-questionnaire-form',
@@ -166,6 +170,10 @@ export class QuestionnaireFormComponent implements OnInit {
     return null;
   }
 
+  moveQuestion(event: CdkDragDrop<void>) {
+    moveItemInArray(this.formGroups, event.previousIndex, event.currentIndex);
+  }
+
   deleteQuestion(index: number) {
     this.formGroups.splice(index, 1);
   }
@@ -198,6 +206,7 @@ export class QuestionnaireFormComponent implements OnInit {
     MatSelectModule,
     MatInputModule,
     MatChipsModule,
+    DragDropModule,
   ],
   declarations: [QuestionnaireFormComponent],
 })
