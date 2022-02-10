@@ -8,6 +8,10 @@ body {
   cursor: pointer;
 }
 
+.movable {
+  cursor: grab;
+}
+
 .full-width {
   width: 100%;
 }

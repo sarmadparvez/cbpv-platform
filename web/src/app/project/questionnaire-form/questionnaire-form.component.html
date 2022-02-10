@@ -1,12 +1,18 @@
 <h2 mat-dialog-title>{{ 'action.editQuestionnaire' | translate }}</h2>
-<mat-dialog-content class="mat-typography">
+<mat-dialog-content class="mat-typography" cdkScrollable>
   <p class="text-note">{{ 'note.askQuestions' | translate }}</p>
-
+  <div (cdkDropListDropped)="moveQuestion($event)" cdkDropList
+  cdkDropListAutoScrollStep="15"
+       class="questions-list"
+  >
   <ng-container *ngFor="let form of formGroups; let i = index">
-    <div class="form-container">
-      <div fxLayout>
+    <div class="form-container" cdkDrag >
+      <div fxLayout fxLayoutGap="10px">
         <h3>Question No. {{ i + 1 }}</h3>
-        <mat-icon class="margin-left-auto clickable" (click)="deleteQuestion(i)"
+        <mat-icon class="margin-left-auto movable"
+        cdkDragHandle
+        >drag_indicator</mat-icon>
+        <mat-icon class="clickable" (click)="deleteQuestion(i)"
           >clear</mat-icon
         >
       </div>
@@ -79,6 +85,7 @@
       </form>
     </div>
   </ng-container>
+  </div>
   <button
     class="mb-20"
     mat-button
