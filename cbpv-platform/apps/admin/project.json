@@ -10,7 +10,15 @@
         "outputPath": "dist/apps/admin",
         "main": "apps/admin/src/main.ts",
         "tsConfig": "apps/admin/tsconfig.app.json",
-        "assets": ["apps/admin/src/assets"]
+        "assets": ["apps/admin/src/assets"],
+        "tsPlugins": [
+          {
+            "name": "@nestjs/swagger/plugin",
+            "options": {
+              "introspectComments": true
+            }
+          }
+        ]
       },
       "configurations": {
         "production": {
