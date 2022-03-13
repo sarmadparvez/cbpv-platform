@@ -7,9 +7,6 @@ import { ValidationPipe } from '@nestjs/common';
 import * as contextService from 'request-context';
 
 async function bootstrap() {
-  //const app = await NestFactory.create(AppModule);
-/*  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);*/
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   // Swagger

@@ -10,7 +10,15 @@
         "outputPath": "dist/apps/task",
         "main": "apps/task/src/main.ts",
         "tsConfig": "apps/task/tsconfig.app.json",
-        "assets": ["apps/task/src/assets"]
+        "assets": ["apps/task/src/assets"],
+        "tsPlugins": [
+          {
+            "name": "@nestjs/swagger/plugin",
+            "options": {
+              "introspectComments": true
+            }
+          }
+        ]
       },
       "configurations": {
         "production": {
