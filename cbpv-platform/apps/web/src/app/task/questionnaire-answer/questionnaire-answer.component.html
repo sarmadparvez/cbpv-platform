@@ -1,0 +1,136 @@
+<mat-card>
+  <mat-card-title>{{ 'name.questionnaire' | translate }}</mat-card-title>
+  <mat-card-content>
+    <!--Textual description 1-->
+    <p class="text-note" *ngIf="!readonly">Please fill out this Questionnaire.</p>
+    <!--Questions-->
+    <div fxLayout fxLayoutGap="20px">
+      <form [formGroup]="form" fxFlex="60%">
+        <ng-container *ngFor="let question of task?.questions; let i = index">
+          <div fxLayout fxLayoutGap="10px" class="mt-20">
+            <strong>Q{{ i + 1 }}: </strong>
+            <!--Question-->
+            <span class="multiline">{{ question.description | translate }}</span>
+          </div>
+          <!--Answer-->
+          <div class="answer-container mt-10" [ngSwitch]="question.type">
+            <!--Description -->
+            <ng-container *ngSwitchCase="QuestionType.Text">
+              <mat-form-field
+                  class="full-width"
+                  appearance="outline"
+                  *ngIf="!readonly; else textAnswer"
+              >
+                <mat-label>{{ 'name.answer' | translate }}</mat-label>
+                <textarea matInput [formControlName]="question.id" rows="5"> </textarea>
+                <mat-error *ngIf="!form.controls[question.id].hasError('required')">
+                  {{ 'error.required' | translate }}
+                </mat-error>
+              </mat-form-field>
+              <ng-template #textAnswer>
+                <p class="multiline">{{form.controls[question.id]?.value}} </p>
+              </ng-template>
+            </ng-container>
+
+            <!--Radio answer-->
+            <ng-container *ngSwitchCase="QuestionType.Radio">
+              <mat-radio-group
+                  fxLayout="row wrap"
+                  fxLayoutGap="10px"
+                  [formControlName]="question.id"
+              >
+                <mat-radio-button
+                    *ngFor="let option of question.radioOptions"
+                    value="{{ option }}"
+                >{{ option }}</mat-radio-button
+                >
+              </mat-radio-group>
+              <mat-error class="mt-10" *ngIf="submitted && !form.controls[question.id]?.valid">
+                {{ 'error.required' | translate }}
+              </mat-error>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="QuestionType.StarRating">
+              <!--Star rating-->
+              <ngx-material-rating
+                  [disabled]="readonly"
+                  [color]="'primary'"
+                  [(ngModel)]="starRatingAnswers[question.id]"
+                  [max]="5"
+                  [ngModelOptions]="{ standalone: true }"
+              >
+              </ngx-material-rating>
+              <mat-error *ngIf="submitted && !starRatingAnswers[question.id]">
+                {{ 'error.required' | translate }}
+              </mat-error>
+            </ng-container>
+
+            <!--Thumbs up/down Rating-->
+            <ng-container *ngSwitchCase="QuestionType.ThumbsRating">
+              <div
+                  fxLayout
+                  fxLayoutGap="10px"
+                  [ngClass]="readonly ? 'disabled-element': ''"
+              >
+                <!--Thumbs Up un selected-->
+                <mat-icon
+                    class="clickable"
+                    fontSet="material-icons-outlined"
+                    *ngIf="
+                !thumbsRatingAnswers[question.id] ||
+                thumbsRatingAnswers[question.id] === ThumbsRatingEnum.Down
+              "
+                    (click)="thumbsUp(question.id)"
+                >thumb_up</mat-icon
+                >
+                <!--Thumbs up selected-->
+                <mat-icon
+                    *ngIf="thumbsRatingAnswers[question.id] === ThumbsRatingEnum.Up"
+                >thumb_up</mat-icon
+                >
+                <!--Thumbs Down un selected-->
+                <mat-icon
+                    class="clickable"
+                    [fontSet]="'material-icons-outlined'"
+                    *ngIf="
+                !thumbsRatingAnswers[question.id] ||
+                thumbsRatingAnswers[question.id] === ThumbsRatingEnum.Up
+              "
+                    (click)="thumbsDown(question.id)"
+                >thumb_down</mat-icon
+                >
+                <!--Thumbs Down selected-->
+                <mat-icon
+                    *ngIf="thumbsRatingAnswers[question.id] === ThumbsRatingEnum.Down"
+                >thumb_down</mat-icon
+                >
+              </div>
+              <mat-error class="mt-10" *ngIf="submitted && !thumbsRatingAnswers[question.id]">
+                {{ 'error.required' | translate }}
+              </mat-error>
+            </ng-container>
+          </div>
+        </ng-container>
+        <!--Additional Comment -->
+        <mat-form-field
+            class="full-width mt-20"
+            appearance="outline"
+            *ngIf="!readonly"
+        >
+          <mat-label>{{ 'name.additionalComment' | translate }}</mat-label>
+          <textarea matInput formControlName="comment" rows="5"> </textarea>
+          <mat-hint class="normal-font-size">{{'note.commentHint' | translate}}</mat-hint>
+        </mat-form-field>
+
+        <button *ngIf="!readonly" (click)="saveAnswers()" mat-raised-button color="black" class="mt-30" type="submit">{{'name.submitFeedback' | translate}}</button>
+      </form>
+      <div *ngIf="readonly" fxFlex="40%">
+        <div class="field-label field-name">
+          {{ 'name.additionalComment' | translate }}
+        </div>
+        <p class="multiline">{{form.controls["comment"]?.value}} </p>
+      </div>
+
+    </div>
+  </mat-card-content>
+</mat-card>

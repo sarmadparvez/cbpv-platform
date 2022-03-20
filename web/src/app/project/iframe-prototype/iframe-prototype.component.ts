@@ -37,7 +37,6 @@ export class IframePrototypeComponent implements OnInit {
     public sanitizer: DomSanitizer,
     private readonly dialog: MatDialog,
   ) {
-    Window['ipself'] = this;
   }
 
   async ngOnInit() {

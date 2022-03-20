@@ -1,0 +1,62 @@
+<h2 mat-dialog-title>Task Feedback</h2>
+<mat-dialog-content class="mat-typography">
+  <!-- Feedback Provider -->
+  <div>
+    <div class="field-label field-name">
+      {{ 'name.feedbackProvider' | translate }}
+    </div>
+    <div>
+      <span *ngIf="user; else userDeleted">{{
+        user?.firstName + ' ' + user?.lastName
+      }}</span>
+      <ng-template #userDeleted>
+        {{ 'note.userDeleted' | translate }}
+      </ng-template>
+    </div>
+  </div>
+
+  <p class="text-note mt-30">Please see the answer for your Questions below.</p>
+
+  <div class="mt-20 mb-30">
+    <app-questionnaire-answer
+      [task]="task"
+      [readonly]="true"
+      [feedback]="feedback"
+    >
+    </app-questionnaire-answer>
+  </div>
+  <!--Task Rating-->
+  <h2>{{ 'name.taskRating' | translate }}</h2>
+  <p class="text-note">
+    Rating for your Task. The Rating is provided by Crowdworker.
+  </p>
+  <div class="field-container" fxLayout fxLayoutAlign="start start">
+    <!--Rating field-->
+    <div fxFlex="30%">
+      <!--Star rating-->
+      <ngx-material-rating
+        *ngIf="feedback.taskRating; else noRating"
+        [readonly]="true"
+        [color]="'primary'"
+        [value]="feedback.taskRating"
+        [max]="5"
+      >
+      </ngx-material-rating>
+      <ng-template #noRating>
+        {{ 'note.noRating' | translate }}
+      </ng-template>
+    </div>
+    <!--Rating Comment-->
+    <div fxFlex="70%">
+      <div class="field-label field-name">
+        {{ 'name.comment' | translate }}
+      </div>
+      <div>
+        <span>{{ feedback.taskRatingComment }}</span>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-dialog-close mat-button>Close</button>
+</mat-dialog-actions>

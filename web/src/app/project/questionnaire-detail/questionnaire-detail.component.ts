@@ -23,7 +23,6 @@ export class QuestionnaireDetailComponent {
   @Input() task: ReplaySubject<Task>;
 
   constructor() {
-    Window['qdself'] = this;
   }
 }
 

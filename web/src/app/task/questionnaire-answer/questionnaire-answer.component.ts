@@ -52,7 +52,6 @@ export class QuestionnaireAnswerComponent implements OnInit {
     private readonly snackbar: MatSnackBar,
     private readonly router: Router,
   ) {
-    Window['qaself'] = this;
   }
 
   ngOnInit(): void {

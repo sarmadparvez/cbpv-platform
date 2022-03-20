@@ -1,0 +1,159 @@
+<mat-card>
+  <mat-card-title>{{ task?.title }}</mat-card-title>
+  <mat-card-content>
+    <div class="field-container" fxLayout>
+      <!--Description-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.description' | translate }}
+        </div>
+        <div>
+          <span class="multiline">{{ task?.description }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="field-container" fxLayout>
+      <!--Status-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.status' | translate }}
+        </div>
+        <div>
+          <span>{{ 'name.' + task?.status | translate }}</span>
+        </div>
+      </div>
+      <!--Access Type-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.taskAccess' | translate }}
+        </div>
+        <div>
+          <span>{{ 'accessType.' + task?.accessType | translate }}</span>
+        </div>
+      </div>
+      <!--Creation Date -->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.dateCreated' | translate }}
+        </div>
+        <div>
+          <span>{{ task?.dateCreated | date: 'dd.MM.y HH:mm:ss' }}</span>
+        </div>
+      </div>
+    </div>
+    <mat-divider inset></mat-divider>
+
+    <h3>{{ 'name.crowdCriteria' | translate }}</h3>
+    <div class="field-container" fxLayout>
+      <!--Min Experience-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.minExperience' | translate }}
+        </div>
+        <div>
+          <span>{{ task?.minExperience }}</span>
+        </div>
+      </div>
+
+      <!--Max Experience-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.maxExperience' | translate }}
+        </div>
+        <div>
+          <span>{{ task?.maxExperience }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="field-container" fxLayout>
+      <!--Min Age-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.minAge' | translate }}
+        </div>
+        <div>
+          <span>{{ task?.minAge }}</span>
+        </div>
+      </div>
+
+      <!--Max Age-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.maxAge' | translate }}
+        </div>
+        <div>
+          <span>{{ task?.maxAge }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-container" fxLayout>
+      <!--Skills-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.skills' | translate }}
+        </div>
+        <div>
+          <mat-chip-list>
+            <mat-chip *ngFor="let skill of task?.skills">
+              {{ skill.name }}
+            </mat-chip>
+          </mat-chip-list>
+        </div>
+      </div>
+      <!--Countries-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.countries' | translate }}
+        </div>
+        <div>
+          <mat-chip-list>
+            <mat-chip *ngFor="let country of task?.countries">
+              {{ country.name }}
+            </mat-chip>
+          </mat-chip-list>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-container" fxLayout>
+      <!--Incentive-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.incentive' | translate }}
+        </div>
+        <div>
+          <span>{{ task?.incentive | currency: 'EUR' }}</span>
+        </div>
+      </div>
+
+      <!--Budget-->
+      <div class="full-width">
+        <div class="field-label field-name">
+          {{ 'name.budget' | translate }}
+        </div>
+        <div>
+          <span>{{ task?.budget | currency: 'EUR'}}</span>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider inset></mat-divider>
+    <h3>{{ 'name.prototypeFormat' | translate }}</h3>
+    <!--Prototype format card-->
+    <app-task-format-selector-card
+      [testType]="task?.testType"
+      [selectorForPrototypeFormat]="task?.prototypeFormat"
+      [readonly]="true"
+    >
+    </app-task-format-selector-card>
+    <!--Test type notes-->
+    <div class="text-note mt-15 field-container">
+      <strong>{{ 'name.basicTest' | translate }}: </strong>
+      {{ 'note.basicTest' | translate }}
+      <br />
+      <strong>{{ 'name.comparisonTest' | translate }}: </strong>
+      {{ 'note.comparisonTest' | translate }}
+    </div>
+  </mat-card-content>
+</mat-card>

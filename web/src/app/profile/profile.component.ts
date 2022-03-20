@@ -78,7 +78,6 @@ export class ProfileComponent extends RegisterComponent implements OnInit {
       authService,
     );
     this.initializeFormWithUserData();
-    Window['pself'] = this;
   }
 
   async initializeFormWithUserData() {

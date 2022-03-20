@@ -47,7 +47,6 @@ export class TasksComponent {
     private readonly userService: UserService,
   ) {
     this.findOpenTasks();
-    Window['tcself'] = this;
   }
 
   async findOpenTasks() {

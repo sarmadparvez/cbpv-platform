@@ -138,7 +138,6 @@ export class RegisterComponent implements OnInit {
     protected readonly router: Router,
     protected readonly authService: AuthService,
   ) {
-    Window['rcself'] = this;
   }
 
   async ngOnInit() {

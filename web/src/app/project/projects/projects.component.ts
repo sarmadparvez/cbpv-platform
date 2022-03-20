@@ -57,7 +57,6 @@ export class ProjectsComponent {
     private readonly permService: PermissionsService,
     private readonly userService: UserService,
   ) {
-    Window['pself'] = this;
     this.setColumns();
     this.getProjects();
   }

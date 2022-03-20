@@ -101,7 +101,6 @@ export class TaskFormComponent implements OnInit {
     private readonly countryService: CountriesService,
     @Inject(MAT_DIALOG_DATA) private readonly data: TaskFormDialogData,
   ) {
-    Window['tfself'] = this;
     if (this.data.task) {
       this.task = this.data.task;
       this.form.patchValue(this.task);

@@ -62,7 +62,6 @@ export class ProjectBuilderComponent {
     private readonly snackBar: MatSnackBar,
     private readonly translateService: TranslateService,
   ) {
-    Window['pcself'] = this;
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.hanleQueryParamsChange();
     this.getProject();

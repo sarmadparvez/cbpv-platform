@@ -1,0 +1,64 @@
+<app-access-container>
+  <mat-card fxFlexAlign="center">
+    <mat-card-title>
+      Login to CBPV Platform
+    </mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="form">
+        <mat-form-field class="login-field" appearance="outline">
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            formControlName="username"
+            autocomplete="username"
+          />
+          <mat-error *ngIf="form.controls.username.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="login-field" appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            name="password"
+            formControlName="password"
+            type="password"
+            autocomplete="current-password"
+          />
+          <mat-error *ngIf="form.controls.password.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </form>
+      <mat-error [textContent]="errorMessage"></mat-error>
+    </mat-card-content>
+    <mat-card-actions>
+      <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="centre center">
+        <!--Login button-->
+        <button
+            mat-raised-button
+            color="black"
+            class="login-field"
+            (click)="login()"
+        >
+          Login
+        </button>
+        <mat-label class="half-opacity">OR</mat-label>
+        <!--Google sso button-->
+        <button
+            mat-raised-button
+            class="login-field"
+            (click)="googleSSORedirect()"
+        >
+          <mat-icon svgIcon="google_logo"></mat-icon>
+          &nbsp; Sign in with Google
+        </button>
+      </div>
+      <div fxLayout="column" class="register-container" fxLayoutAlign="centre center">
+        <mat-label class="half-opacity">Don't have an account?</mat-label>
+        <a mat-button routerLink="/access/register">Create account</a>
+      </div>
+
+    </mat-card-actions>
+  </mat-card>
+</app-access-container>

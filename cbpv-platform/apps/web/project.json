@@ -2,7 +2,7 @@
   "projectType": "application",
   "root": "apps/web",
   "sourceRoot": "apps/web/src",
-  "prefix": "cbpv-platform",
+  "prefix": "app",
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -15,7 +15,7 @@
         "tsConfig": "apps/web/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": ["apps/web/src/favicon.ico", "apps/web/src/assets"],
-        "styles": ["apps/web/src/styles.scss"],
+        "styles": ["apps/web/src/styles.scss", "apps/web/src/theme.scss","node_modules/font-awesome/css/font-awesome.css"],
         "scripts": []
       },
       "configurations": {

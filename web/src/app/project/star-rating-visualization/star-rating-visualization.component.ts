@@ -31,7 +31,6 @@ export class StarRatingVisualizationComponent implements OnInit {
   averageRating = 0;
 
   constructor() {
-    Window['srself'] = this;
   }
 
   ngOnInit(): void {

@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>{{'action.prototypeLink' | translate}}</h2>
+<mat-dialog-content class="mat-typography">
+  <p class="text-note">{{'note.prototypeLink' | translate}}</p>
+
+  <!--Link -->
+  <mat-form-field class="full-width" appearance="outline">
+    <mat-label>Link</mat-label>
+    <textarea [formControl]="control" rows="7" matInput> </textarea>
+    <mat-error *ngIf="control.errors?.required">
+      {{ 'error.required' | translate }}
+    </mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-dialog-close mat-button>Cancel</button>
+  <button mat-button color="black" (click)="saveLink()">Save</button>
+</mat-dialog-actions>

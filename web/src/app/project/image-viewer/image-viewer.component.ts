@@ -33,7 +33,6 @@ export class ImageViewerComponent implements OnInit {
   @Output() deleteEvent = new EventEmitter<number>();
 
   constructor() {
-    Window['ivself'] = this;
   }
 
   ngOnInit(): void {

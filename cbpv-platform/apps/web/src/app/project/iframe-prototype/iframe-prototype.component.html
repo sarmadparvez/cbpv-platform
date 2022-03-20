@@ -1,0 +1,77 @@
+<mat-card>
+  <mat-card-title>{{ 'name.link' | translate }}</mat-card-title>
+  <mat-card-subtitle *ngIf="(task | async)?.testType === TestTypeEnum.Comparison">
+    {{ 'name.prototype1' | translate }}
+  </mat-card-subtitle>
+  <mat-card-content>
+    <!--Prototype 1-->
+    <p class="text-note" *ngIf="!readonly">
+      <ng-container
+        *ngIf="
+          (task | async)?.testType === TestTypeEnum.Basic;
+          else comparisonIframeUploadNote
+        "
+      >
+        {{ 'note.basicIframeUpload' | translate }}
+      </ng-container>
+      <ng-template #comparisonIframeUploadNote>
+        {{ 'note.comparisonIframeUpload1' | translate }}
+      </ng-template>
+    </p>
+    <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
+      <a
+        mat-button
+        color="primary"
+        (click)="openEditDialog(1)"
+        *ngIf="(task | async)?.status === TaskStatusEnum.Draft && !readonly"
+        >{{ 'action.editPrototypeLink' | translate }}</a
+      >
+      <ng-container
+        *ngTemplateOutlet="
+          iframeViewer;
+          context: { data: { iframeUrl: safeIframeUrl1 | async } }
+        "
+      ></ng-container>
+    </div>
+
+    <!--Prototype 2-->
+    <ng-container *ngIf="(task | async)?.testType === TestTypeEnum.Comparison">
+      <mat-divider inset></mat-divider>
+      <mat-card-title class="mt-15">{{
+        'name.link' | translate
+      }}</mat-card-title>
+      <mat-card-subtitle>{{ 'name.prototype2' | translate }}</mat-card-subtitle>
+
+      <p class="text-note" *ngIf="!readonly">{{ 'note.comparisonIframeUpload2' | translate }}</p>
+
+      <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
+        <a
+          mat-button
+          color="primary"
+          (click)="openEditDialog(2)"
+          *ngIf="(task | async)?.status === TaskStatusEnum.Draft && !readonly"
+          >{{ 'action.editPrototypeLink' | translate }}</a
+        >
+        <ng-container
+          *ngTemplateOutlet="
+            iframeViewer;
+            context: { data: { iframeUrl: safeIframeUrl2 | async } }
+          "
+        ></ng-container>
+      </div>
+    </ng-container>
+  </mat-card-content>
+</mat-card>
+
+<!-- Image uploader and Viewer-->
+<ng-template #iframeViewer let-data="data">
+  <!--Iframe-->
+  <iframe
+    class="mb-20"
+    *ngIf="data.iframeUrl"
+    height="450"
+    width="800"
+    [src]="data.iframeUrl"
+    allowfullscreen
+  ></iframe>
+</ng-template>

@@ -46,7 +46,6 @@ export class UsersComponent {
     private readonly translateService: TranslateService,
     private readonly snackBar: MatSnackBar,
   ) {
-    Window['ucself'] = this;
     this.findUsers();
   }
 

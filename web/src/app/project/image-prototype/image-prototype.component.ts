@@ -38,7 +38,6 @@ export class ImagePrototypeComponent implements OnInit {
     private readonly translateService: TranslateService,
     private readonly dialog: MatDialog,
   ) {
-    Window['ipself'] = this;
   }
 
   ngOnInit() {

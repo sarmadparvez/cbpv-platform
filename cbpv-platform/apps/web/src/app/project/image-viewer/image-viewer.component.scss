@@ -1,0 +1,22 @@
+@import 'apps/web/src/variables';
+
+.ngx-gallery {
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+::ng-deep .ngx-gallery-active {
+  position: absolute !important;
+}
+
+.ngx-gallery ::ng-deep .ngx-gallery-thumbnails .ngx-gallery-thumbnail {
+  // border: none !important;
+  box-sizing: border-box;
+}
+.ngx-gallery ::ng-deep .ngx-gallery-icon .fa.fa-trash {
+  color: black;
+}
+
+.ngx-gallery ::ng-deep .ngx-gallery-arrow {
+  color: $primaryColor;
+}

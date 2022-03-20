@@ -21,7 +21,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "cbpv-platform",
+            "prefix": "app",
             "style": "kebab-case"
           }
         ]

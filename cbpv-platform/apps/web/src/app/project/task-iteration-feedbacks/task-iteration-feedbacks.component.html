@@ -1,0 +1,178 @@
+<div>
+  Here you can see all feedbacks Provided for this Prototype iteration.
+  Feedbacks are only provided after the Task is activated.
+</div>
+<ul>
+  <li class="list-item">
+    To see feedbacks for a different iteration, please change the iteration from
+    the dropdown.
+  </li>
+  <ng-container *ngIf="dataSource.data.length > 0">
+    <li class="list-item">
+      To see the detailed feedback please click on it or open it from
+      <em>Options</em> column menu in the table.
+    </li>
+    <li class="list-item">
+      To release Payment (Crowdworker incentive), click Release Payment in
+      <em>Options</em> column menu in the table.
+    </li>
+    <li class="list-item">
+      To rate the feedback please click on <em>Rate Feedback</em> in
+      <em>Options</em> column menu in the table.
+    </li>
+    <li class="list-item">
+      To report misuse, please click on <em>Report Misuse</em> in
+      <em>Options</em> column menu in the table.
+    </li>
+  </ng-container>
+</ul>
+<!--Basic task details-->
+<app-basic-task-detail
+  *ngIf="dataSource.data.length > 0"
+  [task]="task"
+></app-basic-task-detail>
+
+<div [hidden]="dataSource.data.length < 1">
+  <!--Tasks table-->
+  <h2>Feedbacks</h2>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+    <!-- User Column -->
+    <ng-container matColumnDef="user">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'name.feedbackProvider' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <ng-container *ngIf="userMap[element.userId]; else userDeleted">
+          {{
+            userMap[element.userId]?.firstName +
+              ' ' +
+              userMap[element.userId]?.lastName
+          }}
+        </ng-container>
+        <ng-template #userDeleted>
+          {{ 'note.userDeleted' | translate }}
+        </ng-template>
+      </td>
+    </ng-container>
+    <!-- Username Column -->
+    <ng-container
+        matColumnDef="username"
+        *ngIf="Action.Manage | permission: 'all' | async"
+    >
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'name.feedbackUsername' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <ng-container *ngIf="userMap[element.userId]">
+          {{ userMap[element.userId]?.username }}
+        </ng-container>
+      </td>
+    </ng-container>
+
+    <!-- Comment Column -->
+    <ng-container matColumnDef="comment">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'name.additionalComment' | translate }}
+      </th>
+      <td
+        mat-cell
+        [matTooltip]="element.comment"
+        [matTooltipPosition]="'before'"
+        *matCellDef="let element"
+        class="comment-column"
+      >
+        <span>
+          {{ element.comment }}
+        </span>
+      </td>
+    </ng-container>
+
+    <!-- Creation date Column -->
+    <ng-container matColumnDef="dateCreated">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'name.dateCreated' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.dateCreated | date: 'dd.MM.y HH:mm:ss' }}
+      </td>
+    </ng-container>
+
+    <!-- Payment Status -->
+    <ng-container matColumnDef="paymentStatus" >
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'name.paymentStatus' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ 'paymentStatus.' + element.paymentStatus | translate }}
+      </td>
+    </ng-container>
+    <!-- Feedback Rating Column -->
+    <ng-container matColumnDef="feedbackRating">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'name.feedbackRating' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.feedbackRating }}
+      </td>
+    </ng-container>
+    <!-- Task Rating Column -->
+    <ng-container matColumnDef="taskRating">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'name.taskRating' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.taskRating }}
+      </td>
+    </ng-container>
+
+    <!-- Options Column -->
+    <ng-container matColumnDef="options">
+      <th mat-header-cell *matHeaderCellDef>
+        <span class="float-right">Options</span>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <button
+          class="float-right"
+          (click)="$event.stopPropagation()"
+          [matMenuTriggerFor]="menu"
+          mat-icon-button
+        >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu>
+          <!--Open-->
+          <a mat-menu-item (click)="openFeedback(element.id)"> Open </a>
+          <!--Release Payment-->
+          <a
+            *ngIf="element.paymentStatus === PaymentStatusEnum.Pending"
+            mat-menu-item
+            (click)="releasePayment(element.id)"
+          >
+            {{ 'name.releasePayment' | translate }}
+          </a>
+          <a mat-menu-item (click)="rateFeedback(element)">
+            {{ 'action.rateFeedback' | translate }}
+          </a>
+          <!--Report misuse-->
+          <a mat-menu-item (click)="report(element.id)">
+            {{ 'action.reportMisuse' | translate }}
+          </a>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (click)="openFeedback(row.id)"
+    ></tr>
+  </table>
+  <mat-paginator
+    class="mat-elevation-z8"
+    [pageSizeOptions]="[10, 25, 50, 100]"
+    showFirstLastButtons="true"
+  ></mat-paginator>
+</div>
+
+<app-no-data *ngIf="dataSource.data.length < 1"></app-no-data>

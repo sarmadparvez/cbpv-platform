@@ -29,7 +29,6 @@ export class FeedbackVisualizationComponent implements OnInit {
   QuestionTypeEnum = QuestionTypeEnum;
 
   constructor(private readonly taskService: TasksService) {
-    Window['fvself'] = this;
   }
 
   async ngOnInit() {

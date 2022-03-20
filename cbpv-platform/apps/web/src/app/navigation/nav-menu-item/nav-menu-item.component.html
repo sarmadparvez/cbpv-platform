@@ -1,0 +1,14 @@
+<a
+  mat-list-item
+  class="sidenav-item"
+  [ngClass]="active ? 'selected' : ''"
+  disableRipple
+  (mouseleave)="hovered = false"
+  (mouseover)="hovered = true"
+>
+  <div
+    class="item-selector"
+    [ngStyle]="selectorStyle && (active || hovered) ? selectorStyle : {}"
+  ></div>
+  <div fxFlex="100%">{{ text }}</div>
+</a>

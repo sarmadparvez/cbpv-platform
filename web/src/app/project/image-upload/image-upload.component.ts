@@ -51,7 +51,6 @@ export class ImageUploadComponent {
     private readonly translateService: TranslateService,
     private readonly httpClient: HttpClient,
   ) {
-    Window['iuself'] = this;
   }
   /** accepted filed extensions */
   accept = '.jpg, .jpeg, .png';

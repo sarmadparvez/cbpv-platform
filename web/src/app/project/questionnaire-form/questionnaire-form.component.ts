@@ -57,7 +57,6 @@ export class QuestionnaireFormComponent implements OnInit {
     private translateService: TranslateService,
     @Inject(MAT_DIALOG_DATA) private data: Task,
   ) {
-    Window['qfself'] = this;
     this.task = this.data;
   }
 

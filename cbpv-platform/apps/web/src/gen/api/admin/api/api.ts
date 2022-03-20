@@ -1,0 +1,11 @@
+export * from './auth.service';
+import { AuthService } from './auth.service';
+export * from './countries.service';
+import { CountriesService } from './countries.service';
+export * from './iAM.service';
+import { IAMService } from './iAM.service';
+export * from './skills.service';
+import { SkillsService } from './skills.service';
+export * from './users.service';
+import { UsersService } from './users.service';
+export const APIS = [AuthService, CountriesService, IAMService, SkillsService, UsersService];

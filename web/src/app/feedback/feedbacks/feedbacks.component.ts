@@ -76,7 +76,6 @@ export class FeedbacksComponent implements OnInit {
     private readonly permService: PermissionsService,
     private readonly snackBar: MatSnackBar,
   ) {
-    Window['fcself'] = this;
     this.setColumns();
   }
 
