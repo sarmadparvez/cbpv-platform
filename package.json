@@ -8,7 +8,8 @@
     "test": "nx test",
     "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
     "postinstall": "ngcc --properties es2015 browser module main",
-    "generate:api": "openapi-generator-cli generate -i apps/admin/src/swagger/swagger.json -g typescript-angular -o apps/web/src/gen/api/admin/ -p=removeOperationIdPrefix=true && openapi-generator-cli generate -i apps/task/src/swagger/swagger.json -g typescript-angular -o apps/web/src/gen/api/task/ -p=removeOperationIdPrefix=true"
+    "generate:api": "openapi-generator-cli generate -i apps/admin/src/swagger/swagger.json -g typescript-angular -o apps/web/src/gen/api/admin/ -p=removeOperationIdPrefix=true && openapi-generator-cli generate -i apps/task/src/swagger/swagger.json -g typescript-angular -o apps/web/src/gen/api/task/ -p=removeOperationIdPrefix=true",
+    "prepare": "husky install"
   },
   "private": true,
   "devDependencies": {
@@ -47,7 +48,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-cypress": "^2.10.3",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^8.0.1",
+    "husky": "^8.0.0",
     "jest": "^27.2.5",
     "jest-preset-angular": "11.1.1",
     "prettier": "^2.5.1",
