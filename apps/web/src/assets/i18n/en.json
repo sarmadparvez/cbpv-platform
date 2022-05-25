@@ -4,6 +4,7 @@
     "activate": "Activate",
     "save": "Save",
     "delete": "Delete",
+    "downloadNDA": "Download NDA",
     "edit": "Edit",
     "cancel": "Cancel",
     "closeIteration": "Close Iteration",

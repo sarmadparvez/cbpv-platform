@@ -129,13 +129,23 @@
       <button
         mat-icon-button
         [mat-menu-trigger-for]="additionalOptions"
-        *ngIf="(task | async)?.status === StatusEnum.Draft"
+        *ngIf="(task | async)?.status === StatusEnum.Draft || project?.ndaUrl"
       >
         <mat-icon>more_vert</mat-icon>
       </button>
       <!--Menu-->
       <!-- Menu -->
       <mat-menu #additionalOptions="matMenu">
+        <button
+            mat-menu-item
+            *ngIf="project?.ndaUrl"
+            (click)="downloadNDA()"
+        >
+          <span>
+            {{ 'action.downloadNDA' | translate }}
+          </span>
+        </button>
+
         <button
           mat-menu-item
           *ngIf="(task | async)?.status === StatusEnum.Draft"

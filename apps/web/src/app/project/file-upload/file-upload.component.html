@@ -6,12 +6,10 @@ The solution is copied and modified as per our requirement.
   <!-- Buttons -->
   <div fxLayout="row" fxLayoutGap="10px">
     <!-- Upload button -->
-    <div *ngIf="!readonly">
-      <button mat-button (click)="initiateImageUpload()">
-        <mat-icon>add_photo_alternate</mat-icon>
+      <button mat-button (click)="initiateFileUpload()">
+        <mat-icon>file_upload</mat-icon>
         {{ 'action.upload' | translate }}
       </button>
-    </div>
   </div>
   <br />
   <div class="upload-progress">
@@ -32,9 +30,8 @@ The solution is copied and modified as per our requirement.
   </div>
   <input
       type="file"
-      id="fileUpload{{uniqueId}}"
+      id="fileUpload"
       name="fileUpload"
-      multiple="multiple"
       accept="{{ accept }}"
       style="display: none"
   />

@@ -9,28 +9,26 @@
     <div fxLayout fxLayoutGap="10px">
       <!--Title-->
       <mat-form-field class="full-width" appearance="outline">
-        <mat-label>{{ 'name.title' | translate }}</mat-label>
+        <mat-label>{{ "name.title" | translate }}</mat-label>
         <input formControlName="title" matInput />
         <mat-hint>Title for a Task iteration</mat-hint>
         <mat-error *ngIf="form.controls.title.hasError('required')">
-          {{ 'error.required' | translate }}
+          {{ "error.required" | translate }}
         </mat-error>
       </mat-form-field>
       <!--Description -->
       <mat-form-field class="full-width" appearance="outline">
-        <mat-label>{{ 'name.description' | translate }}</mat-label>
-        <textarea formControlName="description" matInput
-        rows="7"
-        > </textarea>
+        <mat-label>{{ "name.description" | translate }}</mat-label>
+        <textarea formControlName="description" matInput rows="7"> </textarea>
         <mat-hint>Optional description for the task</mat-hint>
       </mat-form-field>
     </div>
 
     <!--Prototype format Selector -->
     <div fxLayout="column" fxLayoutGap="10px" class="form-container">
-      <h3>{{ 'name.prototypeFormat' | translate }}</h3>
+      <h3>{{ "name.prototypeFormat" | translate }}</h3>
       <div class="text-note mb-20">
-        {{ 'note.prototype' | translate }}
+        {{ "note.prototype" | translate }}
       </div>
 
       <div fxLayout fxLayoutGap="10px">
@@ -78,11 +76,11 @@
       </div>
       <!--Test type notes-->
       <div class="text-note">
-        <strong>{{ 'name.basicTest' | translate }}: </strong>
-        {{ 'note.basicTest' | translate }}
+        <strong>{{ "name.basicTest" | translate }}: </strong>
+        {{ "note.basicTest" | translate }}
         <br />
-        <strong>{{ 'name.comparisonTest' | translate }}: </strong>
-        {{ 'note.comparisonTest' | translate }}
+        <strong>{{ "name.comparisonTest" | translate }}: </strong>
+        {{ "note.comparisonTest" | translate }}
       </div>
       <mat-error
         *ngIf="
@@ -95,16 +93,16 @@
     </div>
     <!--Crowd criteria-->
     <div fxLayout="column" fxLayoutGap="10px" class="form-container mb-10">
-      <h3>{{ 'name.crowdCriteria' | translate }}</h3>
+      <h3>{{ "name.crowdCriteria" | translate }}</h3>
 
       <div class="text-note mb-20">
-        {{ 'note.crowdCriteria' | translate }}
+        {{ "note.crowdCriteria" | translate }}
       </div>
 
       <div fxLayout fxLayoutGap="10px" class="mb-20">
         <!--Min Experience-->
         <mat-form-field class="full-width" appearance="outline">
-          <mat-label> {{ 'name.minExperience' | translate }} </mat-label>
+          <mat-label> {{ "name.minExperience" | translate }} </mat-label>
           <input
             type="number"
             min="0"
@@ -113,7 +111,7 @@
             matInput
           />
           <mat-error *ngIf="form.controls.minExperience.hasError('required')">
-            {{ 'error.required' | translate }}
+            {{ "error.required" | translate }}
           </mat-error>
           <mat-hint
             >The minimum experience limit for a Crowdworker to work on this
@@ -123,7 +121,7 @@
 
         <!--Max Experience-->
         <mat-form-field class="full-width" appearance="outline">
-          <mat-label> {{ 'name.maxExperience' | translate }} </mat-label>
+          <mat-label> {{ "name.maxExperience" | translate }} </mat-label>
           <input
             type="number"
             min="0"
@@ -132,7 +130,7 @@
             matInput
           />
           <mat-error *ngIf="form.controls.maxExperience.hasError('required')">
-            {{ 'error.required' | translate }}
+            {{ "error.required" | translate }}
           </mat-error>
           <mat-hint
             >The maximum experience limit for a Crowdworker to work on this
@@ -144,7 +142,7 @@
       <div fxLayout fxLayoutGap="10px" class="mb-20">
         <!--Min Age-->
         <mat-form-field class="full-width" appearance="outline">
-          <mat-label> {{ 'name.minAge' | translate }} </mat-label>
+          <mat-label> {{ "name.minAge" | translate }} </mat-label>
           <input
             type="number"
             min="18"
@@ -153,7 +151,7 @@
             matInput
           />
           <mat-error *ngIf="form.controls.minAge.hasError('required')">
-            {{ 'error.required' | translate }}
+            {{ "error.required" | translate }}
           </mat-error>
           <mat-hint
             >The minimum age limit for a Crowdworker to work on this Task.
@@ -163,7 +161,7 @@
 
         <!--Max Age-->
         <mat-form-field class="full-width" appearance="outline">
-          <mat-label> {{ 'name.maxAge' | translate }} </mat-label>
+          <mat-label> {{ "name.maxAge" | translate }} </mat-label>
           <input
             type="number"
             min="18"
@@ -172,7 +170,7 @@
             matInput
           />
           <mat-error *ngIf="form.controls.maxAge.hasError('required')">
-            {{ 'error.required' | translate }}
+            {{ "error.required" | translate }}
           </mat-error>
           <mat-hint
             >The maximum age limit for a Crowdworker to work on this Task.
@@ -183,7 +181,7 @@
       <div fxLayout class="full-width" fxLayoutGap="10px" class="mb-20">
         <!--Skills-->
         <mat-form-field class="full-width" appearance="outline">
-          <mat-label>{{ 'name.skills' | translate }} *</mat-label>
+          <mat-label>{{ "name.skills" | translate }} *</mat-label>
           <mat-chip-list #chipList formControlName="skills">
             <mat-chip
               *ngFor="let skill of selectedSkills"
@@ -217,7 +215,7 @@
             </mat-option>
           </mat-autocomplete>
           <mat-error *ngIf="form.controls.skills.hasError('required')">
-            {{ 'error.required' | translate }}
+            {{ "error.required" | translate }}
           </mat-error>
           <mat-hint
             >Crowdworkers having one of these skills will be able to work on
@@ -231,7 +229,7 @@
           class="full-width"
           appearance="outline"
         >
-          <mat-label>{{ 'name.countries' | translate }}</mat-label>
+          <mat-label>{{ "name.countries" | translate }}</mat-label>
           <mat-chip-list #countryChipList formControlName="countries">
             <mat-chip
               *ngFor="let country of selectedCountries"
@@ -265,7 +263,7 @@
             </mat-option>
           </mat-autocomplete>
           <mat-error *ngIf="form.controls.countries.hasError('required')">
-            {{ 'error.required' | translate }}
+            {{ "error.required" | translate }}
           </mat-error>
           <mat-hint
             >Crowdworkers from one of these skills will be able to work on this
@@ -276,10 +274,10 @@
       <div fxLayout fxLayoutGap="10px">
         <!-- Incentive-->
         <mat-form-field class="full-width" appearance="outline">
-          <mat-label> {{ 'name.incentive' | translate }} </mat-label>
+          <mat-label> {{ "name.incentive" | translate }} </mat-label>
           <input type="number" min="0" formControlName="incentive" matInput />
           <mat-error *ngIf="form.controls.incentive.hasError('required')">
-            {{ 'error.required' | translate }}
+            {{ "error.required" | translate }}
           </mat-error>
           <mat-hint
             >The incentive given to each Crowdworker who works on this
@@ -289,10 +287,10 @@
 
         <!--Budget-->
         <mat-form-field class="full-width" appearance="outline">
-          <mat-label> {{ 'name.budget' | translate }} </mat-label>
+          <mat-label> {{ "name.budget" | translate }} </mat-label>
           <input type="number" min="0" formControlName="budget" matInput />
           <mat-error *ngIf="form.controls.budget.hasError('required')">
-            {{ 'error.required' | translate }}
+            {{ "error.required" | translate }}
           </mat-error>
           <mat-hint>Total budget for this Prototype iteration</mat-hint>
         </mat-form-field>
@@ -300,10 +298,10 @@
     </div>
     <!--Task Access-->
     <div fxLayout="column" fxLayoutGap="10px" class="form-container mb-10">
-      <h3>{{ 'name.taskAccess' | translate }}</h3>
+      <h3>{{ "name.taskAccess" | translate }}</h3>
 
       <div class="text-note mb-20">
-        {{ 'note.taskAccess' | translate }}
+        {{ "note.taskAccess" | translate }}
       </div>
 
       <div fxLayout="column" fxLayoutGap="10px" class="mb-20">
@@ -314,37 +312,66 @@
         >
           <div>
             <mat-radio-button value="{{ AccessType.Open }}">
-              {{ 'accessType.' + AccessType.Open | translate }}
+              {{ "accessType." + AccessType.Open | translate }}
             </mat-radio-button>
             <div
               class="access-note text-note"
               style="white-space: break-spaces"
-            >{{ 'note.openAccess' | translate }}
+            >
+              {{ "note.openAccess" | translate }}
             </div>
           </div>
           <div>
             <mat-radio-button value="{{ AccessType.Nda }}">
-              {{ 'accessType.' + AccessType.Nda | translate }}
+              {{ "accessType." + AccessType.Nda | translate }}
             </mat-radio-button>
             <div
               class="access-note text-note"
               style="white-space: break-spaces"
-            >{{ 'note.ndaAccess' | translate }}
+            >
+              {{ "note.ndaAccess" | translate }}
             </div>
+            <ng-container
+              *ngIf="form.controls.accessType.value === AccessType.Nda"
+            >
+              <div>
+                <app-file-upload
+                  [uploadSignature]="uploadSignature"
+                  (fileUploadClick)="getUploadSignature()"
+                  (completeEvent)="saveNDAUrl($event)"
+                >
+                </app-file-upload>
+              </div>
+              <a
+                  mat-button
+                *ngIf="project.ndaUrl"
+                href="{{ project.ndaUrl }}"
+                target="_blank"
+              >
+             <mat-icon>file_download</mat-icon> {{ "action.downloadNDA" | translate }}
+              </a>
+            </ng-container>
           </div>
           <div>
             <mat-radio-button value="{{ AccessType.Request }}">
-              {{ 'accessType.' + AccessType.Request | translate }}
+              {{ "accessType." + AccessType.Request | translate }}
             </mat-radio-button>
             <div
               class="access-note text-note"
               style="white-space: break-spaces"
-            >{{ 'note.requestAccess' | translate }}
+            >
+              {{ "note.requestAccess" | translate }}
             </div>
           </div>
         </mat-radio-group>
-        <mat-error class="mt-10" *ngIf="form.controls.accessType.touched && form.controls.accessType.errors?.required">
-          {{ 'error.required' | translate }}
+        <mat-error
+          class="mt-10"
+          *ngIf="
+            form.controls.accessType.touched &&
+            form.controls.accessType.errors?.required
+          "
+        >
+          {{ "error.required" | translate }}
         </mat-error>
       </div>
     </div>

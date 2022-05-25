@@ -5,64 +5,78 @@ import {
   NgModule,
   OnInit,
   ViewChild,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
   MatDialogRef,
-} from '@angular/material/dialog';
+} from "@angular/material/dialog";
 import {
   FormBuilder,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
-} from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MatInputModule } from '@angular/material/input';
+} from "@angular/forms";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { MatInputModule } from "@angular/material/input";
 import {
   CreateTaskDto,
+  FileUploadSignatureResponseDto,
+  Project,
+  ProjectsService,
   Task,
   TasksService,
   UpdateTaskDto,
-} from '../../../gen/api/task';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { FlexLayoutModule } from '@angular/flex-layout';
+} from "../../../gen/api/task";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { FlexLayoutModule } from "@angular/flex-layout";
 import TestTypeEnum = CreateTaskDto.TestTypeEnum;
 import PrototypeFormatEnum = CreateTaskDto.PrototypeFormatEnum;
-import { TaskFormatSelectorCardModule } from '../task-format-selector-card/task-format-selector-card.component';
+import { TaskFormatSelectorCardModule } from "../task-format-selector-card/task-format-selector-card.component";
 import {
   CountriesService,
   Country,
   Skill,
   SkillsService,
-} from '../../../gen/api/admin';
-import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+} from "../../../gen/api/admin";
+import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
 import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
-} from '@angular/material/autocomplete';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { firstValueFrom, map, Observable, startWith } from 'rxjs';
-import { MatIconModule } from '@angular/material/icon';
-import { parseError } from '../../error/parse-error';
-import { MatRadioModule } from '@angular/material/radio';
+} from "@angular/material/autocomplete";
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import {
+  firstValueFrom,
+  map,
+  Observable,
+  ReplaySubject,
+  startWith,
+} from "rxjs";
+import { MatIconModule } from "@angular/material/icon";
+import { parseError } from "../../error/parse-error";
+import { MatRadioModule } from "@angular/material/radio";
+import {
+  FileUploadModule,
+  FileUploadResponse,
+} from "../file-upload/file-upload.component";
 
 export interface TaskFormDialogData {
   task?: Task;
-  projectId: string;
+  project: Project;
 }
 @Component({
-  selector: 'app-task-form',
-  templateUrl: './task-form.component.html',
-  styleUrls: ['./task-form.component.scss'],
+  selector: "app-task-form",
+  templateUrl: "./task-form.component.html",
+  styleUrls: ["./task-form.component.scss"],
 })
 export class TaskFormComponent implements OnInit {
   PrototypeFormatEnum = PrototypeFormatEnum;
   AccessType = Task.AccessTypeEnum;
   prototypeToTestTypeMap = new Map<PrototypeFormatEnum, TestTypeEnum>();
   task!: Task;
+  project!: Project;
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
   allCountries: Country[] = [];
@@ -73,23 +87,23 @@ export class TaskFormComponent implements OnInit {
   filteredCountries!: Observable<Country[] | undefined>;
 
   form = this.fb.group({
-    title: ['', Validators.required],
+    title: ["", Validators.required],
     description: [null],
-    testType: ['', Validators.required],
-    prototypeFormat: ['', Validators.required],
+    testType: ["", Validators.required],
+    prototypeFormat: ["", Validators.required],
     budget: [null, Validators.required],
     incentive: [null, Validators.required],
     minExperience: [null],
     maxExperience: [null],
     minAge: [null],
     maxAge: [null],
-    countries: [''],
-    skills: ['', [() => this.skillsValid()]],
+    countries: [""],
+    skills: ["", [() => this.skillsValid()]],
     accessType: [null, Validators.required],
   });
-
-  @ViewChild('skillsInput') skillsInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('countriesInput') countriesInput!: ElementRef<HTMLInputElement>;
+  uploadSignature = new ReplaySubject<FileUploadSignatureResponseDto>();
+  @ViewChild("skillsInput") skillsInput!: ElementRef<HTMLInputElement>;
+  @ViewChild("countriesInput") countriesInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -99,7 +113,8 @@ export class TaskFormComponent implements OnInit {
     private readonly translateService: TranslateService,
     private readonly skillService: SkillsService,
     private readonly countryService: CountriesService,
-    @Inject(MAT_DIALOG_DATA) private readonly data: TaskFormDialogData,
+    private readonly projectService: ProjectsService,
+    @Inject(MAT_DIALOG_DATA) private readonly data: TaskFormDialogData
   ) {
     if (this.data.task) {
       this.task = this.data.task;
@@ -108,8 +123,11 @@ export class TaskFormComponent implements OnInit {
       this.selectedCountries = this.task.countries.slice();
       this.prototypeToTestTypeMap.set(
         this.task.prototypeFormat,
-        this.task.testType,
+        this.task.testType
       );
+    }
+    if (this.data.project) {
+      this.project = this.data.project;
     }
   }
 
@@ -119,14 +137,14 @@ export class TaskFormComponent implements OnInit {
     this.filteredCountries = this.form.controls["countries"].valueChanges.pipe(
       startWith(null),
       map((value: string | null) =>
-        value ? this.filterCountries(value) : this.filterCountries(''),
-      ),
+        value ? this.filterCountries(value) : this.filterCountries("")
+      )
     );
     this.filteredSkills = this.form.controls["skills"].valueChanges.pipe(
       startWith(null),
       map((value: string | null) =>
-        value ? this.filterSkills(value) : this.filterSkills(''),
-      ),
+        value ? this.filterSkills(value) : this.filterSkills("")
+      )
     );
   }
 
@@ -134,10 +152,10 @@ export class TaskFormComponent implements OnInit {
     const prototypeFormat = this.form.controls["prototypeFormat"].value;
     if (prototypeFormat && this.prototypeToTestTypeMap.has(prototypeFormat)) {
       this.form.controls["testType"].setValue(
-        this.prototypeToTestTypeMap.get(prototypeFormat),
+        this.prototypeToTestTypeMap.get(prototypeFormat)
       );
     } else {
-      this.form.controls["testType"].setValue('');
+      this.form.controls["testType"].setValue("");
     }
 
     if (this.form.invalid) {
@@ -145,38 +163,38 @@ export class TaskFormComponent implements OnInit {
       return;
     }
     this.form.controls["countries"].setValue(
-      this.selectedCountries.map(country => country.id),
+      this.selectedCountries.map((country) => country.id)
     );
     this.form.controls["skills"].setValue(
-      this.selectedSkills.map(skill => skill.id),
+      this.selectedSkills.map((skill) => skill.id)
     );
-    let successMsg = '';
+    let successMsg = "";
 
     try {
       if (!this.task) {
         const request = <CreateTaskDto>{
           ...this.form.value,
         };
-        request.projectId = this.data.projectId;
+        request.projectId = this.project.id;
         await firstValueFrom(this.taskService.create(request));
-        successMsg = 'notification.create';
+        successMsg = "notification.create";
       } else {
         const request = <UpdateTaskDto>{
           ...this.form.value,
         };
         await firstValueFrom(this.taskService.update(this.task.id, request));
-        successMsg = 'notification.update';
+        successMsg = "notification.update";
       }
       // success message
-      this.snackBar.open(this.translateService.instant(successMsg), '', {
+      this.snackBar.open(this.translateService.instant(successMsg), "", {
         duration: 5000,
       });
       this.dialog.close(true);
     } catch (err) {
-      console.log('unable to create/update Task ', err);
+      console.log("unable to create/update Task ", err);
       const error = parseError(err);
       if (error?.message) {
-        this.snackBar.open(error.message, '', {
+        this.snackBar.open(error.message, "", {
           duration: 5000,
         });
       }
@@ -195,7 +213,7 @@ export class TaskFormComponent implements OnInit {
     try {
       this.allSkills = await firstValueFrom(this.skillService.findAll());
     } catch (err) {
-      console.log('unable to fetch skills ', err);
+      console.log("unable to fetch skills ", err);
     }
   }
 
@@ -203,58 +221,58 @@ export class TaskFormComponent implements OnInit {
     try {
       this.allCountries = await firstValueFrom(this.countryService.findAll());
     } catch (err) {
-      console.log('unable to fetch countries ', err);
+      console.log("unable to fetch countries ", err);
     }
   }
 
-  private filterSkills(value: string): Skill[] | undefined{
-    if (typeof value !== 'string') {
+  private filterSkills(value: string): Skill[] | undefined {
+    if (typeof value !== "string") {
       return;
     }
     const filterValue = value.toLowerCase();
     const skillSelected = (skill: Skill) => {
       return (
         this.selectedSkills.findIndex(
-          selectedSkill => selectedSkill.id === skill.id,
+          (selectedSkill) => selectedSkill.id === skill.id
         ) > -1
       );
     };
     return this.allSkills
-      .filter(skill => !skillSelected(skill))
-      .filter(option => option.name.toLowerCase().includes(filterValue));
+      .filter((skill) => !skillSelected(skill))
+      .filter((option) => option.name.toLowerCase().includes(filterValue));
   }
 
-  private filterCountries(value: string): Country[] | undefined{
-    if (typeof value !== 'string') {
+  private filterCountries(value: string): Country[] | undefined {
+    if (typeof value !== "string") {
       return;
     }
     const filterValue = value.toLowerCase();
     const countrySelected = (country: Country) => {
       return (
         this.selectedCountries.findIndex(
-          selectedCountry => selectedCountry.id === country.id,
+          (selectedCountry) => selectedCountry.id === country.id
         ) > -1
       );
     };
     return this.allCountries
-      .filter(country => !countrySelected(country))
-      .filter(option => option.name.toLowerCase().includes(filterValue));
+      .filter((country) => !countrySelected(country))
+      .filter((option) => option.name.toLowerCase().includes(filterValue));
   }
 
   displayFn(option: Country | Skill): string {
-    return option && option.name ? option.name : '';
+    return option && option.name ? option.name : "";
   }
 
   selectedSkill(event: MatAutocompleteSelectedEvent): void {
     this.selectedSkills.push(event.option.value);
-    this.skillsInput.nativeElement.value = '';
-    this.form.controls['skills'].setValue(null);
-    this.form.controls['skills'].updateValueAndValidity();
+    this.skillsInput.nativeElement.value = "";
+    this.form.controls["skills"].setValue(null);
+    this.form.controls["skills"].updateValueAndValidity();
   }
 
   selectedCountry(event: MatAutocompleteSelectedEvent): void {
     this.selectedCountries.push(event.option.value);
-    this.countriesInput.nativeElement.value = '';
+    this.countriesInput.nativeElement.value = "";
     this.form.controls["countries"].setValue(null);
     this.form.controls["countries"].updateValueAndValidity();
   }
@@ -295,6 +313,47 @@ export class TaskFormComponent implements OnInit {
     }
     return null;
   }
+
+  async getUploadSignature() {
+    try {
+      const signature = await firstValueFrom(
+        this.projectService.fileUploadSignature(this.project.id)
+      );
+      this.uploadSignature.next(signature);
+    } catch (err) {
+      console.log("unable to get signature for image upload ", err);
+      this.snackBar.open(
+        this.translateService.instant("error.imageSignature"),
+        "",
+        {
+          duration: 5000,
+        }
+      );
+      throw err;
+    }
+  }
+
+  async saveNDAUrl(fileUploads: FileUploadResponse[]) {
+    if (!fileUploads) {
+      throw new Error("File upload url set");
+    }
+    try {
+      this.project = await firstValueFrom(
+        this.projectService.update(this.project.id, {
+          ndaUrl: fileUploads[0].url,
+          ndaCloudId: fileUploads[0].cloudId,
+        })
+      );
+    } catch (err) {
+      console.log("unable to save nda url to project ", err);
+      const error = parseError(err);
+      if (error?.message) {
+        this.snackBar.open(error.message, "", {
+          duration: 5000,
+        });
+      }
+    }
+  }
 }
 
 @NgModule({
@@ -312,6 +371,7 @@ export class TaskFormComponent implements OnInit {
     MatAutocompleteModule,
     MatIconModule,
     MatRadioModule,
+    FileUploadModule,
   ],
 })
 export class TaskFormModule {}

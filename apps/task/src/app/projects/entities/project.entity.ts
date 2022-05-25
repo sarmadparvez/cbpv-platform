@@ -3,32 +3,38 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-} from 'typeorm';
+} from "typeorm";
 
 export enum ProjectStatus {
-  Open = 'open',
-  Closed = 'closed',
+  Open = "open",
+  Closed = "closed",
 }
 
 @Entity()
 export class Project {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()
   title: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: "text", nullable: true })
   description: string;
 
-  @CreateDateColumn({ type: 'timestamp with time zone' })
+  @CreateDateColumn({ type: "timestamp with time zone" })
   dateCreated: Date;
 
-  @Column({ type: 'enum', enum: ProjectStatus, default: ProjectStatus.Open })
+  @Column({ type: "enum", enum: ProjectStatus, default: ProjectStatus.Open })
   status: ProjectStatus;
 
-  @Column('uuid')
+  @Column("uuid")
   userId: string;
+
+  @Column({ type: "text", nullable: true })
+  ndaUrl: string;
+
+  @Column({ type: "text", nullable: true })
+  ndaCloudId: string;
 
   public constructor(init?: Partial<Project>) {
     Object.assign(this, init);

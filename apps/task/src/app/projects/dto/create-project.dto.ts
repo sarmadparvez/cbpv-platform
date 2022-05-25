@@ -1,10 +1,4 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateProjectDto {
   @IsString()
@@ -13,4 +7,10 @@ export class CreateProjectDto {
   @IsString()
   @IsOptional()
   description?: string;
+  @IsString()
+  @IsOptional()
+  ndaUrl: string;
+  @IsString()
+  @IsOptional()
+  ndaCloudId: string;
 }
