@@ -38,7 +38,7 @@ export class RatingDialogComponent {
   constructor(
     private readonly fb: FormBuilder,
     private dialogRef: MatDialogRef<RatingDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: RatingDialogData,
+    @Inject(MAT_DIALOG_DATA) private data: RatingDialogData
   ) {
     if (this.data) {
       this.title = this.data?.title;

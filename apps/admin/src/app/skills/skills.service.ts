@@ -15,7 +15,7 @@ export class SkillsService {
   ];
   constructor(
     @InjectRepository(Skill)
-    private skillRepository: Repository<Skill>,
+    private skillRepository: Repository<Skill>
   ) {}
 
   findAll() {

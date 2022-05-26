@@ -55,7 +55,7 @@ export class QuestionnaireFormComponent implements OnInit {
     private readonly taskService: TasksService,
     private snackBar: MatSnackBar,
     private translateService: TranslateService,
-    @Inject(MAT_DIALOG_DATA) private data: Task,
+    @Inject(MAT_DIALOG_DATA) private data: Task
   ) {
     this.task = this.data;
   }
@@ -75,40 +75,40 @@ export class QuestionnaireFormComponent implements OnInit {
             question.radioOptions ? question.radioOptions : [],
             [() => this.validateRadioOptions(index)],
           ],
-        }),
+        })
       );
     });
   }
 
   async saveQuestionnaire() {
-    const invalid = this.formGroups.filter(f => f.invalid);
+    const invalid = this.formGroups.filter((f) => f.invalid);
     if (invalid.length > 0) {
-      invalid.forEach(f => f.markAllAsTouched());
+      invalid.forEach((f) => f.markAllAsTouched());
       return;
     }
     const request = <UpdateTaskDto>{
       questions: [],
     };
     this.formGroups.forEach((form, index) => {
-      if (form.controls["type"].value !== Question.TypeEnum.Radio) {
-        form.controls["radioOptions"].setValue([]);
+      if (form.controls['type'].value !== Question.TypeEnum.Radio) {
+        form.controls['radioOptions'].setValue([]);
       }
       request.questions?.push({
         order: index + 1,
         taskId: this.task.id,
-        id: form.controls["id"]?.value,
-        description: form.controls["question"].value,
-        type: form.controls["type"].value,
+        id: form.controls['id']?.value,
+        description: form.controls['question'].value,
+        type: form.controls['type'].value,
         radioOptions:
-          form.controls["radioOptions"].value.length > 0
-            ? form.controls["radioOptions"].value
+          form.controls['radioOptions'].value.length > 0
+            ? form.controls['radioOptions'].value
             : null,
       });
     });
     let message = '';
     try {
       const response = await firstValueFrom(
-        this.taskService.update(this.task.id, request),
+        this.taskService.update(this.task.id, request)
       );
       message = 'notification.update';
       this.dialog.close(response.questions);
@@ -129,7 +129,7 @@ export class QuestionnaireFormComponent implements OnInit {
         question: ['', Validators.required],
         type: ['', Validators.required],
         radioOptions: [[], [() => this.validateRadioOptions(index)]],
-      }),
+      })
     );
   }
 
@@ -158,9 +158,9 @@ export class QuestionnaireFormComponent implements OnInit {
   validateRadioOptions(formIndex: number): ValidationErrors | null {
     if (
       this.formGroups &&
-      this.formGroups[formIndex]?.controls["type"].value ===
+      this.formGroups[formIndex]?.controls['type'].value ===
         Question.TypeEnum.Radio &&
-      this.formGroups[formIndex]?.controls["radioOptions"].value?.length === 0
+      this.formGroups[formIndex]?.controls['radioOptions'].value?.length === 0
     ) {
       return {
         required: true,
@@ -179,7 +179,7 @@ export class QuestionnaireFormComponent implements OnInit {
 
   typeChanged(event: MatSelectChange, index: number) {
     if (event.value !== Question.TypeEnum.Radio) {
-      this.formGroups[index].controls["radioOptions"].updateValueAndValidity();
+      this.formGroups[index].controls['radioOptions'].updateValueAndValidity();
     }
   }
 

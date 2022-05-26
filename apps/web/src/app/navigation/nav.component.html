@@ -20,28 +20,28 @@
       </app-nav-menu-item>
       <!--Evaluate-->
       <app-nav-menu-item
-          *ngIf="Action.Create | permission: 'Feedback' | async"
-          text="Evaluate"
-          routerLink="/tasks"
-          selectionRoute="tasks"
+        *ngIf="Action.Create | permission: 'Feedback' | async"
+        text="Evaluate"
+        routerLink="/tasks"
+        selectionRoute="tasks"
       >
       </app-nav-menu-item>
-        <!--Feedbacks-->
-        <app-nav-menu-item
-            *ngIf="Action.Create | permission: 'Feedback' | async"
-            text="Feedbacks"
-            routerLink="/feedbacks"
-            selectionRoute="feedbacks"
-            [selectorStyle]="{ transform: 'translateX(-14px)' }"
-        >
-        </app-nav-menu-item>
+      <!--Feedbacks-->
+      <app-nav-menu-item
+        *ngIf="Action.Create | permission: 'Feedback' | async"
+        text="Feedbacks"
+        routerLink="/feedbacks"
+        selectionRoute="feedbacks"
+        [selectorStyle]="{ transform: 'translateX(-14px)' }"
+      >
+      </app-nav-menu-item>
       <!--Users-->
       <div class="full-width">
         <app-nav-menu-item
-            *ngIf="Action.Manage | permission: 'User' | async"
-            text="Users"
-            routerLink="/users"
-            selectionRoute="users"
+          *ngIf="Action.Manage | permission: 'User' | async"
+          text="Users"
+          routerLink="/users"
+          selectionRoute="users"
         >
         </app-nav-menu-item>
       </div>

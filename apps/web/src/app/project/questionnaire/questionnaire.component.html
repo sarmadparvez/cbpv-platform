@@ -5,11 +5,13 @@
     <p class="text-note">
       {{ 'note.questionnaire' | translate }}
     </p>
-      <a mat-button color="primary" (click)="openEditDialog()"
-         *ngIf="(task | async)?.status === TaskStatusEnum.Draft"
-      >{{
-        'action.editQuestionnaire' | translate
-      }}</a>
+    <a
+      mat-button
+      color="primary"
+      (click)="openEditDialog()"
+      *ngIf="(task | async)?.status === TaskStatusEnum.Draft"
+      >{{ 'action.editQuestionnaire' | translate }}</a
+    >
 
     <app-questionnaire-detail [readonly]="true" [task]="task">
     </app-questionnaire-detail>

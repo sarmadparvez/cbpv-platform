@@ -7,7 +7,7 @@ import { Country } from './entities/country.entity';
 export class CountriesService {
   constructor(
     @InjectRepository(Country)
-    private countryRepository: Repository<Country>,
+    private countryRepository: Repository<Country>
   ) {}
 
   findAll() {

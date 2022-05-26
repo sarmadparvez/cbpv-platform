@@ -9,7 +9,7 @@ import * as contextService from 'request-context';
 export class UsersService {
   constructor(
     private httpService: HttpService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {}
 
   /**
@@ -24,14 +24,14 @@ export class UsersService {
           status: HttpStatus.SERVICE_UNAVAILABLE,
           error: 'Admin service users endpoint url not found.',
         },
-        HttpStatus.SERVICE_UNAVAILABLE,
+        HttpStatus.SERVICE_UNAVAILABLE
       );
     }
     try {
       const response = await firstValueFrom(
         this.httpService.get<User>(`${adminAPI}/users/${id}`, {
           headers: getAuthorizationHeader(),
-        }),
+        })
       );
       return response.data;
     } catch (err) {
@@ -40,7 +40,7 @@ export class UsersService {
         {
           error: err?.message,
         },
-        HttpStatus.UNPROCESSABLE_ENTITY,
+        HttpStatus.UNPROCESSABLE_ENTITY
       );
     }
   }

@@ -50,9 +50,8 @@ export class QuestionnaireAnswerComponent implements OnInit {
     private readonly feedbackService: FeedbacksService,
     private readonly translateService: TranslateService,
     private readonly snackbar: MatSnackBar,
-    private readonly router: Router,
-  ) {
-  }
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     this.form = this.questionsToForm(this.task?.questions);
@@ -66,12 +65,12 @@ export class QuestionnaireAnswerComponent implements OnInit {
     if (!questions) {
       throw new Error('No questions are provided');
     }
-    const controlsMap: {[key: string]: FormControl} = { };
+    const controlsMap: { [key: string]: FormControl } = {};
 
-    questions.forEach(q => {
+    questions.forEach((q) => {
       let answer: Answer | undefined;
       if (this.feedback && this.feedback.answers) {
-        answer = this.feedback.answers.find(a => a.questionId === q.id);
+        answer = this.feedback.answers.find((a) => a.questionId === q.id);
       }
       if (this.isAnswerInForm(q)) {
         let value = '';
@@ -107,7 +106,7 @@ export class QuestionnaireAnswerComponent implements OnInit {
     if (this.form) {
       this.form.addControl(
         'comment',
-        new FormControl(this.feedback?.comment || null),
+        new FormControl(this.feedback?.comment || null)
       );
     }
   }
@@ -125,7 +124,7 @@ export class QuestionnaireAnswerComponent implements OnInit {
     }
     this.submitted = true;
     let valid = true;
-    this.task.questions.forEach(q => {
+    this.task.questions.forEach((q) => {
       if (
         !this.isAnswerInForm(q) &&
         !this.starRatingAnswers[q.id] &&
@@ -140,12 +139,12 @@ export class QuestionnaireAnswerComponent implements OnInit {
     }
     // prepare request for submitting
     const request = <CreateFeedbackDto>{
-      comment: this.form.controls["comment"].value,
+      comment: this.form.controls['comment'].value,
       taskId: this.task.id,
       answers: [],
     };
     // collect answers
-    this.task.questions.forEach(q => {
+    this.task.questions.forEach((q) => {
       const answer = <Answer>{
         questionId: q.id,
       };

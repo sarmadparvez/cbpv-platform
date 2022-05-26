@@ -3,11 +3,11 @@
  * This is only a minimal backend to get started.
  */
 
-import {Logger, ValidationPipe} from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as contextService from 'request-context';
 import { AppModule } from './app/app.module';
-import {DocumentBuilder, OpenAPIObject, SwaggerModule} from "@nestjs/swagger";
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import * as fs from 'fs';
 
 async function bootstrap() {
@@ -18,7 +18,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Task')
     .setDescription(
-      'Task service is responsible for iterative validation of Prototypes. Tasks are created and Feedback is provided through this service.',
+      'Task service is responsible for iterative validation of Prototypes. Tasks are created and Feedback is provided through this service.'
     )
     .setVersion('1.0')
     .addBearerAuth({
@@ -40,7 +40,7 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       forbidUnknownValues: true,
-    }),
+    })
   );
   // wrap requests in a middleware namespace 'request'.
   // thi is done to attach data to request context e.g currently logged in user
@@ -48,9 +48,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
-  Logger.log(
-    `🚀 Application is running on: http://localhost:${port}`
-  );
+  Logger.log(`🚀 Application is running on: http://localhost:${port}`);
 }
 
 function saveSwaggerSpec(document: OpenAPIObject) {

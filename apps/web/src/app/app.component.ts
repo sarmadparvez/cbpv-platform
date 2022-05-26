@@ -16,7 +16,7 @@ export class AppComponent {
     private readonly domSanitizer: DomSanitizer,
     private readonly translateService: TranslateService,
     private readonly authService: AuthService,
-    private spinner: NgxSpinnerService,
+    private spinner: NgxSpinnerService
   ) {
     this.translateService.setDefaultLang('en');
     this.addSVGIcons();
@@ -24,7 +24,7 @@ export class AppComponent {
   }
 
   async subscribeLoadingIndicator() {
-    this.authService.loading.subscribe(loading => {
+    this.authService.loading.subscribe((loading) => {
       if (loading) {
         this.spinner.show();
       } else {
@@ -35,12 +35,12 @@ export class AppComponent {
 
   addSVGIcons() {
     const icons = ['google_logo'];
-    icons.forEach(icon => {
+    icons.forEach((icon) => {
       this.matIconRegistry.addSvgIcon(
         `${icon}`,
         this.domSanitizer.bypassSecurityTrustResourceUrl(
-          `../assets/icons/${icon}.svg`,
-        ),
+          `../assets/icons/${icon}.svg`
+        )
       );
     });
   }

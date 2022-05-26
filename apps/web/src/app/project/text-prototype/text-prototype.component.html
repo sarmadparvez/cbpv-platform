@@ -1,16 +1,18 @@
 <mat-card>
   <mat-card-title>{{ 'name.text' | translate }}</mat-card-title>
-  <mat-card-subtitle *ngIf="(task | async)?.testType === TestTypeEnum.Comparison">
+  <mat-card-subtitle
+    *ngIf="(task | async)?.testType === TestTypeEnum.Comparison"
+  >
     {{ 'name.prototype1' | translate }}
   </mat-card-subtitle>
   <mat-card-content>
     <!--Textual description 1-->
     <p class="text-note" *ngIf="!readonly">
       <ng-container
-          *ngIf="
-        (task | async)?.testType === TestTypeEnum.Basic;
-        else comparisonTextNote
-      "
+        *ngIf="
+          (task | async)?.testType === TestTypeEnum.Basic;
+          else comparisonTextNote
+        "
       >
         {{ 'note.basicTextAdd' | translate }}
       </ng-container>
@@ -19,11 +21,20 @@
       </ng-template>
     </p>
     <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
-      <a mat-button color="primary" (click)="openEditDialog(1)"
-      *ngIf="(task | async)?.status === TaskStatusEnum.Draft && !readonly"
-      >{{ 'action.editText' | translate }}</a>
+      <a
+        mat-button
+        color="primary"
+        (click)="openEditDialog(1)"
+        *ngIf="(task | async)?.status === TaskStatusEnum.Draft && !readonly"
+        >{{ 'action.editText' | translate }}</a
+      >
       <ng-container
-          *ngTemplateOutlet="textViewer; context: { data: { textualDescription: (task | async)?.textualDescription1 } }"
+        *ngTemplateOutlet="
+          textViewer;
+          context: {
+            data: { textualDescription: (task | async)?.textualDescription1 }
+          }
+        "
       ></ng-container>
     </div>
 
@@ -32,17 +43,28 @@
       <mat-divider inset></mat-divider>
       <mat-card-title class="mt-15">{{
         'name.text' | translate
-        }}</mat-card-title>
+      }}</mat-card-title>
       <mat-card-subtitle>{{ 'name.prototype2' | translate }}</mat-card-subtitle>
 
-      <p class="text-note"  *ngIf="!readonly">{{ 'note.comparisonText2' | translate }}</p>
+      <p class="text-note" *ngIf="!readonly">
+        {{ 'note.comparisonText2' | translate }}
+      </p>
 
       <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
-        <a mat-button color="primary" (click)="openEditDialog(2)"
-           *ngIf="(task | async)?.status === TaskStatusEnum.Draft && !readonly"
-        >{{ 'action.editText' | translate }}</a>
+        <a
+          mat-button
+          color="primary"
+          (click)="openEditDialog(2)"
+          *ngIf="(task | async)?.status === TaskStatusEnum.Draft && !readonly"
+          >{{ 'action.editText' | translate }}</a
+        >
         <ng-container
-            *ngTemplateOutlet="textViewer; context: { data: { textualDescription: (task | async )?.textualDescription2 }}"
+          *ngTemplateOutlet="
+            textViewer;
+            context: {
+              data: { textualDescription: (task | async)?.textualDescription2 }
+            }
+          "
         ></ng-container>
       </div>
     </ng-container>
@@ -52,5 +74,5 @@
 <!-- Text viewer-->
 <ng-template #textViewer let-data="data">
   <!--Text-->
-  <p class="multiline">{{data.textualDescription}}</p>
+  <p class="multiline">{{ data.textualDescription }}</p>
 </ng-template>

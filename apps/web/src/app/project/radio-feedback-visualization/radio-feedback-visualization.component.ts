@@ -41,7 +41,7 @@ export class RadioFeedbackVisualizationComponent implements OnInit {
   }
 
   formatStatsForChart() {
-    this.questionStats.stats.forEach(stat => {
+    this.questionStats.stats.forEach((stat) => {
       this.chartData.push({
         name: stat.radioAnswer,
         value: stat.radioAnswerCount,

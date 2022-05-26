@@ -77,7 +77,12 @@
         }}</ng-container>
       </ng-container>
     </p>
-    <label><ng-container *ngIf="!readonly; else readonlyLabel" >Select Test type</ng-container> :</label>
+    <label
+      ><ng-container *ngIf="!readonly; else readonlyLabel"
+        >Select Test type</ng-container
+      >
+      :</label
+    >
     <ng-template #readonlyLabel>Test type</ng-template>
     <mat-radio-group
       [disabled]="readonly"

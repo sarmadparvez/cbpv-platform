@@ -1,19 +1,19 @@
 <ng-container *ngIf="task | async as taskObj">
-  <div [ngClass]="applyContainerClass? 'page-content' : ''">
+  <div [ngClass]="applyContainerClass ? 'page-content' : ''">
     <ng-container *ngIf="!readonly">
-      <p>
-        Please see the Task details below and fill out the Questionnaire.
-      </p>
+      <p>Please see the Task details below and fill out the Questionnaire.</p>
 
       <ul>
         <li class="list-item">
-          After answering the questions press <em>{{'name.submitFeedback' | translate}}</em> button below.
+          After answering the questions press
+          <em>{{ 'name.submitFeedback' | translate }}</em> button below.
         </li>
         <li class="list-item">
           Please note that once submitted, you cannot change your answers later.
         </li>
         <li class="list-item">
-          You can see your submitted feedback form Feedbacks section in the side menu.
+          You can see your submitted feedback form Feedbacks section in the side
+          menu.
         </li>
       </ul>
     </ng-container>
@@ -23,36 +23,34 @@
     <div class="mt-30">
       <!--Image Prototype-->
       <app-image-prototype
-          *ngIf="taskObj.prototypeFormat === PrototypeFormatEnum.Image
-            "
-          [task]="task"
-          [readonly]="true"
+        *ngIf="taskObj.prototypeFormat === PrototypeFormatEnum.Image"
+        [task]="task"
+        [readonly]="true"
       >
       </app-image-prototype>
       <!--Iframe Prototype-->
       <app-iframe-prototype
-          *ngIf="taskObj.prototypeFormat === PrototypeFormatEnum.Iframe
-            "
-          [task]="task"
-          [readonly]="true"
+        *ngIf="taskObj.prototypeFormat === PrototypeFormatEnum.Iframe"
+        [task]="task"
+        [readonly]="true"
       >
       </app-iframe-prototype>
       <!--Text Prototype-->
       <app-text-prototype
-          *ngIf="taskObj.prototypeFormat === PrototypeFormatEnum.Text"
-          [task]="task"
-          [readonly]="true"
+        *ngIf="taskObj.prototypeFormat === PrototypeFormatEnum.Text"
+        [task]="task"
+        [readonly]="true"
       >
       </app-text-prototype>
     </div>
     <!--Questionnaire-->
     <div class="mt-30 mb-30">
-    <app-questionnaire-answer
+      <app-questionnaire-answer
         [task]="taskObj"
         [readonly]="readonly"
         [feedback]="feedback"
-    >
-    </app-questionnaire-answer>
+      >
+      </app-questionnaire-answer>
     </div>
   </div>
 </ng-container>

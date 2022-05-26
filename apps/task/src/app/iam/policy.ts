@@ -9,6 +9,7 @@ import { Project } from '../projects/entities/project.entity';
 import { Task } from '../tasks/entities/task.entity';
 import { Feedback } from '../feedbacks/entities/feedback.entity';
 import { Role, User } from '../users/entities/user.entity';
+import { TaskRequest } from '../task-requests/entities/task-request.entity';
 
 /**
  * Defines the policy for a User.
@@ -24,7 +25,9 @@ export enum Action {
 }
 
 type Subjects =
-  | InferSubjects<typeof Project | typeof Task | typeof Feedback>
+  | InferSubjects<
+      typeof Project | typeof Task | typeof Feedback | typeof TaskRequest
+    >
   | 'all';
 
 type AppAbilities = [Action, Subjects];
@@ -33,7 +36,7 @@ export const AppAbility = Ability as AbilityClass<AppAbility>;
 
 type DefinePermissions = (
   user: User,
-  builder: AbilityBuilder<AppAbility>,
+  builder: AbilityBuilder<AppAbility>
 ) => void;
 
 // For each role, define the permissions
@@ -48,6 +51,9 @@ const rolePermissions: Record<Role, DefinePermissions> = {
   crowdworker(user, { can }) {
     can(Action.Create, Feedback);
     can(Action.Read, Feedback, { userId: user.id });
+    can(Action.Create, TaskRequest);
+    can(Action.Update, TaskRequest);
+    can(Action.Read, TaskRequest, { userId: user.id });
   },
 };
 

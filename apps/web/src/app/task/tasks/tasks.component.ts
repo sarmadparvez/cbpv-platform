@@ -1,8 +1,13 @@
 import { Component, NgModule, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Task } from '../../../gen/api/task/model/models';
-import { TasksService } from '../../../gen/api/task';
+import {
+  Task,
+  TaskRequest,
+  UpdateTaskDto,
+  UpdateTaskRequestDto,
+} from '../../../gen/api/task/model/models';
+import { TaskRequestsService, TasksService } from '../../../gen/api/task';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -15,8 +20,14 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { User } from '../../../gen/api/admin';
 import { UserMap, UserService } from '../../user/user.service';
+import AccessTypeEnum = UpdateTaskDto.AccessTypeEnum;
+import { MatDialog } from '@angular/material/dialog';
+import {
+  TaskRequestFormComponent,
+  TaskRequestFormData,
+} from '../task-request/task-request-form/task-request-form.component';
+import RequestStatusEnum = UpdateTaskRequestDto.RequestStatusEnum;
 
 @Component({
   selector: 'app-tasks',
@@ -45,6 +56,8 @@ export class TasksComponent {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly userService: UserService,
+    private readonly dialog: MatDialog,
+    private readonly taskRequestService: TaskRequestsService
   ) {
     this.findOpenTasks();
   }
@@ -59,7 +72,7 @@ export class TasksComponent {
   }
 
   async getUsersForTasks(tasks: Task[]) {
-    const ids = tasks.map(f => f.userId);
+    const ids = tasks.map((f) => f.userId);
     if (ids.length > 0) {
       this.userMap = await this.userService.getUserMap(ids);
     }
@@ -74,9 +87,7 @@ export class TasksComponent {
       const accumulator = (currentTerm: any, key: any) => {
         return this.nestedFilterCheck(currentTerm, data, key);
       };
-      const dataStr = Object.keys(data)
-        .reduce(accumulator, '')
-        .toLowerCase();
+      const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
       const transformedFilter = filter.trim().toLowerCase();
       return dataStr.indexOf(transformedFilter) !== -1;
     };
@@ -98,11 +109,40 @@ export class TasksComponent {
     return search;
   }
 
-  openTask(event: MouseEvent, task: string) {
+  async openTask(event: MouseEvent, task: Task) {
     event.preventDefault();
-    this.router.navigate([task], {
-      relativeTo: this.route,
-    });
+    if (task.accessType === AccessTypeEnum.Open) {
+      this.router.navigate([task.id], {
+        relativeTo: this.route,
+      });
+    } else {
+      let taskRequest: TaskRequest | undefined;
+      try {
+        taskRequest = await firstValueFrom(
+          this.taskRequestService.searchRequest(task.id)
+        );
+        if (taskRequest?.requestStatus === RequestStatusEnum.Accepted) {
+          this.router.navigate([task.id], {
+            relativeTo: this.route,
+          });
+          return;
+        }
+      } catch (err) {
+        console.log('failed to get TaskRequest', err);
+      }
+      this.dialog.open(TaskRequestFormComponent, {
+        width: '50%',
+        data: <TaskRequestFormData>{
+          task,
+          taskRequest,
+        },
+        autoFocus: false,
+      });
+    }
+  }
+
+  async getTaskRequest(taskId: string) {
+    return firstValueFrom(this.taskRequestService.searchRequest(taskId));
   }
 
   applyFilter(event: Event) {

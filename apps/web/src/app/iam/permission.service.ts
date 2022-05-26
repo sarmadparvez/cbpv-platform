@@ -14,7 +14,7 @@ export class PermissionsService {
 
   constructor(
     private readonly iamService: IAMService,
-    private readonly authService: AuthService,
+    private readonly authService: AuthService
   ) {
     this.authService.logoutObservable.subscribe(() => {
       this.permissionsFetched = false;
@@ -28,7 +28,7 @@ export class PermissionsService {
     this.authService.loading.next(true);
     try {
       const response = (await firstValueFrom(
-        this.iamService.getPermissions(),
+        this.iamService.getPermissions()
       )) as any;
       const userAbility = new Ability();
       userAbility.update(unpackRules(response));

@@ -6,7 +6,7 @@ import { User } from './entities/user.entity';
 import { Skill } from '../skills/entities/skill.entity';
 import { Country } from '../countries/entities/country.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateWithSSODto, SSOProvider } from './dto/create-with-sso.dto';
 import { BatchGetUserInfoDto } from './dto/batch-get-user-info.dto';
@@ -17,7 +17,7 @@ import { Action, AppAbility } from '../iam/policy';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>,
+    private userRepository: Repository<User>
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -34,7 +34,7 @@ export class UsersService {
           error:
             'This username is not available. Please select a different one.',
         },
-        HttpStatus.PRECONDITION_FAILED,
+        HttpStatus.PRECONDITION_FAILED
       );
     }
     if (createUserDto.skills) {
@@ -48,7 +48,7 @@ export class UsersService {
     // hash password
     user.passwordHash = await bcrypt.hash(
       createUserDto.password,
-      await bcrypt.genSalt(),
+      await bcrypt.genSalt()
     );
     const savedUser = await this.userRepository.save(user);
     // re-retrieve the user here so that password is removed from savedUser which was added to it when converting dto to entity
@@ -113,7 +113,7 @@ export class UsersService {
       // hash password
       user.passwordHash = await bcrypt.hash(
         updateUserDto.password,
-        await bcrypt.genSalt(),
+        await bcrypt.genSalt()
       );
     }
     // using save instead of update here to also add/remove the relationships
@@ -141,7 +141,7 @@ export class UsersService {
 }
 
 function userDtoToEntity(
-  dto: CreateUserDto | UpdateUserDto | CreateWithSSODto,
+  dto: CreateUserDto | UpdateUserDto | CreateWithSSODto
 ): User {
   const data = classToPlain(dto);
   return plainToClass(User, data);

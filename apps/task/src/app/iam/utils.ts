@@ -13,13 +13,13 @@ export async function findWithPermissionCheck<T>(
   id: string,
   action: Action,
   repository: Repository<T>,
-  findOneOptions?: FindOneOptions<T>,
+  findOneOptions?: FindOneOptions<T>
 ): Promise<T> {
   const entity: T = await repository.findOneOrFail(id, findOneOptions);
   // check if user have permission to remove this project
   ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
     action,
-    entity,
+    entity
   );
   return entity;
 }

@@ -11,7 +11,7 @@ import { AuthService } from '../../auth/auth.service';
 export class LoginGuard implements CanActivate {
   constructor(
     private readonly authService: AuthService,
-    private readonly router: Router,
+    private readonly router: Router
   ) {}
 
   /**

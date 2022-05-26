@@ -24,7 +24,7 @@ export class AuthService {
   endpoint = 'auth';
   token: string;
   redirectUrl!: string | null;
-  user!: ReplaySubject<User> | null ;
+  user!: ReplaySubject<User> | null;
   logoutObservable = new ReplaySubject<void | null>(1);
   loading = new ReplaySubject<boolean>(1);
 
@@ -37,14 +37,14 @@ export class AuthService {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly iamService: IAMService,
-    private readonly userService: UsersService,
+    private readonly userService: UsersService
   ) {
     this.token = this.storage.read(AUTH_TOKEN) || '';
   }
 
   public async loginWithUsernameAndPassword(
     username: string,
-    password: string,
+    password: string
   ) {
     try {
       this.loading.next(true);
@@ -52,7 +52,7 @@ export class AuthService {
         this.authService.login(<LoginDto>{
           username,
           password,
-        }),
+        })
       );
       this.loading.next(false);
       if (response.accessToken) {
@@ -102,7 +102,7 @@ export class AuthService {
     }
     const token: any = jwt_decode(this.getToken());
     if (token.sub) {
-      firstValueFrom(this.userService.findOne(token.sub)).then(resp => {
+      firstValueFrom(this.userService.findOne(token.sub)).then((resp) => {
         this.user?.next(resp);
       });
       return this.user;

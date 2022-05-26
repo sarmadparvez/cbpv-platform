@@ -9,18 +9,18 @@ const routes: Routes = [
   {
     path: 'access',
     loadChildren: () =>
-      import('./access/access.module').then(m => m.AccessModule),
+      import('./access/access.module').then((m) => m.AccessModule),
   },
   {
     path: 'profile',
     component: NavComponent,
     loadChildren: () =>
-      import('./profile/profile.module').then(m => m.ProfileModule),
+      import('./profile/profile.module').then((m) => m.ProfileModule),
   },
   {
     path: 'home',
     component: NavComponent,
-    loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+    loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
   },
   {
     path: 'projects',
@@ -31,7 +31,7 @@ const routes: Routes = [
     },
     canActivate: [RouteGuard],
     loadChildren: () =>
-      import('./project/project.module').then(m => m.ProjectModule),
+      import('./project/project.module').then((m) => m.ProjectModule),
   },
   {
     path: 'tasks',
@@ -41,7 +41,7 @@ const routes: Routes = [
       subject: 'Feedback',
     },
     canActivate: [RouteGuard],
-    loadChildren: () => import('./task/task.module').then(m => m.TaskModule),
+    loadChildren: () => import('./task/task.module').then((m) => m.TaskModule),
   },
   {
     path: 'feedbacks',
@@ -52,7 +52,7 @@ const routes: Routes = [
     },
     canActivate: [RouteGuard],
     loadChildren: () =>
-      import('./feedback/feedback.module').then(m => m.FeedbackModule),
+      import('./feedback/feedback.module').then((m) => m.FeedbackModule),
   },
   {
     path: 'users',
@@ -62,7 +62,7 @@ const routes: Routes = [
       subject: 'User',
     },
     canActivate: [RouteGuard],
-    loadChildren: () => import('./user/user.module').then(m => m.UserModule),
+    loadChildren: () => import('./user/user.module').then((m) => m.UserModule),
   },
   {
     path: '**',

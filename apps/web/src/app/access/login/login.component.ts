@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
     private readonly router: Router,
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
-    private readonly translateService: TranslateService,
+    private readonly translateService: TranslateService
   ) {}
 
   async ngOnInit() {
@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
     try {
       const url = await this.authService.loginWithUsernameAndPassword(
         this.form.controls.username.value,
-        this.form.controls.password.value,
+        this.form.controls.password.value
       );
       this.navigateTo(url);
     } catch (e) {

@@ -4,25 +4,25 @@ import {
   Input,
   NgModule,
   Output,
-} from "@angular/core";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { HttpClientModule } from "@angular/common/http";
-import { CommonModule } from "@angular/common";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
-import { FileUploadSignatureResponseDto, Image } from "../../../gen/api/task";
-import { FileUpload, FileUploadService } from "./file-upload.service";
-import { firstValueFrom, ReplaySubject } from "rxjs";
-import { parseError } from "../../error/parse-error";
+} from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { FileUploadSignatureResponseDto, Image } from '../../../gen/api/task';
+import { FileUpload, FileUploadService } from './file-upload.service';
+import { firstValueFrom, ReplaySubject } from 'rxjs';
+import { parseError } from '../../error/parse-error';
 import {
   animate,
   state,
   style,
   transition,
   trigger,
-} from "@angular/animations";
+} from '@angular/animations';
 
 export interface FileUploadResponse {
   url: string;
@@ -30,21 +30,22 @@ export interface FileUploadResponse {
 }
 
 @Component({
-  selector: "app-file-upload",
-  templateUrl: "./file-upload.component.html",
-  styleUrls: ["./file-upload.component.scss"],
+  selector: 'app-file-upload',
+  templateUrl: './file-upload.component.html',
+  styleUrls: ['./file-upload.component.scss'],
   providers: [FileUploadService],
   animations: [
-    trigger("fadeInOut", [
-      state("in", style({ opacity: 100 })),
-      transition("* => void", [animate(300, style({ opacity: 0 }))]),
+    trigger('fadeInOut', [
+      state('in', style({ opacity: 100 })),
+      transition('* => void', [animate(300, style({ opacity: 0 }))]),
     ]),
   ],
 })
 export class FileUploadComponent {
-  accept = ".jpg, .jpeg, .png, .pdf";
+  accept = '.jpg, .jpeg, .png, .pdf, .zip';
   @Input() uploadSignature =
     new ReplaySubject<FileUploadSignatureResponseDto>();
+  @Input() buttonLabel = 'action.upload';
   @Output() fileUploadClick = new EventEmitter<void>();
   /** Emit urls of the uploaded files when the file uploading is completed. */
   @Output() completeEvent = new EventEmitter<FileUploadResponse[]>();
@@ -77,7 +78,7 @@ export class FileUploadComponent {
     const fileUpload = document.getElementById(
       `fileUpload`
     ) as HTMLInputElement;
-    fileUpload.value = "";
+    fileUpload.value = '';
 
     this.fileUploadService.files.forEach((file) =>
       promises.push(this.uploadFile(file))
@@ -100,12 +101,12 @@ export class FileUploadComponent {
       };
       return fileUploadResponse;
     } catch (err) {
-      let message = this.translateService.instant("error.uploadImage");
+      let message = this.translateService.instant('error.uploadImage');
       const error = parseError(err);
       if (error?.message) {
-        message += " " + error.message;
+        message += ' ' + error.message;
       }
-      this.snackbar.open(message, "", {
+      this.snackbar.open(message, '', {
         duration: 5000,
       });
       return Promise.reject(err);

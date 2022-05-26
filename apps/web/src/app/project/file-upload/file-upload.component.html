@@ -6,22 +6,36 @@ The solution is copied and modified as per our requirement.
   <!-- Buttons -->
   <div fxLayout="row" fxLayoutGap="10px">
     <!-- Upload button -->
-      <button mat-button (click)="initiateFileUpload()">
-        <mat-icon>file_upload</mat-icon>
-        {{ 'action.upload' | translate }}
-      </button>
+    <button mat-button (click)="initiateFileUpload()">
+      <mat-icon>file_upload</mat-icon>
+      {{ buttonLabel | translate }}
+    </button>
   </div>
   <br />
   <div class="upload-progress">
     <ul>
-      <li *ngFor="let file of fileUploadService.files" [@fadeInOut]="file.state">
-        <mat-progress-bar mode="indeterminate" [value]="file.progress"></mat-progress-bar>
+      <li
+        *ngFor="let file of fileUploadService.files"
+        [@fadeInOut]="file.state"
+      >
+        <mat-progress-bar
+          mode="indeterminate"
+          [value]="file.progress"
+        ></mat-progress-bar>
         <span id="file-label">
           {{ file.data.name }}
-          <a title="Retry" (click)="fileUploadService.retryFile(file)" *ngIf="file.canRetry">
+          <a
+            title="Retry"
+            (click)="fileUploadService.retryFile(file)"
+            *ngIf="file.canRetry"
+          >
             <mat-icon>refresh</mat-icon>
           </a>
-          <a title="Cancel" (click)="fileUploadService.cancelFile(file)" *ngIf="file.canCancel">
+          <a
+            title="Cancel"
+            (click)="fileUploadService.cancelFile(file)"
+            *ngIf="file.canCancel"
+          >
             <mat-icon>cancel</mat-icon>
           </a>
         </span>
@@ -29,10 +43,10 @@ The solution is copied and modified as per our requirement.
     </ul>
   </div>
   <input
-      type="file"
-      id="fileUpload"
-      name="fileUpload"
-      accept="{{ accept }}"
-      style="display: none"
+    type="file"
+    id="fileUpload"
+    name="fileUpload"
+    accept="{{ accept }}"
+    style="display: none"
   />
 </div>

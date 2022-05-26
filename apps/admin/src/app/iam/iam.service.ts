@@ -9,7 +9,7 @@ import { packRules } from '@casl/ability/extra';
 export class IamService {
   constructor(
     private httpService: HttpService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {}
 
   async getPermissions() {
@@ -23,7 +23,7 @@ export class IamService {
           return subjectType;
         }
         return subjectType.name;
-      },
+      }
     ).concat(taskServicePermissions);
   }
 
@@ -39,14 +39,14 @@ export class IamService {
           status: HttpStatus.SERVICE_UNAVAILABLE,
           error: 'Task service url not found.',
         },
-        HttpStatus.SERVICE_UNAVAILABLE,
+        HttpStatus.SERVICE_UNAVAILABLE
       );
     }
     try {
       const response = await firstValueFrom(
-        this.httpService.get(`${taskApi}/iam/getPermissions`, {
+        this.httpService.get(`${taskApi}/iam/get-permissions`, {
           headers: getAuthorizationHeader(),
-        }),
+        })
       );
       return response.data;
     } catch (err) {
@@ -55,7 +55,7 @@ export class IamService {
         {
           error: err?.message,
         },
-        HttpStatus.UNPROCESSABLE_ENTITY,
+        HttpStatus.UNPROCESSABLE_ENTITY
       );
     }
   }

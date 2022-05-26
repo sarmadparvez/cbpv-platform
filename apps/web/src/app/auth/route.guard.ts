@@ -14,12 +14,12 @@ import { PermissionsService } from '../iam/permission.service';
 export class RouteGuard implements CanActivate {
   constructor(
     private permService: PermissionsService,
-    private router: Router,
+    private router: Router
   ) {}
 
   async canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
+    state: RouterStateSnapshot
   ): Promise<boolean> {
     if (route.data && route.data.permission && route.data.subject) {
       try {

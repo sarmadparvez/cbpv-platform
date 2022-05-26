@@ -10,7 +10,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
    * @param context
    */
   canActivate(
-    context: ExecutionContext,
+    context: ExecutionContext
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     contextService.set('request', request);

@@ -9,7 +9,6 @@ import {
 } from 'typeorm';
 import { Task } from '../../tasks/entities/task.entity';
 import { Answer } from './answer.entity';
-import { Max, Min } from 'class-validator';
 
 export enum PaymentStatus {
   Pending = 'pending',

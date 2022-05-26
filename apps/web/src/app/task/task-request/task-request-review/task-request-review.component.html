@@ -1,0 +1,106 @@
+<h2 mat-dialog-title>
+  <ng-container ngSwitch="{{ task.accessType }}">
+    Request For Access
+  </ng-container>
+</h2>
+<mat-dialog-content class="mat-typography">
+  <ng-container
+    ngSwitch="{{ task.accessType }}"
+    *ngIf="
+      !(taskRequest?.requestStatus === RequestStatusEnum.Accepted);
+      else acceptMessage
+    "
+  >
+    <ng-container *ngSwitchCase="AccessType.Nda">
+      <p
+        class="text-note"
+        *ngIf="
+          taskRequest?.requestStatus === RequestStatusEnum.Requested;
+          else rejectMessage
+        "
+      >
+        The crowd-worker have uploaded the signed Non Disclosure Agreement
+        (NDA). Please review the request. If you accept the request, the
+        crowd-worker will be able to work on this task. If you reject the
+        request, the crowd-worker can request again.
+      </p>
+    </ng-container>
+    <ng-container *ngSwitchCase="AccessType.Request">
+      <p
+        class="text-note"
+        *ngIf="
+          taskRequest?.requestStatus === RequestStatusEnum.Requested;
+          else rejectMessage
+        "
+      >
+        The crowd-worker have requested access for this Task. If you accept the
+        request, the crowd-worker will be able to work on this task. If you
+        reject the request, the crowd-worker can request again.
+      </p>
+    </ng-container>
+    <ng-template #rejectMessage>
+      <p class="text-note">
+        You have rejected the crowd-worker's request to access and work on this
+        Task.
+      </p>
+    </ng-template>
+  </ng-container>
+  <ng-template #acceptMessage>
+    <p class="text-note">
+      You have already accepted crowd-worker's request for this Task. The Task
+      is now accessible to the crowd-worker.
+    </p>
+  </ng-template>
+
+  <!--Signed NDA Download-->
+  <ng-container *ngIf="taskRequest?.ndaUrl">
+    <a
+      class="mt-20"
+      mat-button
+      href="{{ taskRequest?.ndaUrl }}"
+      target="_blank"
+    >
+      <mat-icon>file_download</mat-icon>
+      {{ 'action.signedDownloadNDA' | translate }}
+    </a>
+    <span class="text-note"
+      >This is the signed NDA uploaded by Crowd-Worker.</span
+    >
+  </ng-container>
+  <!--Request Comment-->
+  <div *ngIf="taskRequest?.requestComment" class="mt-20">
+    <p class="text-note"><b>Comment by Crowd-Worker:</b></p>
+    <P class="text-note multiline">{{ taskRequest.requestComment }}</P>
+  </div>
+
+  <!--Rejection Comment -->
+  <mat-form-field class="full-width mt-20" appearance="outline">
+    <mat-label>Optional comment for rejection</mat-label>
+    <textarea rows="5" [formControl]="rejectionComment" matInput> </textarea>
+    <mat-hint
+      >If you reject the request, optionally you can add a comment here for
+      Crowd-Worker.
+    </mat-hint>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-dialog-close mat-button>Cancel</button>
+  <ng-container *ngIf="task.status === TaskStatusEnum.Open">
+    <button
+      mat-button
+      color="warn"
+      (click)="update(RequestStatusEnum.Rejected)"
+      *ngIf="taskRequest?.requestStatus === RequestStatusEnum.Requested"
+    >
+      Reject
+    </button>
+    <button
+      mat-button
+      color="black"
+      (click)="update(RequestStatusEnum.Accepted)"
+      *ngIf="taskRequest?.requestStatus === RequestStatusEnum.Requested"
+    >
+      Accept
+    </button>
+  </ng-container>
+</mat-dialog-actions>

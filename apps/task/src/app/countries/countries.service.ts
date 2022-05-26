@@ -13,7 +13,7 @@ export class CountriesService {
     private httpService: HttpService,
     private configService: ConfigService,
     @InjectRepository(Country)
-    private countryRepository: Repository<Country>,
+    private countryRepository: Repository<Country>
   ) {}
 
   /**
@@ -31,7 +31,7 @@ export class CountriesService {
     if (adminAPI) {
       try {
         const response = await firstValueFrom(
-          this.httpService.get<Country[]>(`${adminAPI}/countries`),
+          this.httpService.get<Country[]>(`${adminAPI}/countries`)
         );
         const countries = response.data;
         this.countryRepository.save(countries);

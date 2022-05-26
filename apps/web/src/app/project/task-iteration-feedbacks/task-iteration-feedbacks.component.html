@@ -56,8 +56,8 @@
     </ng-container>
     <!-- Username Column -->
     <ng-container
-        matColumnDef="username"
-        *ngIf="Action.Manage | permission: 'all' | async"
+      matColumnDef="username"
+      *ngIf="Action.Manage | permission: 'all' | async"
     >
       <th mat-header-cell *matHeaderCellDef>
         {{ 'name.feedbackUsername' | translate }}
@@ -98,7 +98,7 @@
     </ng-container>
 
     <!-- Payment Status -->
-    <ng-container matColumnDef="paymentStatus" >
+    <ng-container matColumnDef="paymentStatus">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{ 'name.paymentStatus' | translate }}
       </th>

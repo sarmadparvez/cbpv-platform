@@ -9,41 +9,41 @@ import {
   Input,
   NgModule,
   Output,
-} from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import {
   BatchCreateImagesDto,
   Image,
   TasksService,
-} from "../../../gen/api/task";
-import { firstValueFrom } from "rxjs";
-import { MatSnackBar } from "@angular/material/snack-bar";
+} from '../../../gen/api/task';
+import { firstValueFrom } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   animate,
   state,
   style,
   transition,
   trigger,
-} from "@angular/animations";
-import { HttpClient, HttpClientModule } from "@angular/common/http";
-import { parseError } from "../../error/parse-error";
+} from '@angular/animations';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { parseError } from '../../error/parse-error';
 import {
   FileUpload,
   FileUploadService,
-} from "../file-upload/file-upload.service";
+} from '../file-upload/file-upload.service';
 
 @Component({
-  selector: "app-image-upload",
-  templateUrl: "./image-upload.component.html",
-  styleUrls: ["./image-upload.component.scss"],
+  selector: 'app-image-upload',
+  templateUrl: './image-upload.component.html',
+  styleUrls: ['./image-upload.component.scss'],
   animations: [
-    trigger("fadeInOut", [
-      state("in", style({ opacity: 100 })),
-      transition("* => void", [animate(300, style({ opacity: 0 }))]),
+    trigger('fadeInOut', [
+      state('in', style({ opacity: 100 })),
+      transition('* => void', [animate(300, style({ opacity: 0 }))]),
     ]),
   ],
   providers: [FileUploadService],
@@ -57,7 +57,7 @@ export class ImageUploadComponent {
     readonly fileUploadService: FileUploadService
   ) {}
   /** accepted filed extensions */
-  accept = ".jpg, .jpeg, .png";
+  accept = '.jpg, .jpeg, .png';
 
   @Input() readonly!: boolean;
   @Input() uniqueId!: number;
@@ -82,15 +82,15 @@ export class ImageUploadComponent {
 
   async getUploadSignature() {
     if (!this.taskId) {
-      throw new Error("taskId not set");
+      throw new Error('taskId not set');
     }
     try {
       return firstValueFrom(this.taskService.imageUploadSignature(this.taskId));
     } catch (err) {
-      console.log("unable to get signature for image upload ", err);
+      console.log('unable to get signature for image upload ', err);
       this.snackbar.open(
-        this.translateService.instant("error.imageSignature"),
-        "",
+        this.translateService.instant('error.imageSignature'),
+        '',
         {
           duration: 5000,
         }
@@ -113,12 +113,12 @@ export class ImageUploadComponent {
         cloudId: response.public_id,
       };
     } catch (err) {
-      let message = this.translateService.instant("error.uploadImage");
+      let message = this.translateService.instant('error.uploadImage');
       const error = parseError(err);
       if (error?.message) {
-        message += " " + error.message;
+        message += ' ' + error.message;
       }
-      this.snackbar.open(message, "", {
+      this.snackbar.open(message, '', {
         duration: 5000,
       });
       return Promise.reject(err);
@@ -127,22 +127,22 @@ export class ImageUploadComponent {
 
   async batchCreateImages(images: Image[]) {
     if (!this.taskId) {
-      throw new Error("taskId not set");
+      throw new Error('taskId not set');
     }
     const request: BatchCreateImagesDto = {
       images,
     };
-    let message = "";
+    let message = '';
     try {
       await firstValueFrom(
         this.taskService.batchCreateImages(this.taskId, request)
       );
-      message = "notification.imageUpload";
+      message = 'notification.imageUpload';
     } catch (err) {
-      console.log("err", err);
-      message = "error.saveImageUrls";
+      console.log('err', err);
+      message = 'error.saveImageUrls';
     } finally {
-      this.snackbar.open(this.translateService.instant(message), "", {
+      this.snackbar.open(this.translateService.instant(message), '', {
         duration: 5000,
       });
     }
@@ -156,7 +156,7 @@ export class ImageUploadComponent {
     const fileUpload = document.getElementById(
       `fileUpload${this.uniqueId}`
     ) as HTMLInputElement;
-    fileUpload.value = "";
+    fileUpload.value = '';
 
     this.fileUploadService.files.forEach((file) =>
       promises.push(this.uploadFile(file))

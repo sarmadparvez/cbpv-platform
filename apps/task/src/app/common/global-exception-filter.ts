@@ -35,7 +35,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     Logger.error(
       message,
       (exception as any).stack,
-      `${request.method} ${request.url}`,
+      `${request.method} ${request.url}`
     );
     let httpStatus;
     let responseBody;
@@ -60,7 +60,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
         message = (exception as UpdateValuesMissingError).message;
         break;
-      default:
+      default: {
         const httpException = exception as HttpException;
         if (httpException.getResponse) {
           responseBody = (exception as HttpException).getResponse();
@@ -71,6 +71,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         if (!message) {
           message = 'Internal Server Error';
         }
+      }
     }
 
     if (!responseBody) {

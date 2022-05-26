@@ -24,7 +24,7 @@ export class StorageService {
     if (value) {
       return JSON.parse(value);
     }
-    return null
+    return null;
   }
 
   public remove(key: StorageKey) {

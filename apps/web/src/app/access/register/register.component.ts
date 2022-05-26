@@ -62,7 +62,8 @@ import SsoProviderEnum = CreateWithSSODto.SsoProviderEnum;
 import { parseError } from '../../error/parse-error';
 import { AuthService } from '../../auth/auth.service';
 
-export const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*)(+=._-]{8,}$/;
+export const PASSWORD_REGEX =
+  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*)(+=._-]{8,}$/;
 export const USERNAME_REGEX = /^\S*$/; // username should not contain spaces
 
 @Component({
@@ -118,7 +119,7 @@ export class RegisterComponent implements OnInit {
       },
       {
         validators: matchPassword,
-      },
+      }
     ),
     birthDate: [null],
     // gender: ['', Validators.required],
@@ -136,22 +137,21 @@ export class RegisterComponent implements OnInit {
     protected readonly userService: UsersService,
     protected readonly snackBar: MatSnackBar,
     protected readonly router: Router,
-    protected readonly authService: AuthService,
-  ) {
-  }
+    protected readonly authService: AuthService
+  ) {}
 
   async ngOnInit() {
     // fetch skills and countries
     await Promise.all([this.fetchCountries(), this.fetchSkills()]);
     this.filteredCountries = this.form.controls.country.valueChanges.pipe(
       startWith(''),
-      map(value => this.filterCountries(value)),
+      map((value) => this.filterCountries(value))
     );
     this.filteredSkills = this.form.controls.skills.valueChanges.pipe(
       startWith(null),
       map((value: string | null) =>
-        value ? this.filterSkills(value) : this.filterSkills(''),
-      ),
+        value ? this.filterSkills(value) : this.filterSkills('')
+      )
     );
 
     this.ssoProfileId = this.route.snapshot.queryParamMap.get('googleId');
@@ -217,7 +217,7 @@ export class RegisterComponent implements OnInit {
     const request = <CreateWithSSODto>{
       ssoProfileId: this.ssoProfileId,
       ...this.form.value,
-      country: null
+      country: null,
     };
     this.fillDataInRequest(request);
     request.ssoProvider = SsoProviderEnum.Google;
@@ -230,22 +230,22 @@ export class RegisterComponent implements OnInit {
   }
 
   protected fillDataInRequest(
-    request: CreateUserDto | CreateWithSSODto | UpdateUserDto,
+    request: CreateUserDto | CreateWithSSODto | UpdateUserDto
   ) {
     if (this.form.controls.birthDate.value) {
       request.birthDate = dateToDBDateString(
-        new Date(this.form.controls.birthDate.value),
+        new Date(this.form.controls.birthDate.value)
       );
     }
     if (this.form.controls.country.value) {
       request.country = this.form.controls.country.value.id;
     }
-    request.skills = this.selectedSkills.map(skill => skill.id);
+    request.skills = this.selectedSkills.map((skill) => skill.id);
   }
 
   private handleRegistrationSuccess() {
     const message = this.translateService.instant(
-      'notification.registerSuccess',
+      'notification.registerSuccess'
     );
     this.snackBar.open(message, '', {
       duration: 5000,
@@ -269,22 +269,22 @@ export class RegisterComponent implements OnInit {
     }
     const filterValue = value.toLowerCase();
 
-    return this.countries.filter(option =>
-      option.name.toLowerCase().includes(filterValue),
+    return this.countries.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
     );
   }
 
-  private filterSkills(value: string): Skill[] | undefined{
+  private filterSkills(value: string): Skill[] | undefined {
     if (typeof value !== 'string') {
       return;
     }
     const filterValue = value.toLowerCase();
     const skillSelected = (skill: Skill) => {
-      return this.selectedSkills.findIndex(s => s.id === skill.id) > -1;
+      return this.selectedSkills.findIndex((s) => s.id === skill.id) > -1;
     };
     return this.allSkills
-      .filter(skill => !skillSelected(skill))
-      .filter(option => option.name.toLowerCase().includes(filterValue));
+      .filter((skill) => !skillSelected(skill))
+      .filter((option) => option.name.toLowerCase().includes(filterValue));
   }
 
   displayFn(option: Country | Skill): string {
@@ -359,7 +359,7 @@ function matchPassword(group: AbstractControl): ValidationErrors | null {
 export class CustomErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
     control: FormControl | null,
-    form: FormGroupDirective | NgForm | null,
+    form: FormGroupDirective | NgForm | null
   ): boolean {
     const invalidCtrl = !!(control?.invalid && control?.parent?.dirty);
     const invalidParent = !!(
@@ -377,7 +377,7 @@ export function dateToDBDateString(date?: Date): string {
   const pad = (num: number) => String(num).padStart(2, '0');
   if (date) {
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
-      date.getDate(),
+      date.getDate()
     )}`;
   }
   return '';

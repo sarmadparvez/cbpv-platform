@@ -28,6 +28,7 @@ export class ProjectFormComponent {
     title: ['', Validators.required],
     description: [null],
   });
+  project!: Project;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -35,10 +36,11 @@ export class ProjectFormComponent {
     private readonly snackBar: MatSnackBar,
     private dialog: MatDialogRef<ProjectFormComponent>,
     private translateService: TranslateService,
-    @Inject(MAT_DIALOG_DATA) private project: Project,
+    @Inject(MAT_DIALOG_DATA) project: Project
   ) {
-    if (this.project) {
-      this.form.patchValue(this.project);
+    if (project) {
+      this.project = project;
+      this.form.patchValue(project);
     }
   }
 
@@ -60,7 +62,7 @@ export class ProjectFormComponent {
         errorMsg = 'error.update';
         const request = <UpdateProjectDto>{ ...this.form.value };
         await firstValueFrom(
-          this.projectService.update(this.project.id, request),
+          this.projectService.update(this.project.id, request)
         );
       }
       // success message

@@ -11,6 +11,7 @@ import QuestionTypeEnum = QuestionAnswerStats.QuestionTypeEnum;
 import { ThumbsRatingVisualizationModule } from '../thumbs-rating-visualization/thumbs-rating-visualization.component';
 import { RadioFeedbackVisualizationModule } from '../radio-feedback-visualization/radio-feedback-visualization.component';
 import { StarRatingVisualizationModule } from '../star-rating-visualization/star-rating-visualization.component';
+import { SubscriptionComponent } from '../../common/subscription.component';
 
 export interface QuestionStats {
   question: Question;
@@ -22,32 +23,38 @@ export interface QuestionStats {
   templateUrl: './feedback-visualization.component.html',
   styleUrls: ['./feedback-visualization.component.scss'],
 })
-export class FeedbackVisualizationComponent implements OnInit {
+export class FeedbackVisualizationComponent
+  extends SubscriptionComponent
+  implements OnInit
+{
   @Input() task = new ReplaySubject<Task>(1);
 
   questionStats: QuestionStats[] = [];
   QuestionTypeEnum = QuestionTypeEnum;
 
   constructor(private readonly taskService: TasksService) {
+    super();
   }
 
   async ngOnInit() {
-    this.task.subscribe(task => {
-      this.getFeedbackStats(task);
-    });
+    this.subscriptions.add(
+      this.task.subscribe((task) => {
+        this.getFeedbackStats(task);
+      })
+    );
   }
 
   private async getFeedbackStats(task: Task) {
     const response = await firstValueFrom(
-      this.taskService.feedbackStats(task.id),
+      this.taskService.feedbackStats(task.id)
     );
     this.processStats(task, response.stats);
   }
 
   private processStats(task: Task, stats: QuestionAnswerStats[]) {
     this.questionStats = [];
-    task.questions.forEach(question => {
-      const questionStats = stats.filter(s => s.questionId === question.id);
+    task.questions.forEach((question) => {
+      const questionStats = stats.filter((s) => s.questionId === question.id);
       if (questionStats.length > 0) {
         this.questionStats.push({
           question,

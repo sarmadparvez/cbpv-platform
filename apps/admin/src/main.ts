@@ -13,7 +13,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Admin')
     .setDescription(
-      'Admin service is responsible for User management and authentication. Also it provides static data i.e list of Skills and Countries ',
+      'Admin service is responsible for User management and authentication. Also it provides static data i.e list of Skills and Countries '
     )
     .setVersion('1.0')
     .addBearerAuth({
@@ -35,7 +35,7 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       forbidUnknownValues: true,
-    }),
+    })
   );
 
   // wrap requests in a middleware namespace 'request'.
@@ -44,9 +44,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3001;
   await app.listen(port);
-  Logger.log(
-    `🚀 Application is running on: http://localhost:${port}`
-  );
+  Logger.log(`🚀 Application is running on: http://localhost:${port}`);
 }
 
 function saveSwaggerSpec(document: OpenAPIObject) {
@@ -57,6 +55,5 @@ function saveSwaggerSpec(document: OpenAPIObject) {
     console.error('Error in saving swagger file', fileName, error);
   }
 }
-
 
 bootstrap();

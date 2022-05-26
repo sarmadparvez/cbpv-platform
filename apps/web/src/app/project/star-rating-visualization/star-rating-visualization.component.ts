@@ -38,9 +38,9 @@ export class StarRatingVisualizationComponent implements OnInit {
     this.initializeData();
     let totalStars = 0;
     let totalUsers = 0;
-    this.questionStats.stats.forEach(stat => {
+    this.questionStats.stats.forEach((stat) => {
       const data = this.chartData.find(
-        d => d.name === stat.starRatingAnswer.toString() + ' star',
+        (d) => d.name === stat.starRatingAnswer.toString() + ' star'
       );
       if (data) {
         totalStars += stat.starRatingAnswerCount * stat.starRatingAnswer;
@@ -60,7 +60,7 @@ export class StarRatingVisualizationComponent implements OnInit {
 
   initializeData() {
     const stars = [5, 4, 3, 2, 1];
-    stars.forEach(star => {
+    stars.forEach((star) => {
       this.chartData.push({
         name: star.toString() + ' star',
         value: 0,

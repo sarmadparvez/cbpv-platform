@@ -78,7 +78,11 @@
           [matTooltipPosition]="'before'"
           *matCellDef="let element"
           class="comment-column"
-          [ngClass]="(Action.Manage | permission: 'all' | async) ? 'manager-comment-column' : ''"
+          [ngClass]="
+            (Action.Manage | permission: 'all' | async)
+              ? 'manager-comment-column'
+              : ''
+          "
         >
           <span>
             {{ element.comment }}
@@ -185,9 +189,13 @@
               Open
             </a>
             <a mat-menu-item (click)="rateTask(element)"> Rate Task </a>
-            <a mat-menu-item (click)="deleteFeedback(element.id)"
-               *ngIf="Action.Manage | permission: 'all' | async"
-            > Delete </a>
+            <a
+              mat-menu-item
+              (click)="deleteFeedback(element.id)"
+              *ngIf="Action.Manage | permission: 'all' | async"
+            >
+              Delete
+            </a>
           </mat-menu>
         </td>
       </ng-container>

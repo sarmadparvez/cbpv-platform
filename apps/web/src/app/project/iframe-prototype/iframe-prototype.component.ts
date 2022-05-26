@@ -35,9 +35,8 @@ export class IframePrototypeComponent implements OnInit {
 
   constructor(
     public sanitizer: DomSanitizer,
-    private readonly dialog: MatDialog,
-  ) {
-  }
+    private readonly dialog: MatDialog
+  ) {}
 
   async ngOnInit() {
     const task = await firstValueFrom(this.task);
@@ -68,7 +67,7 @@ export class IframePrototypeComponent implements OnInit {
 
   isFigmaUrl(url: string) {
     return /https:\/\/([\w.-]+\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?$/.test(
-      url,
+      url
     );
   }
 

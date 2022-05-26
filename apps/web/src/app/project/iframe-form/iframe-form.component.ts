@@ -32,7 +32,7 @@ export class IframeFormComponent {
     private translateService: TranslateService,
     private readonly snackBar: MatSnackBar,
     private dialog: MatDialogRef<IframeFormComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: IframeFormData,
+    @Inject(MAT_DIALOG_DATA) private data: IframeFormData
   ) {
     if (this.data.prototypeNumber === 1) {
       this.control.setValue(this.data.task.iframeUrl1);

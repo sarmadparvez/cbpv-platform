@@ -15,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { UsersModule } from './users/users.module';
 import { IamModule } from './iam/iam.module';
+import { TaskRequestsModule } from './task-requests/task-requests.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { IamModule } from './iam/iam.module';
     AuthModule,
     ProjectsModule,
     TasksModule,
+    TaskRequestsModule,
     SkillsModule,
     CountriesModule,
     FeedbacksModule,

@@ -14,7 +14,7 @@ export class SkillsService {
     private httpService: HttpService,
     private configService: ConfigService,
     @InjectRepository(Skill)
-    private skillRepository: Repository<Skill>,
+    private skillRepository: Repository<Skill>
   ) {}
 
   /**
@@ -32,7 +32,7 @@ export class SkillsService {
     if (adminAPI) {
       try {
         const response = await firstValueFrom(
-          this.httpService.get<Skill[]>(`${adminAPI}/skills`),
+          this.httpService.get<Skill[]>(`${adminAPI}/skills`)
         );
         const skills = response.data;
         this.skillRepository.save(skills);

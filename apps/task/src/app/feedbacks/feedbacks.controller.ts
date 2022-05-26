@@ -35,7 +35,7 @@ export class FeedbacksController {
     // check if user have permission to create Feedback
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Create,
-      Feedback,
+      Feedback
     );
     return this.feedbacksService.create(createFeedbackDto);
   }
@@ -49,7 +49,7 @@ export class FeedbacksController {
     // check if user have permission to list Feedback
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Read,
-      new Feedback(),
+      new Feedback()
     );
     return this.feedbacksService.findAll(query);
   }
@@ -64,7 +64,7 @@ export class FeedbacksController {
     // check if user have permission to read Feedbacks
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Read,
-      Feedback,
+      Feedback
     );
     return this.feedbacksService.searchAll();
   }
@@ -102,7 +102,7 @@ export class FeedbacksController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateFeedbackDto: UpdateFeedbackDto,
+    @Body() updateFeedbackDto: UpdateFeedbackDto
   ) {
     return this.feedbacksService.update(id, updateFeedbackDto);
   }
@@ -111,7 +111,7 @@ export class FeedbacksController {
    * Release payment for the Feedback. User must have Update Permission on the Task related to Feedback.
    */
   @ApiBearerAuth()
-  @Put(':id/releasePayment')
+  @Put(':id/release-payment')
   releasePayment(@Param('id') id: string) {
     return this.feedbacksService.releasePayment(id);
   }
@@ -120,10 +120,10 @@ export class FeedbacksController {
    * Rate a feedback. User must have Update Permission on the Task related to Feedback.
    */
   @ApiBearerAuth()
-  @Patch(':id/rateFeedback')
+  @Patch(':id/rate-feedback')
   rateFeedback(
     @Param('id') id: string,
-    @Body() rateFeedbackDto: RateFeedbackDto,
+    @Body() rateFeedbackDto: RateFeedbackDto
   ) {
     return this.feedbacksService.rateFeedback(id, rateFeedbackDto);
   }
@@ -132,7 +132,7 @@ export class FeedbacksController {
    * Rate a Task related to feedback. User must have Read Permission on the Feedback.
    */
   @ApiBearerAuth()
-  @Patch(':id/rateTask')
+  @Patch(':id/rate-task')
   rateTask(@Param('id') id: string, @Body() rateTaskDto: RateTaskDto) {
     return this.feedbacksService.rateTask(id, rateTaskDto);
   }

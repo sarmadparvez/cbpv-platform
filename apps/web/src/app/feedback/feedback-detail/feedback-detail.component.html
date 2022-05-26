@@ -1,7 +1,10 @@
 <ng-container *ngIf="feedback | async as feedbackObj">
   <div class="page-content">
-    <app-task-feedback [task]="task" [feedback]="feedbackObj" [readonly]="true"
-    [applyContainerClass]="false"
+    <app-task-feedback
+      [task]="task"
+      [feedback]="feedbackObj"
+      [readonly]="true"
+      [applyContainerClass]="false"
     >
     </app-task-feedback>
     <!--Feedback rating-->
@@ -9,7 +12,10 @@
       <mat-card>
         <mat-card-title>{{ 'name.feedbackRating' | translate }}</mat-card-title>
         <mat-card-content>
-          <p class="text-note">Rating for your Feedback. The Rating is provided by Task/Prototype owner.</p>
+          <p class="text-note">
+            Rating for your Feedback. The Rating is provided by Task/Prototype
+            owner.
+          </p>
           <div class="field-container" fxLayout>
             <!-- Task Owner -->
             <div fxFlex="50%">
@@ -17,7 +23,7 @@
                 {{ 'name.taskOwner' | translate }}
               </div>
               <div *ngIf="taskOwner | async as user">
-                {{user.firstName + ' ' + user.lastName}}
+                {{ user.firstName + ' ' + user.lastName }}
               </div>
             </div>
 
@@ -25,15 +31,15 @@
             <div fxFlex="50%">
               <!--Star rating-->
               <ngx-material-rating
-                  *ngIf="feedbackObj.feedbackRating; else noRating"
-                  [readonly]="true"
-                  [color]="'primary'"
-                  [value]="feedbackObj.feedbackRating"
-                  [max]="5"
+                *ngIf="feedbackObj.feedbackRating; else noRating"
+                [readonly]="true"
+                [color]="'primary'"
+                [value]="feedbackObj.feedbackRating"
+                [max]="5"
               >
               </ngx-material-rating>
               <ng-template #noRating>
-                {{'note.noRating' | translate}}
+                {{ 'note.noRating' | translate }}
               </ng-template>
             </div>
           </div>

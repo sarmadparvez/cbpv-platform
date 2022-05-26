@@ -2,3 +2,5 @@
 
 /dist
 /coverage
+.angular
+/apps/web/src/gen

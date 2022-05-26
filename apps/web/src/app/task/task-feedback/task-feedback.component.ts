@@ -27,7 +27,7 @@ export class TaskFeedbackComponent {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly taskService: TasksService,
+    private readonly taskService: TasksService
   ) {
     const taskId = this.route.snapshot.paramMap.get('taskId');
     if (taskId) {

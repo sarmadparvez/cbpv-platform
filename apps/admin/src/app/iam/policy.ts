@@ -27,7 +27,7 @@ export const AppAbility = Ability as AbilityClass<AppAbility>;
 
 type DefinePermissions = (
   user: User,
-  builder: AbilityBuilder<AppAbility>,
+  builder: AbilityBuilder<AppAbility>
 ) => void;
 
 // For each role, define the permissions

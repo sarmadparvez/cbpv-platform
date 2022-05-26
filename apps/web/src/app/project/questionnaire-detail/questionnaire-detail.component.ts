@@ -21,7 +21,6 @@ export class QuestionnaireDetailComponent {
   QuestionType = Question.TypeEnum;
 
   @Input() task!: ReplaySubject<Task>;
-
 }
 
 @NgModule({

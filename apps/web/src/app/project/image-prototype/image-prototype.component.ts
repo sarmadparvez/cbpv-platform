@@ -15,6 +15,7 @@ import {
   ConfirmationDialogData,
 } from '../../template/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { SubscriptionComponent } from '../../common/subscription.component';
 
 type GalleryImage = NgxGalleryImage & {
   id: string;
@@ -25,7 +26,10 @@ type GalleryImage = NgxGalleryImage & {
   templateUrl: './image-prototype.component.html',
   styleUrls: ['./image-prototype.component.scss'],
 })
-export class ImagePrototypeComponent implements OnInit {
+export class ImagePrototypeComponent
+  extends SubscriptionComponent
+  implements OnInit
+{
   @Input() task!: ReplaySubject<Task>;
   @Input() readonly!: boolean;
   TestTypeEnum = TestTypeEnum;
@@ -36,17 +40,20 @@ export class ImagePrototypeComponent implements OnInit {
   constructor(
     private readonly taskService: TasksService,
     private readonly translateService: TranslateService,
-    private readonly dialog: MatDialog,
+    private readonly dialog: MatDialog
   ) {
+    super();
   }
 
   ngOnInit() {
     if (this.task) {
-      this.task.subscribe(async task => {
-        this.showViewer = false;
-        await this.findAllImages();
-        this.showViewer = true;
-      });
+      this.subscriptions.add(
+        this.task.subscribe(async (task) => {
+          this.showViewer = false;
+          await this.findAllImages();
+          this.showViewer = true;
+        })
+      );
     }
   }
 
@@ -54,7 +61,7 @@ export class ImagePrototypeComponent implements OnInit {
     const task = await firstValueFrom(this.task);
     try {
       const images = await firstValueFrom(
-        this.taskService.findAllImages(task.id, prototypeNumber),
+        this.taskService.findAllImages(task.id, prototypeNumber)
       );
       this.divideImagesInMap(images, prototypeNumber);
     } catch (err) {
@@ -64,10 +71,14 @@ export class ImagePrototypeComponent implements OnInit {
 
   async divideImagesInMap(images: Image[], prototypeNumber?: number) {
     if (!prototypeNumber) {
-      const firstPrototypeImages = images.filter(i => i.prototypeNumber === 1);
+      const firstPrototypeImages = images.filter(
+        (i) => i.prototypeNumber === 1
+      );
       // first comparison should always exist if images exist because default comparison number is 1
       this.setImagesInMap(firstPrototypeImages, 1);
-      const secondPrototypeImages = images.filter(i => i.prototypeNumber === 2);
+      const secondPrototypeImages = images.filter(
+        (i) => i.prototypeNumber === 2
+      );
       const task = await firstValueFrom(this.task);
       if (task.testType === TestTypeEnum.Comparison) {
         // only set second comparison images if they exist
@@ -88,14 +99,14 @@ export class ImagePrototypeComponent implements OnInit {
 
   imagesToGalleryImages(images: Image[]) {
     return images.map(
-      img =>
+      (img) =>
         <GalleryImage>{
           small: img.url,
           medium: img.url,
           big: img.url,
           url: img.url,
           id: img.id,
-        },
+        }
     );
   }
 
@@ -113,23 +124,23 @@ export class ImagePrototypeComponent implements OnInit {
       data: <ConfirmationDialogData>{
         title: this.translateService.instant('note.deleteImageConfirmTitle'),
         message: this.translateService.instant(
-          'note.deleteImageConfirmMessage',
+          'note.deleteImageConfirmMessage'
         ),
       },
       width: '50vw',
     });
-    dialogRef.afterClosed().subscribe(async confirm => {
+    dialogRef.afterClosed().subscribe(async (confirm) => {
       if (confirm) {
         const imagesSubject = this.images.get(prototypeNumber);
         let images: GalleryImage[] = [];
         if (imagesSubject) {
-           images = await firstValueFrom(imagesSubject);
+          images = await firstValueFrom(imagesSubject);
         }
 
         if (imagesSubject && images[deleteIndex]) {
           try {
             const response = await firstValueFrom(
-              this.taskService.removeImage(task.id, images[deleteIndex].id),
+              this.taskService.removeImage(task.id, images[deleteIndex].id)
             );
             images.splice(deleteIndex, 1);
             imagesSubject.next([...images]);

@@ -44,7 +44,7 @@ export class UsersComponent {
     private readonly userService: UsersService,
     private readonly dialog: MatDialog,
     private readonly translateService: TranslateService,
-    private readonly snackBar: MatSnackBar,
+    private readonly snackBar: MatSnackBar
   ) {
     this.findUsers();
   }
@@ -64,7 +64,7 @@ export class UsersComponent {
       },
       width: '50vw',
     });
-    dialogRef.afterClosed().subscribe(async confirm => {
+    dialogRef.afterClosed().subscribe(async (confirm) => {
       if (confirm) {
         let message = 'notification.delete';
         try {

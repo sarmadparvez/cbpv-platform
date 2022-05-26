@@ -36,6 +36,7 @@ import { UserMap, UserService } from '../../user/user.service';
 import { PermissionsService } from '../../iam/permission.service';
 import { Action } from '../../../gen/api/admin';
 import { PermissionPipeModule } from '../../iam/permission.pipe';
+import { SubscriptionComponent } from '../../common/subscription.component';
 
 @Component({
   selector: 'app-task-iteration-feedbacks',
@@ -43,11 +44,14 @@ import { PermissionPipeModule } from '../../iam/permission.pipe';
   styleUrls: ['./task-iteration-feedbacks.component.scss'],
   providers: [UserService],
 })
-export class TaskIterationFeedbacksComponent implements OnInit {
+export class TaskIterationFeedbacksComponent
+  extends SubscriptionComponent
+  implements OnInit
+{
   @Input() task = new ReplaySubject<Task>(1);
   PaymentStatusEnum = PaymentStatusEnum;
   dataSource: MatTableDataSource<Feedback> = new MatTableDataSource<Feedback>(
-    [],
+    []
   );
   displayedColumns: string[] = [
     'user',
@@ -71,17 +75,20 @@ export class TaskIterationFeedbacksComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly translateService: TranslateService,
     private readonly snackbar: MatSnackBar,
-    private readonly permService: PermissionsService,
+    private readonly permService: PermissionsService
   ) {
+    super();
     this.setColumns();
   }
 
   ngOnInit(): void {
-    this.task.subscribe(task => {
-      if (task) {
-        this.findFeedbacks(task.id);
-      }
-    });
+    this.subscriptions.add(
+      this.task.subscribe((task) => {
+        if (task) {
+          this.findFeedbacks(task.id);
+        }
+      })
+    );
   }
 
   async setColumns() {
@@ -94,7 +101,7 @@ export class TaskIterationFeedbacksComponent implements OnInit {
 
   async findFeedbacks(taskId: string) {
     const feedbacks = await firstValueFrom(
-      this.feedbackService.findFeedbacks(taskId),
+      this.feedbackService.findFeedbacks(taskId)
     );
     this.getUsersForFeedbacks(feedbacks);
     this.dataSource = new MatTableDataSource(feedbacks);
@@ -103,7 +110,7 @@ export class TaskIterationFeedbacksComponent implements OnInit {
   }
 
   async getUsersForFeedbacks(feedbacks: Feedback[]) {
-    const ids = feedbacks.map(f => f.userId);
+    const ids = feedbacks.map((f) => f.userId);
     if (ids.length > 0) {
       this.userMap = await this.userService.getUserMap(ids);
     }
@@ -112,7 +119,7 @@ export class TaskIterationFeedbacksComponent implements OnInit {
   async openFeedback(feedbackId: string) {
     const task = await firstValueFrom(this.task);
     const feedback = await firstValueFrom(
-      this.feedbackService.findOne(feedbackId),
+      this.feedbackService.findOne(feedbackId)
     );
 
     this.dialog.open(TaskIterationFeedbackPreviewComponent, {
@@ -131,7 +138,7 @@ export class TaskIterationFeedbacksComponent implements OnInit {
     let message = 'notification.paymentReleased';
     try {
       await firstValueFrom(this.feedbackService.releasePayment(feedbackId));
-      const feedback = this.dataSource.data.find(f => f.id === feedbackId);
+      const feedback = this.dataSource.data.find((f) => f.id === feedbackId);
       if (feedback) {
         feedback.paymentStatus = PaymentStatusEnum.Completed;
       }
@@ -175,12 +182,12 @@ export class TaskIterationFeedbacksComponent implements OnInit {
               feedbackRatingComment: data.ratingComment,
             };
             await firstValueFrom(
-              this.feedbackService.rateFeedback(feedback.id, request),
+              this.feedbackService.rateFeedback(feedback.id, request)
             );
             feedback.feedbackRating = data.rating;
             feedback.feedbackRatingComment = data.ratingComment;
             message = this.translateService.instant(
-              'notification.rateFeedback',
+              'notification.rateFeedback'
             );
           } catch (err) {
             message = this.translateService.instant('error.save');

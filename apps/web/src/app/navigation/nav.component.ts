@@ -17,7 +17,7 @@ export class NavComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private readonly permService: PermissionsService,
+    private readonly permService: PermissionsService
   ) {
     this.permService.fetchPermissions();
   }

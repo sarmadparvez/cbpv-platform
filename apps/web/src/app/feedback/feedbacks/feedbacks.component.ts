@@ -1,11 +1,7 @@
 import { Component, NgModule, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import {
-  Feedback,
-  FeedbacksService,
-  RateTaskDto,
-} from '../../../gen/api/task';
+import { Feedback, FeedbacksService, RateTaskDto } from '../../../gen/api/task';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -44,7 +40,7 @@ import {
 })
 export class FeedbacksComponent implements OnInit {
   dataSource: MatTableDataSource<Feedback> = new MatTableDataSource<Feedback>(
-    [],
+    []
   );
   displayedColumns: string[] = [
     'task',
@@ -74,7 +70,7 @@ export class FeedbacksComponent implements OnInit {
     private readonly snackbar: MatSnackBar,
     private readonly userService: UserService,
     private readonly permService: PermissionsService,
-    private readonly snackBar: MatSnackBar,
+    private readonly snackBar: MatSnackBar
   ) {
     this.setColumns();
   }
@@ -88,7 +84,7 @@ export class FeedbacksComponent implements OnInit {
       this.displayedColumns.splice(
         this.displayedColumns.length - 1,
         0,
-        'taskUsername',
+        'taskUsername'
       );
     }
   }
@@ -117,15 +113,15 @@ export class FeedbacksComponent implements OnInit {
   }
 
   async getUsers(feedbacks: Feedback[]) {
-    let taskUserIds = feedbacks.map(f => f.task.userId);
+    let taskUserIds = feedbacks.map((f) => f.task.userId);
     // if user have permission to see all feedbacks, also get feedback provider
     const ability = await firstValueFrom(this.permService.userAbility);
     if (ability.can(Action.ActionEnum.Manage, 'all')) {
-      const feedbackUserIds = feedbacks.map(f => f.userId);
+      const feedbackUserIds = feedbacks.map((f) => f.userId);
       taskUserIds = [...new Set(taskUserIds.concat(feedbackUserIds))];
     }
     if (taskUserIds.length > 0) {
-      this.userMap = await this.userService.getUserMap(taskUserIds)!;
+      this.userMap = await this.userService.getUserMap(taskUserIds);
     }
   }
 
@@ -156,12 +152,12 @@ export class FeedbacksComponent implements OnInit {
               taskRatingComment: data.ratingComment,
             };
             await firstValueFrom(
-              this.feedbackService.rateTask(feedback.id, request),
+              this.feedbackService.rateTask(feedback.id, request)
             );
             feedback.taskRating = data.rating;
             feedback.taskRatingComment = data.ratingComment;
             message = this.translateService.instant(
-              'notification.rateFeedback',
+              'notification.rateFeedback'
             );
           } catch (err) {
             message = this.translateService.instant('error.save');
@@ -178,12 +174,12 @@ export class FeedbacksComponent implements OnInit {
       data: <ConfirmationDialogData>{
         title: this.translateService.instant('action.deleteFeedback'),
         message: this.translateService.instant(
-          'note.deleteFeedbackConfirmMessage',
+          'note.deleteFeedbackConfirmMessage'
         ),
       },
       width: '50vw',
     });
-    dialogRef.afterClosed().subscribe(async confirm => {
+    dialogRef.afterClosed().subscribe(async (confirm) => {
       if (confirm) {
         let message = 'notification.delete';
         try {

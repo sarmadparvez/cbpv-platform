@@ -1,24 +1,29 @@
-<h2 mat-dialog-title>Create Project</h2>
+<h2 mat-dialog-title>
+  <ng-container *ngIf="project; else createProject">
+    Edit Project
+  </ng-container>
+  <ng-template #createProject>Create Project</ng-template>
+</h2>
 <mat-dialog-content class="mat-typography">
-  <p class="text-note">Start a new Project now and create prototypes in it later.</p>
+  <p class="text-note">
+    Start a new Project now and create prototypes in it later.
+  </p>
 
   <form [formGroup]="form">
-      <!--Title-->
-      <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Title</mat-label>
-        <input formControlName="title" matInput>
-        <mat-error *ngIf="form.controls.title.hasError('required')">
-          {{ 'error.required' | translate }}
-        </mat-error>
-      </mat-form-field>
-      <!--Description -->
-      <mat-form-field class="full-width" appearance="outline">
-        <mat-label>Description</mat-label>
-        <textarea formControlName="description" matInput>
-          </textarea>
-      </mat-form-field>
+    <!--Title-->
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Title</mat-label>
+      <input formControlName="title" matInput />
+      <mat-error *ngIf="form.controls.title.hasError('required')">
+        {{ 'error.required' | translate }}
+      </mat-error>
+    </mat-form-field>
+    <!--Description -->
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea formControlName="description" matInput> </textarea>
+    </mat-form-field>
   </form>
-
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-dialog-close mat-button>Cancel</button>

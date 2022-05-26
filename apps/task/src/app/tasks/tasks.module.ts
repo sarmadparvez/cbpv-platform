@@ -8,10 +8,11 @@ import { Question } from './entities/question.entity';
 import { ConfigModule } from '@nestjs/config';
 import { Project } from '../projects/entities/project.entity';
 import { UsersModule } from '../users/users.module';
+import { TaskRequest } from '../task-requests/entities/task-request.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Task, Image, Question, Project]),
+    TypeOrmModule.forFeature([Task, Image, Question, Project, TaskRequest]),
     ConfigModule,
     UsersModule,
   ],

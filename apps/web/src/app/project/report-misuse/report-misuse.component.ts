@@ -22,7 +22,7 @@ export class ReportMisuseComponent {
     private readonly fb: FormBuilder,
     private dialogRef: MatDialogRef<ReportMisuseComponent>,
     private snackbar: MatSnackBar,
-    private translateService: TranslateService,
+    private translateService: TranslateService
   ) {}
 
   report() {
@@ -35,7 +35,7 @@ export class ReportMisuseComponent {
     this.snackbar.open(
       this.translateService.instant('notification.reportMisuseSuccess'),
       '',
-      { duration: 5000 },
+      { duration: 5000 }
     );
   }
 }

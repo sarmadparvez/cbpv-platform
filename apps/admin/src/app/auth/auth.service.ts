@@ -10,7 +10,7 @@ export class AuthService {
   constructor(
     private configService: ConfigService,
     private usersService: UsersService,
-    private jwtService: JwtService,
+    private jwtService: JwtService
   ) {}
 
   async validateUser(username: string, pass: string) {
@@ -52,13 +52,13 @@ export class AuthService {
       // user is already registered
       const login = await this.login(user);
       res.redirect(
-        `${webAppUrl}/access/login?accessToken=${login.accessToken}`,
+        `${webAppUrl}/access/login?accessToken=${login.accessToken}`
       );
       return;
     }
     // User does not exist in the database, it needs to proceed with completing registration
     res.redirect(
-      `${webAppUrl}/access/register?googleId=${req.user.googleId}&firstName=${req.user.firstName}&lastName=${req.user.lastName}`,
+      `${webAppUrl}/access/register?googleId=${req.user.googleId}&firstName=${req.user.firstName}&lastName=${req.user.lastName}`
     );
   }
 }

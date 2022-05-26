@@ -16,8 +16,9 @@ import { IamModule } from './iam/iam.module';
  * Solution copied from : https://github.com/typeorm/typeorm/issues/5458#issuecomment-770453233
  */
 const contexts = (require as any).context('./migration/', true, /\.ts$/);
-const migrations = contexts.keys()
-  .map(modulePath => contexts(modulePath))
+const migrations = contexts
+  .keys()
+  .map((modulePath) => contexts(modulePath))
   .reduce((result, migrationModule) => {
     return Object.assign(result, migrationModule);
   });
@@ -36,13 +37,13 @@ const migrations = contexts.keys()
             extra: { ssl: { rejectUnauthorized: false } },
             autoLoadEntities: true,
             migrationsRun: true,
-            migrations: Object.values(migrations)
+            migrations: Object.values(migrations),
           };
         }
         return Object.assign(await getConnectionOptions(), {
           autoLoadEntities: true,
           migrationsRun: true,
-          migrations: Object.values(migrations)
+          migrations: Object.values(migrations),
         });
       },
     }),

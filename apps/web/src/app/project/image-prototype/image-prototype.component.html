@@ -1,13 +1,18 @@
 <mat-card>
   <mat-card-title>{{ 'name.images' | translate }}</mat-card-title>
-  <mat-card-subtitle *ngIf="(task | async)?.testType === TestTypeEnum.Comparison">
+  <mat-card-subtitle
+    *ngIf="(task | async)?.testType === TestTypeEnum.Comparison"
+  >
     {{ 'name.prototype1' | translate }}
   </mat-card-subtitle>
   <mat-card-content>
     <!--Prototype 1-->
     <p class="text-note" *ngIf="!readonly">
       <ng-container
-        *ngIf="(task | async)?.testType === TestTypeEnum.Basic; else comparisonImageUploadNote"
+        *ngIf="
+          (task | async)?.testType === TestTypeEnum.Basic;
+          else comparisonImageUploadNote
+        "
       >
         {{ 'note.basicImageUpload' | translate }}
       </ng-container>
@@ -30,7 +35,7 @@
       }}</mat-card-title>
       <mat-card-subtitle>{{ 'name.prototype2' | translate }}</mat-card-subtitle>
 
-      <p class="text-note"  *ngIf="!readonly">
+      <p class="text-note" *ngIf="!readonly">
         {{ 'note.comparisonImageUpload2' | translate }}
       </p>
 
@@ -47,17 +52,17 @@
 <!-- Image uploader and Viewer-->
 <ng-template #imageUploadViewer let-data="data">
   <app-image-upload
-      *ngIf="(task | async)?.status === TaskStatusEnum.Draft && !readonly"
+    *ngIf="(task | async)?.status === TaskStatusEnum.Draft && !readonly"
     [uniqueId]="data.prototypeNumber"
     (completeEvent)="findAllImages(data.prototypeNumber)"
     [taskId]="(task | async)?.id"
   ></app-image-upload>
 
   <app-image-viewer
-      *ngIf="showViewer"
-      [readonly]="(task | async)?.status !== TaskStatusEnum.Draft || readonly"
-      [images]="(images.get(data.prototypeNumber) | async) || []"
-      (deleteEvent)="deleteImage($event, data.prototypeNumber)"
+    *ngIf="showViewer"
+    [readonly]="(task | async)?.status !== TaskStatusEnum.Draft || readonly"
+    [images]="(images.get(data.prototypeNumber) | async) || []"
+    (deleteEvent)="deleteImage($event, data.prototypeNumber)"
   >
   </app-image-viewer>
 </ng-template>

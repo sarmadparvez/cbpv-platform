@@ -10,7 +10,7 @@ export class IamController {
    * Get permissions of the calling user.
    */
   @ApiBearerAuth()
-  @Get('getPermissions')
+  @Get('get-permissions')
   getPermissions() {
     return packRules(
       contextService.get('userAbility')?.rules,
@@ -19,7 +19,7 @@ export class IamController {
           return subjectType;
         }
         return subjectType.name;
-      },
+      }
     );
   }
 }

@@ -1,10 +1,10 @@
-<h2 mat-dialog-title>{{'action.textDescription' | translate}}</h2>
+<h2 mat-dialog-title>{{ 'action.textDescription' | translate }}</h2>
 <mat-dialog-content class="mat-typography">
-  <p class="text-note">{{'note.textDescription' | translate}}</p>
+  <p class="text-note">{{ 'note.textDescription' | translate }}</p>
 
   <!--Link -->
   <mat-form-field class="full-width" appearance="outline">
-    <mat-label>{{'name.text' | translate}}</mat-label>
+    <mat-label>{{ 'name.text' | translate }}</mat-label>
     <textarea [formControl]="control" rows="20" matInput> </textarea>
     <mat-error *ngIf="control.errors?.required">
       {{ 'error.required' | translate }}

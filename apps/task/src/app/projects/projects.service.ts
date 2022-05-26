@@ -1,15 +1,16 @@
-import { Injectable } from "@nestjs/common";
-import { CreateProjectDto } from "./dto/create-project.dto";
-import { UpdateProjectDto } from "./dto/update-project.dto";
-import { Project } from "./entities/project.entity";
-import { Repository } from "typeorm";
-import { InjectRepository } from "@nestjs/typeorm";
-import { classToPlain, plainToClass } from "class-transformer";
-import * as contextService from "request-context";
-import { Action } from "../iam/policy";
-import { findWithPermissionCheck } from "../iam/utils";
-import { getFileUploadSignature } from "../tasks/tasks.service";
-import { ConfigService } from "@nestjs/config";
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
+import { Project } from './entities/project.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { classToPlain, plainToClass } from 'class-transformer';
+import * as contextService from 'request-context';
+import { Action } from '../iam/policy';
+import { findWithPermissionCheck } from '../iam/utils';
+import { getFileUploadSignature } from '../tasks/tasks.service';
+import { ConfigService } from '@nestjs/config';
+import { FindNdaUrlResponseDto } from './dto/find-nda-url-response.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -21,7 +22,7 @@ export class ProjectsService {
 
   create(createProjectDto: CreateProjectDto) {
     const project = projectDtoEntity(createProjectDto);
-    project.userId = contextService.get("user").id;
+    project.userId = contextService.get('user').id;
     return this.projectRepository.save(project);
   }
 
@@ -32,7 +33,7 @@ export class ProjectsService {
   searchAll() {
     return this.projectRepository.find({
       where: {
-        userId: contextService.get("user")?.id,
+        userId: contextService.get('user')?.id,
       },
     });
   }
@@ -54,12 +55,30 @@ export class ProjectsService {
   }
 
   getFileUploadSignature(id: string) {
-    const cloudinaryConfig = this.configService.get("cloudinary");
+    const cloudinaryConfig = this.configService.get('cloudinary');
     return getFileUploadSignature(
       id,
       cloudinaryConfig,
-      `${cloudinaryConfig.filesFolder}/${id}`
+      `${cloudinaryConfig.projectsFolder}/${id}`
     );
+  }
+
+  async getNdaUrl(id: string) {
+    const project = await this.projectRepository.findOneOrFail(id);
+    if (!project.ndaUrl) {
+      // User does not have access to this Task.
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'Non Disclosure Agreement not found.',
+        },
+        HttpStatus.NOT_FOUND
+      );
+    }
+    const response: FindNdaUrlResponseDto = {
+      ndaUrl: project.ndaUrl,
+    };
+    return response;
   }
 }
 function projectDtoEntity(dto: CreateProjectDto | UpdateProjectDto): Project {

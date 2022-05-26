@@ -40,7 +40,7 @@ export class UsersController {
    * Create a new user with single sign on provider profile id. In this case username and password is not required.
    */
   @Public()
-  @Post('createWithSSO')
+  @Post('create-with-sso')
   createWithSSO(@Body() createWithSSODto: CreateWithSSODto) {
     return this.usersService.createWithSSO(createWithSSODto);
   }
@@ -54,7 +54,7 @@ export class UsersController {
     // check permissions first
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Read,
-      new User(),
+      new User()
     ); // if user can read empty user, it can read any user
 
     return this.usersService.findAll();
@@ -69,7 +69,7 @@ export class UsersController {
     // check permissions
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Read,
-      new User({ id }),
+      new User({ id })
     );
     return this.usersService.findOne(id);
   }
@@ -79,12 +79,12 @@ export class UsersController {
    * The calling user must have Read permission for the Users.
    */
   @ApiBearerAuth()
-  @Post('batchGetInfo')
+  @Post('batch-get-info')
   batchGetInfo(@Body() batchGetUserInfo: BatchGetUserInfoDto) {
     // check permissions
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Read,
-      User,
+      User
     );
     return this.usersService.batchGetInfo(batchGetUserInfo);
   }
@@ -98,7 +98,7 @@ export class UsersController {
     // check permissions
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Update,
-      new User({ id }),
+      new User({ id })
     );
     return this.usersService.update(id, updateUserDto);
   }
@@ -112,7 +112,7 @@ export class UsersController {
     // check permissions
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Delete,
-      new User({ id }),
+      new User({ id })
     );
     return this.usersService.remove(id);
   }

@@ -19,7 +19,7 @@ export class FeedbacksService {
     @InjectRepository(Feedback)
     private feedbackRepository: Repository<Feedback>,
     @InjectRepository(Task)
-    private taskRepository: Repository<Task>,
+    private taskRepository: Repository<Task>
   ) {}
 
   async create(createFeedbackDto: CreateFeedbackDto) {
@@ -38,7 +38,7 @@ export class FeedbacksService {
           status: HttpStatus.PRECONDITION_FAILED,
           error: 'You have already provided feedback on this task.',
         },
-        HttpStatus.PRECONDITION_FAILED,
+        HttpStatus.PRECONDITION_FAILED
       );
     }
     // check if Answers belong to the questions of the Task
@@ -47,11 +47,11 @@ export class FeedbacksService {
       {
         select: ['id'],
         relations: ['questions'],
-      },
+      }
     );
     const taskQuestionIds = task.questions.map((question) => question.id);
     const allAnswersBelongToTaskQuesitons = createFeedbackDto.answers.every(
-      (answer) => taskQuestionIds.includes(answer.questionId),
+      (answer) => taskQuestionIds.includes(answer.questionId)
     );
 
     if (!allAnswersBelongToTaskQuesitons) {
@@ -61,7 +61,7 @@ export class FeedbacksService {
           status: HttpStatus.PRECONDITION_FAILED,
           error: 'The answers does not belong to task questions.',
         },
-        HttpStatus.PRECONDITION_FAILED,
+        HttpStatus.PRECONDITION_FAILED
       );
     }
 
@@ -105,7 +105,7 @@ export class FeedbacksService {
       await findWithPermissionCheck(
         feedback.taskId,
         Action.Read,
-        this.taskRepository,
+        this.taskRepository
       );
       return feedback;
     }
@@ -145,7 +145,7 @@ export class FeedbacksService {
     await findWithPermissionCheck(
       feedback.taskId,
       Action.Update,
-      this.taskRepository,
+      this.taskRepository
     );
 
     if (feedback.paymentStatus === PaymentStatus.Completed) {
@@ -155,7 +155,7 @@ export class FeedbacksService {
           status: HttpStatus.PRECONDITION_FAILED,
           error: 'Payment for the Feedback is already completed.',
         },
-        HttpStatus.PRECONDITION_FAILED,
+        HttpStatus.PRECONDITION_FAILED
       );
     }
     return this.feedbackRepository.update(id, {
@@ -171,7 +171,7 @@ export class FeedbacksService {
     await findWithPermissionCheck(
       feedback.taskId,
       Action.Update,
-      this.taskRepository,
+      this.taskRepository
     );
 
     const updatedFeedback = feedbackDtoToEntity(rateFeedbackDto);
@@ -184,7 +184,7 @@ export class FeedbacksService {
     await findWithPermissionCheck(
       feedbackId,
       Action.Read,
-      this.feedbackRepository,
+      this.feedbackRepository
     );
 
     const updatedFeedback = feedbackDtoToEntity(rateTaskDto);
@@ -194,7 +194,7 @@ export class FeedbacksService {
 }
 
 function feedbackDtoToEntity(
-  dto: CreateFeedbackDto | UpdateFeedbackDto | RateFeedbackDto | RateTaskDto,
+  dto: CreateFeedbackDto | UpdateFeedbackDto | RateFeedbackDto | RateTaskDto
 ): Feedback {
   const data = classToPlain(dto);
   return plainToClass(Feedback, data);

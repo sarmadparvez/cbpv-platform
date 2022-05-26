@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
@@ -9,8 +9,8 @@ export class CreateProjectDto {
   description?: string;
   @IsString()
   @IsOptional()
-  ndaUrl: string;
+  ndaUrl?: string;
   @IsString()
   @IsOptional()
-  ndaCloudId: string;
+  ndaCloudId?: string;
 }

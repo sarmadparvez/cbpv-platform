@@ -55,7 +55,7 @@ export class ProjectsComponent {
     private readonly translateService: TranslateService,
     private readonly route: ActivatedRoute,
     private readonly permService: PermissionsService,
-    private readonly userService: UserService,
+    private readonly userService: UserService
   ) {
     this.setColumns();
     this.getProjects();
@@ -68,7 +68,7 @@ export class ProjectsComponent {
         this.displayedColumns.length - 1,
         0,
         'user',
-        'username',
+        'username'
       );
     }
   }
@@ -76,7 +76,9 @@ export class ProjectsComponent {
   openProjectFormDialog(projectId?: string) {
     let project: Project | undefined;
     if (projectId) {
-      project = this.dataSource.data.find(project => project.id === projectId);
+      project = this.dataSource.data.find(
+        (project) => project.id === projectId
+      );
     }
     this.dialog
       .open(ProjectFormComponent, {
@@ -121,7 +123,7 @@ export class ProjectsComponent {
   }
 
   async getUsersForProjects(projects: Project[]) {
-    const ids = projects.map(f => f.userId);
+    const ids = projects.map((f) => f.userId);
     if (ids.length > 0) {
       this.userMap = await this.userService.getUserMap(ids);
     }
@@ -139,12 +141,12 @@ export class ProjectsComponent {
       data: <ConfirmationDialogData>{
         title: this.translateService.instant('note.deleteProjectConfirmTitle'),
         message: this.translateService.instant(
-          'note.deleteProjectConfirmMessage',
+          'note.deleteProjectConfirmMessage'
         ),
       },
       width: '50vw',
     });
-    dialogRef.afterClosed().subscribe(async confirm => {
+    dialogRef.afterClosed().subscribe(async (confirm) => {
       if (confirm) {
         try {
           await firstValueFrom(this.projectService.remove(project));
@@ -156,7 +158,7 @@ export class ProjectsComponent {
             '',
             {
               duration: 5000,
-            },
+            }
           );
         }
       }
@@ -192,7 +194,7 @@ export function dateToDBDateString(date?: Date): string {
   const pad = (num: number) => String(num).padStart(2, '0');
   if (date) {
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
-      date.getDate(),
+      date.getDate()
     )}`;
   }
   return '';
@@ -207,11 +209,11 @@ export function dateToDisplayString(date?: Date, time?: boolean): string {
   const pad = (num: number) => String(num).padStart(2, '0');
   if (date) {
     let dateStr = `${pad(date.getDate())}.${pad(
-      date.getMonth() + 1,
+      date.getMonth() + 1
     )}.${date.getFullYear()}`;
     if (time) {
       dateStr += ` ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(
-        date.getSeconds(),
+        date.getSeconds()
       )}`;
     }
     return dateStr;

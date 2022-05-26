@@ -1,7 +1,7 @@
-import { Injectable } from "@angular/core";
-import { FileUploadSignatureResponseDto, Image } from "../../../gen/api/task";
-import { firstValueFrom } from "rxjs";
-import { HttpClient } from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { FileUploadSignatureResponseDto, Image } from '../../../gen/api/task';
+import { firstValueFrom } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class FileUploadService {
@@ -40,19 +40,19 @@ export class FileUploadService {
 
   async uploadFile(file: FileUpload) {
     if (!this.uploadSignature) {
-      throw new Error("Upload signature not found");
+      throw new Error('Upload signature not found');
     }
     file.inProgress = true;
 
     const formData = new FormData();
-    formData.append("file", file.data);
-    formData.append("api_key", this.uploadSignature.apiKey);
-    formData.append("timestamp", this.uploadSignature.timestamp.toString());
-    formData.append("signature", this.uploadSignature.signature);
-    formData.append("folder", this.uploadSignature.folder);
+    formData.append('file', file.data);
+    formData.append('api_key', this.uploadSignature.apiKey);
+    formData.append('timestamp', this.uploadSignature.timestamp.toString());
+    formData.append('signature', this.uploadSignature.signature);
+    formData.append('folder', this.uploadSignature.folder);
 
     let uploadUrl = this.uploadSignature.uploadUrl;
-    uploadUrl = "https://add-cors.herokuapp.com/" + uploadUrl;
+    uploadUrl = 'https://add-cors.herokuapp.com/' + uploadUrl;
 
     try {
       const response: any = await firstValueFrom(
@@ -62,7 +62,7 @@ export class FileUploadService {
       this.removeFileFromArray(file);
       return response;
     } catch (err) {
-      console.log("error uploading image to cloudinary", err);
+      console.log('error uploading image to cloudinary', err);
       file.inProgress = false;
       this.removeFileFromArray(file);
       throw err;
@@ -74,7 +74,7 @@ export class FileUploadService {
    */
   async initiateFileUpload(fileUpload: HTMLInputElement) {
     if (!this.uploadSignature) {
-      throw new Error("upload signature not set");
+      throw new Error('upload signature not set');
     }
     return new Promise<void>((resolve) => {
       fileUpload.onchange = () => {
@@ -83,7 +83,7 @@ export class FileUploadService {
           const file = files[index];
           this.files.push({
             data: file,
-            state: "in",
+            state: 'in',
             inProgress: false,
             progress: 0,
             canRetry: false,

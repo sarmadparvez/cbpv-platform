@@ -35,6 +35,24 @@
 
       <span>{{ 'action.overview' | translate }}</span>
     </div>
+    <!--Task Requests-->
+    <!--Feedbacks-->
+    <div
+      *ngIf="
+        (task | async)?.accessType === AccessType.Nda ||
+        (task | async)?.accessType === AccessType.Request
+      "
+      class="second-sidenav-options clickable mt-15"
+      (click)="openView('request')"
+      [ngClass]="{
+        'second-sidenav-selected': currentView === 'request'
+      }"
+    >
+      <mat-icon class="second-sidenav-icon"> priority_high </mat-icon>
+
+      <span>{{ 'name.requests' | translate }}</span>
+    </div>
+
     <!--Feedbacks-->
     <div
       class="second-sidenav-options clickable mt-15"
@@ -50,9 +68,9 @@
 
     <!--Visualization-->
     <div
-        class="second-sidenav-options clickable mt-15"
-        (click)="openView('visualization')"
-        [ngClass]="{
+      class="second-sidenav-options clickable mt-15"
+      (click)="openView('visualization')"
+      [ngClass]="{
         'second-sidenav-selected': currentView === 'visualization'
       }"
     >
@@ -136,11 +154,7 @@
       <!--Menu-->
       <!-- Menu -->
       <mat-menu #additionalOptions="matMenu">
-        <button
-            mat-menu-item
-            *ngIf="project?.ndaUrl"
-            (click)="downloadNDA()"
-        >
+        <button mat-menu-item *ngIf="project?.ndaUrl" (click)="downloadNDA()">
           <span>
             {{ 'action.downloadNDA' | translate }}
           </span>
@@ -167,16 +181,11 @@
           You can create new prototype from <em>Start New Iteration</em> button.
         </p>
         <ng-container *ngIf="task | async as t">
-          <p
-              class="margin-right-auto"
-              *ngIf="t.status === StatusEnum.Open"
-          >
-            Task is Open for Feedbacks. However you can close it and start a new Iteration.
+          <p class="margin-right-auto" *ngIf="t.status === StatusEnum.Open">
+            Task is Open for Feedbacks. However you can close it and start a new
+            Iteration.
           </p>
-          <ul
-              class="margin-right-auto"
-              *ngIf="t.status === StatusEnum.Draft"
-          >
+          <ul class="margin-right-auto" *ngIf="t.status === StatusEnum.Draft">
             <li class="list-item">
               Please add your Prototype and Questionnaire before activating the
               Task.
@@ -226,6 +235,10 @@
           <app-questionnaire [task]="task"> </app-questionnaire>
         </div>
       </ng-container>
+      <!--Requests-->
+      <ng-container *ngSwitchCase="'request'">
+        <app-task-requests [task]="task"></app-task-requests>
+      </ng-container>
       <!-- Feedbacks -->
       <ng-container *ngSwitchCase="'feedback'">
         <app-task-iteration-feedbacks
@@ -234,9 +247,7 @@
       </ng-container>
       <!-- Visualization -->
       <ng-container *ngSwitchCase="'visualization'">
-        <app-feedback-visualization
-            [task]="task"
-        ></app-feedback-visualization>
+        <app-feedback-visualization [task]="task"></app-feedback-visualization>
       </ng-container>
 
       <!--Sample Prototypes-->

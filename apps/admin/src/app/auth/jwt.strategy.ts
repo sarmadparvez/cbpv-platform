@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     contextService.set('user', user);
     contextService.set(
       'userAbility',
-      defineAbilityFor(contextService.get('user')),
+      defineAbilityFor(contextService.get('user'))
     );
     return user;
   }

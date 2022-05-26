@@ -12,12 +12,15 @@
     "prototypeLink": "Prototype Link",
     "rateFeedback": "Rate Feedback",
     "upload": "Upload",
+    "uploadNDA": "Upload NDA",
+    "uploadSignedNDA": "Upload Signed NDA",
     "overview": "Overview",
     "editPrototypeLink": "Edit Prototype Link",
     "editText": "Edit Prototype Text",
     "editQuestionnaire": "Edit Questionnaire",
     "reportMisuse": "Report Misuse",
     "samplePrototypes": "Sample Prototypes",
+    "signedDownloadNDA": "Download Signed NDA",
     "textDescription": "Text Description"
   },
   "name": {
@@ -49,6 +52,8 @@
     "maxAge": "Max Age",
     "paymentStatus": "Payment Status",
     "questionType": "Question Type",
+    "requester": "Requester",
+    "requesterComment": "Requester Comment",
     "title": "Title",
     "taskAccess": "Prototype Access",
     "description": "Description",
@@ -62,6 +67,7 @@
     "rateTask": "Rate Task",
     "crowdCriteria": "Crowd Matching Criteria",
     "releasePayment": "Release Payment",
+    "requests": "Requests",
     "skills": "Skills",
     "status": "Status",
     "submitFeedback": "Submit Feedback",
@@ -88,7 +94,8 @@
     "experience": "Experience (Years)",
     "matchedSkills": "Matched Skills",
     "matchedCountry": "Country",
-    "user": "User"
+    "user": "User",
+    "nda": "Non-Disclosure Agreement"
   },
   "notification": {
     "activate": "Task activated Successfully. You cannot edit the task anymore.",
@@ -101,6 +108,7 @@
     "imageUpload": "Image(s) uploaded successfully",
     "rolesChangeReLogin": "You need to login again because you changed your Role(s).",
     "reportMisuseSuccess": "Your report is submitted",
+    "requestSubmitted": "Your request was successfully submitted.",
     "submitFeedback": "Your feedback is submitted successfully.",
     "paymentReleased": "Payment successfully released"
   },
@@ -120,7 +128,8 @@
     "uploadImage": "Failed uploading file to cloud storage.",
     "saveImageUrls": "Unable to store image urls",
     "submitFeedback": "Unable to submit feedback",
-    "paymentRelease": "Unable to release payment for the feedback"
+    "paymentRelease": "Unable to release payment for the feedback",
+    "uploadSignedNDA": "Please upload the signed NDA for requesting access to this Task."
   },
   "role": {
     "admin": "Administrator",
@@ -145,6 +154,11 @@
   "paymentStatus": {
     "pending": "Pending",
     "completed": "Completed"
+  },
+  "requestStatus": {
+    "accepted": "Accepted",
+    "rejected": "Rejected",
+    "requested": "Requested"
   },
   "note": {
     "askQuestions": "Ask questions about your Prototype. This questionnaire will be presented to Crowd-Workers to get feedback for your Prototype.",

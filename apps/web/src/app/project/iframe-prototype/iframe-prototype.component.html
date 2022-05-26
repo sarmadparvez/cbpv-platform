@@ -1,6 +1,8 @@
 <mat-card>
   <mat-card-title>{{ 'name.link' | translate }}</mat-card-title>
-  <mat-card-subtitle *ngIf="(task | async)?.testType === TestTypeEnum.Comparison">
+  <mat-card-subtitle
+    *ngIf="(task | async)?.testType === TestTypeEnum.Comparison"
+  >
     {{ 'name.prototype1' | translate }}
   </mat-card-subtitle>
   <mat-card-content>
@@ -42,7 +44,9 @@
       }}</mat-card-title>
       <mat-card-subtitle>{{ 'name.prototype2' | translate }}</mat-card-subtitle>
 
-      <p class="text-note" *ngIf="!readonly">{{ 'note.comparisonIframeUpload2' | translate }}</p>
+      <p class="text-note" *ngIf="!readonly">
+        {{ 'note.comparisonIframeUpload2' | translate }}
+      </p>
 
       <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start">
         <a

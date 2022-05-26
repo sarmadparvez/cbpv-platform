@@ -10,7 +10,9 @@ export async function yamlToDatabase(fileName: string) {
   let records: any[] = [];
   let tableName: string;
   try {
-    records = yaml.load(fs.readFileSync(`apps/admin/src/app/data/${fileName}`, 'utf8'));
+    records = yaml.load(
+      fs.readFileSync(`apps/admin/src/app/data/${fileName}`, 'utf8')
+    );
     tableName = fileName.substring(0, fileName.indexOf('.yaml'));
   } catch (err) {
     console.log('error reading the yaml file', err);

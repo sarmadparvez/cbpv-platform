@@ -1,37 +1,42 @@
-import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
-import { CreateTaskDto } from "./dto/create-task.dto";
-import { UpdateTaskDto } from "./dto/update-task.dto";
-import { classToPlain, plainToClass } from "class-transformer";
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
+import { classToPlain, plainToClass } from 'class-transformer';
 import {
+  AccessType,
   PrototypeFormat,
   Task,
   TaskStatus,
   TestType,
-} from "./entities/task.entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import { FindManyOptions, In, Repository } from "typeorm";
-import { Skill } from "../skills/entities/skill.entity";
-import { Country } from "../countries/entities/country.entity";
-import { FindAllTasksDto } from "./dto/find-all-tasks.dto";
-import { v2 as cloudinary } from "cloudinary";
-import { ConfigService } from "@nestjs/config";
-import { FileUploadSignatureResponseDto } from "./dto/file-upload-signature-response.dto";
-import { Action, AppAbility } from "../iam/policy";
-import { findWithPermissionCheck } from "../iam/utils";
-import * as contextService from "request-context";
-import { Project } from "../projects/entities/project.entity";
-import { User } from "../users/entities/user.entity";
-import { UsersService } from "../users/users.service";
-import { Feedback } from "../feedbacks/entities/feedback.entity";
-import { BatchCreateImagesDto } from "./dto/batch-create-images.dto";
-import { Image } from "./entities/image.entity";
-import cloudinaryConfig from "../config/cloudinary";
-import { Question, QuestionType } from "./entities/question.entity";
-import { Answer, ThumbsRating } from "../feedbacks/entities/answer.entity";
+} from './entities/task.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindManyOptions, In, Repository } from 'typeorm';
+import { Skill } from '../skills/entities/skill.entity';
+import { Country } from '../countries/entities/country.entity';
+import { FindAllTasksDto } from './dto/find-all-tasks.dto';
+import { v2 as cloudinary } from 'cloudinary';
+import { ConfigService } from '@nestjs/config';
+import { FileUploadSignatureResponseDto } from './dto/file-upload-signature-response.dto';
+import { Action, AppAbility } from '../iam/policy';
+import { findWithPermissionCheck } from '../iam/utils';
+import * as contextService from 'request-context';
+import { Project } from '../projects/entities/project.entity';
+import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
+import { Feedback } from '../feedbacks/entities/feedback.entity';
+import { BatchCreateImagesDto } from './dto/batch-create-images.dto';
+import { Image } from './entities/image.entity';
+import cloudinaryConfig from '../config/cloudinary';
+import { Question, QuestionType } from './entities/question.entity';
+import { Answer, ThumbsRating } from '../feedbacks/entities/answer.entity';
 import {
   FeedbackStatsResponseDto,
   QuestionAnswerStats,
-} from "./dto/feedback-stats-response.dto";
+} from './dto/feedback-stats-response.dto';
+import {
+  TaskRequest,
+  TaskRequestStatus,
+} from '../task-requests/entities/task-request.entity';
 
 cloudinary.config(cloudinaryConfig().cloudinary.config);
 
@@ -43,11 +48,13 @@ export class TasksService {
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
     @InjectRepository(Project)
-    private projectRepository: Repository<Project>
+    private projectRepository: Repository<Project>,
+    @InjectRepository(TaskRequest)
+    private taskRequestRepository: Repository<TaskRequest>
   ) {}
   async create(createTaskDto: CreateTaskDto) {
     // Check if Project of the Task belongs to user.
-    const user = contextService.get("user") as User;
+    const user = contextService.get('user') as User;
     const project = await this.projectRepository.findOneOrFail(
       createTaskDto.projectId
     );
@@ -55,7 +62,7 @@ export class TasksService {
       throw new HttpException(
         {
           status: HttpStatus.FORBIDDEN,
-          error: "The project does not belongs to the user.",
+          error: 'The project does not belongs to the user.',
         },
         HttpStatus.FORBIDDEN
       );
@@ -63,7 +70,7 @@ export class TasksService {
 
     // check if there is already a draft or open Task available, the new Task cannot be created.
     const existingTask = await this.taskRepository.findOne({
-      select: ["id"],
+      select: ['id'],
       where: {
         status: In([TaskStatus.Open, TaskStatus.Draft]),
         projectId: createTaskDto.projectId,
@@ -75,7 +82,7 @@ export class TasksService {
         {
           status: HttpStatus.PRECONDITION_FAILED,
           error:
-            "Please close previous Task iteration before starting a new one.",
+            'Please close previous Task iteration before starting a new one.',
         },
         HttpStatus.PRECONDITION_FAILED
       );
@@ -85,7 +92,7 @@ export class TasksService {
       throw new HttpException(
         {
           status: HttpStatus.UNPROCESSABLE_ENTITY,
-          error: "Incentive cannot be greater than total budget.",
+          error: 'Incentive cannot be greater than total budget.',
         },
         HttpStatus.UNPROCESSABLE_ENTITY
       );
@@ -106,12 +113,12 @@ export class TasksService {
 
   findAll(query?: FindAllTasksDto) {
     const options: FindManyOptions = {
-      relations: ["skills", "countries"],
+      relations: ['skills', 'countries'],
     };
     if (query && query.projectId) {
       // order by dateCreated to return in the order of iterations
       options.where = { projectId: query.projectId };
-      options.order = { dateCreated: "ASC" };
+      options.order = { dateCreated: 'ASC' };
     }
     return this.taskRepository.find(options);
   }
@@ -124,12 +131,12 @@ export class TasksService {
       this.projectRepository
     );
     const tasks = await this.taskRepository.find({
-      relations: ["skills", "countries", "questions"],
+      relations: ['skills', 'countries', 'questions'],
       where: {
         projectId,
       },
       order: {
-        dateCreated: "DESC",
+        dateCreated: 'DESC',
       },
     });
     tasks.forEach((task) => {
@@ -140,18 +147,18 @@ export class TasksService {
 
   async findOpenTasks() {
     // get current user from the admin service to get details for matching the criteria (Task vs User)
-    const user = await this.userService.getUser(contextService.get("user").id);
+    const user = await this.userService.getUser(contextService.get('user').id);
     const query = this.getTaskMatchingQuery(user);
     // filter out those tasks on which user have already provided feedback
     query.leftJoin(
-      "task.feedbacks",
-      "feedbacks",
-      "feedbacks.userId = :userId",
+      'task.feedbacks',
+      'feedbacks',
+      'feedbacks.userId = :userId',
       {
         userId: user.id,
       }
     );
-    query.andWhere("feedbacks.taskId IS NULL AND task.status = :taskStatus", {
+    query.andWhere('feedbacks.taskId IS NULL AND task.status = :taskStatus', {
       taskStatus: TaskStatus.Open,
     });
     return query.getMany();
@@ -174,22 +181,22 @@ export class TasksService {
       }
     }
     const query = this.taskRepository
-      .createQueryBuilder("task")
+      .createQueryBuilder('task')
       .innerJoinAndSelect(
-        "task.skills",
-        "skills",
-        "skills.id IN (:...skills) ",
+        'task.skills',
+        'skills',
+        'skills.id IN (:...skills) ',
         {
           skills: user.skills.map((skill) => skill.id),
         }
       )
-      .leftJoinAndSelect("task.countries", "countries")
+      .leftJoinAndSelect('task.countries', 'countries')
       .where(
-        "(task.maxExperience >= :userExperience OR task.maxExperience IS NULL) " +
-          "AND (task.minExperience <= :userExperience OR task.minExperience IS NULL) " +
-          "AND (task.maxAge >= :userAge OR task.maxAge IS NULL ) " +
-          "AND (task.minAge <= :userAge OR task.minAge IS NULL ) " +
-          "AND (countries.id = :countryId OR countries.id IS NULL)",
+        '(task.maxExperience >= :userExperience OR task.maxExperience IS NULL) ' +
+          'AND (task.minExperience <= :userExperience OR task.minExperience IS NULL) ' +
+          'AND (task.maxAge >= :userAge OR task.maxAge IS NULL ) ' +
+          'AND (task.minAge <= :userAge OR task.minAge IS NULL ) ' +
+          'AND (countries.id = :countryId OR countries.id IS NULL)',
         {
           userExperience: user.experience,
           userAge: age,
@@ -201,11 +208,11 @@ export class TasksService {
 
   async findOne(id: string) {
     const task = await this.taskRepository.findOneOrFail(id, {
-      relations: ["skills", "countries", "questions"],
+      relations: ['skills', 'countries', 'questions'],
     });
     // sort questions for the task
     task.questions = this.sortQuestions(task.questions);
-    const ability = contextService.get("userAbility") as AppAbility;
+    const ability = contextService.get('userAbility') as AppAbility;
     if (ability.can(Action.Read, task)) {
       // user have explicit permission to Read the task
       return task;
@@ -215,14 +222,33 @@ export class TasksService {
     // first fetch the user from admin service
     if (ability.can(Action.Create, Feedback)) {
       const user = await this.userService.getUser(
-        contextService.get("user").id
+        contextService.get('user')?.id
       );
       const query = this.getTaskMatchingQuery(user);
-      query.andWhere("task.id = :taskId", {
+      query.andWhere('task.id = :taskId', {
         taskId: id,
       });
       const taskMatchedCount = await query.getCount();
       if (taskMatchedCount > 0) {
+        if (task.accessType !== AccessType.Open) {
+          // check if user's request for this task is accepted.
+          const taskRequest = await this.taskRequestRepository.findOneOrFail({
+            where: {
+              taskId: task.id,
+              userId: contextService.get('user')?.id,
+            },
+          });
+          if (!(taskRequest.requestStatus === TaskRequestStatus.Accepted)) {
+            // User does not have access to this Task.
+            throw new HttpException(
+              {
+                status: HttpStatus.FORBIDDEN,
+                error: 'You do not have permission for this Task.',
+              },
+              HttpStatus.FORBIDDEN
+            );
+          }
+        }
         return task;
       }
     }
@@ -235,7 +261,7 @@ export class TasksService {
     throw new HttpException(
       {
         status: HttpStatus.FORBIDDEN,
-        error: "You do not have permission for this Task.",
+        error: 'You do not have permission for this Task.',
       },
       HttpStatus.FORBIDDEN
     );
@@ -273,7 +299,7 @@ export class TasksService {
     await this.taskRepository.save(task);
     if (updateTaskDto.questions) {
       const updatedTask = await this.taskRepository.findOne(id, {
-        relations: ["questions"],
+        relations: ['questions'],
       });
       updatedTask.questions = this.sortQuestions(updatedTask.questions);
       return updatedTask;
@@ -296,49 +322,49 @@ export class TasksService {
       Action.Update,
       this.taskRepository,
       {
-        relations: ["images", "skills", "countries", "questions"],
+        relations: ['images', 'skills', 'countries', 'questions'],
       }
     );
     const messages: string[] = [];
     // validate task first
     if (task.status !== TaskStatus.Draft) {
-      messages.push("Task can only be activated when in draft state.");
+      messages.push('Task can only be activated when in draft state.');
     }
     if (!task.incentive || task.incentive < 0) {
-      messages.push("Please set the incentive.");
+      messages.push('Please set the incentive.');
     }
     if (!task.budget || task.budget < 1) {
-      messages.push("Please set the budget.");
+      messages.push('Please set the budget.');
     }
     if (task.incentive > task.budget) {
-      messages.push("Incentive cannot be greater than budget.");
+      messages.push('Incentive cannot be greater than budget.');
     }
     if (task.skills.length === 0) {
       messages.push(
-        "Please provide skills for matching the Task with Crowdworkers."
+        'Please provide skills for matching the Task with Crowdworkers.'
       );
     }
     if (task.questions.length === 0) {
-      messages.push("Please provide questions.");
+      messages.push('Please provide questions.');
     }
     if (this.isIframeFormat(task)) {
       if (
         (this.isBasicTest(task) && !task.iframeUrl1) ||
-        task.iframeUrl1?.trim() === ""
+        task.iframeUrl1?.trim() === ''
       ) {
-        messages.push("Task cannot be activated without a prototype link.");
+        messages.push('Task cannot be activated without a prototype link.');
       } else if (
         this.isComparisonTest(task) &&
         (!task.iframeUrl1 ||
           !task.iframeUrl2 ||
-          task.iframeUrl1?.trim() === "" ||
-          task.iframeUrl2?.trim() === "")
+          task.iframeUrl1?.trim() === '' ||
+          task.iframeUrl2?.trim() === '')
       ) {
-        messages.push("Please provide link for the both prototypes.");
+        messages.push('Please provide link for the both prototypes.');
       }
     } else if (this.isImageFormat(task)) {
       if (this.isBasicTest(task) && task.images.length === 0) {
-        messages.push("At-least one image is required for the basic test.");
+        messages.push('At-least one image is required for the basic test.');
       } else if (this.isComparisonTest(task)) {
         const imageForPrototype1 = task.images.find(
           (t) => t.prototypeNumber === 1
@@ -347,34 +373,34 @@ export class TasksService {
           (t) => t.prototypeNumber === 2
         );
         if (!imageForPrototype1 || !imageForPrototype2) {
-          messages.push("Please provide images for both prototypes.");
+          messages.push('Please provide images for both prototypes.');
         }
       }
     } else if (this.isTextFormat(task)) {
       if (
         (this.isBasicTest(task) && !task.textualDescription1) ||
-        task.textualDescription1?.trim() === ""
+        task.textualDescription1?.trim() === ''
       ) {
-        messages.push("Task cannot be activated without textual description.");
+        messages.push('Task cannot be activated without textual description.');
       } else if (
         this.isComparisonTest(task) &&
         (!task.textualDescription1 ||
-          task.textualDescription1?.trim() === "" ||
+          task.textualDescription1?.trim() === '' ||
           !task.textualDescription2 ||
-          task.textualDescription2?.trim() === "")
+          task.textualDescription2?.trim() === '')
       ) {
         messages.push(
-          "Please provide textual description for both prototypes."
+          'Please provide textual description for both prototypes.'
         );
       }
     } else {
-      messages.push("The Prototype format must be set");
+      messages.push('The Prototype format must be set');
     }
     if (messages.length > 0) {
       throw new HttpException(
         {
           status: HttpStatus.PRECONDITION_FAILED,
-          error: messages.join(" "),
+          error: messages.join(' '),
         },
         HttpStatus.PRECONDITION_FAILED
       );
@@ -405,11 +431,11 @@ export class TasksService {
   }
 
   getImageUploadSignature(id: string): FileUploadSignatureResponseDto {
-    const cloudinaryConfig = this.configService.get("cloudinary");
+    const cloudinaryConfig = this.configService.get('cloudinary');
     return getFileUploadSignature(
       id,
       cloudinaryConfig,
-      `${cloudinaryConfig.imagesFolder}/${id}`
+      `${cloudinaryConfig.tasksFolder}/${id}`
     );
   }
 
@@ -440,7 +466,7 @@ export class TasksService {
       throw new HttpException(
         {
           status: HttpStatus.PRECONDITION_FAILED,
-          error: "Task is not in draft state.",
+          error: 'Task is not in draft state.',
         },
         HttpStatus.PRECONDITION_FAILED
       );
@@ -451,7 +477,7 @@ export class TasksService {
     let hasPermission = false;
     // check if user have permission to Read Task
     const task = await this.taskRepository.findOneOrFail(taskId);
-    const ability = contextService.get("userAbility") as AppAbility;
+    const ability = contextService.get('userAbility') as AppAbility;
     if (ability.can(Action.Read, task)) {
       // user have explicit permission to Read the task
       hasPermission = true;
@@ -462,10 +488,10 @@ export class TasksService {
     // first fetch the user from admin service
     if (!hasPermission && ability.can(Action.Create, Feedback)) {
       const user = await this.userService.getUser(
-        contextService.get("user").id
+        contextService.get('user').id
       );
       const query = this.getTaskMatchingQuery(user);
-      query.andWhere("task.id = :taskId", {
+      query.andWhere('task.id = :taskId', {
         taskId,
       });
       const taskMatchedCount = await query.getCount();
@@ -482,7 +508,7 @@ export class TasksService {
       throw new HttpException(
         {
           status: HttpStatus.FORBIDDEN,
-          error: "You do not have permission to access Images for this Task.",
+          error: 'You do not have permission to access Images for this Task.',
         },
         HttpStatus.FORBIDDEN
       );
@@ -492,7 +518,7 @@ export class TasksService {
       taskId,
     };
     if (prototypeNumber) {
-      where["prototypeNumber"] = prototypeNumber;
+      where['prototypeNumber'] = prototypeNumber;
     }
     const images = await (this.taskRepository.manager.find(Image, {
       where,
@@ -505,7 +531,7 @@ export class TasksService {
   private async hasProvidedFeedbackOnTask(taskId: string) {
     const feedback = await this.taskRepository.manager.find(Feedback, {
       where: {
-        userId: contextService.get("user")?.id,
+        userId: contextService.get('user')?.id,
         taskId,
       },
     });
@@ -530,7 +556,7 @@ export class TasksService {
     try {
       const response = await cloudinary.uploader.destroy(image.cloudId);
       // delete image from database
-      if (response["result"] && response["result"] === "ok") {
+      if (response['result'] && response['result'] === 'ok') {
         await this.taskRepository.manager.delete(Image, image.id);
       } else {
         Logger.error(response);
@@ -562,7 +588,7 @@ export class TasksService {
       throw new HttpException(
         {
           status: HttpStatus.PRECONDITION_FAILED,
-          error: "Task is not Open. Only Open Task can be closed",
+          error: 'Task is not Open. Only Open Task can be closed',
         },
         HttpStatus.PRECONDITION_FAILED
       );
@@ -578,7 +604,7 @@ export class TasksService {
 
     const questionRepo = this.taskRepository.manager.getRepository(Question);
     const records = await questionRepo
-      .createQueryBuilder("q")
+      .createQueryBuilder('q')
       .select([
         'q.id as "questionId"',
         'q.type as "questionType"',
@@ -588,21 +614,21 @@ export class TasksService {
         'count(a."radioAnswer")::int as "radioAnswerCount"',
       ])
       .addSelect(
-        "COUNT(CASE WHEN a.thumbsRatingAnswer = :ratingUp THEN 1 END )::int",
-        "thumbsUpCount"
+        'COUNT(CASE WHEN a.thumbsRatingAnswer = :ratingUp THEN 1 END )::int',
+        'thumbsUpCount'
       )
-      .setParameter("ratingUp", ThumbsRating.Up)
+      .setParameter('ratingUp', ThumbsRating.Up)
       .addSelect(
-        "COUNT(CASE WHEN a.thumbsRatingAnswer = :ratingDown THEN 1 END )::int",
-        "thumbsDownCount"
+        'COUNT(CASE WHEN a.thumbsRatingAnswer = :ratingDown THEN 1 END )::int',
+        'thumbsDownCount'
       )
-      .setParameter("ratingDown", ThumbsRating.Down)
+      .setParameter('ratingDown', ThumbsRating.Down)
       .innerJoin(
         Answer,
-        "a",
+        'a',
         'q.id = a."questionId" ' +
-          "AND ( q.type = :thumbsRating OR q.type = :starRating OR q.type = :radio)" +
-          "AND q.taskId = :taskId",
+          'AND ( q.type = :thumbsRating OR q.type = :starRating OR q.type = :radio)' +
+          'AND q.taskId = :taskId',
         {
           thumbsRating: QuestionType.ThumbsRating,
           starRating: QuestionType.StarRating,
@@ -610,12 +636,33 @@ export class TasksService {
           taskId: id,
         }
       )
-      .groupBy("q.id, a.starRatingAnswer, a.radioAnswer")
+      .groupBy('q.id, a.starRatingAnswer, a.radioAnswer')
       .getRawMany();
 
     const response = new FeedbackStatsResponseDto();
     response.stats = records as QuestionAnswerStats[];
     return response;
+  }
+
+  async findTaskRequests(id: string): Promise<TaskRequest[]> {
+    // check if task belongs to user.
+    // a user can only update task which belongs to him (task.userId = user.id)
+    await findWithPermissionCheck(id, Action.Update, this.taskRepository);
+
+    return this.taskRequestRepository.find({
+      where: {
+        taskId: id,
+      },
+    });
+  }
+
+  getFileUploadSignature(id: string) {
+    const cloudinaryConfig = this.configService.get('cloudinary');
+    return getFileUploadSignature(
+      id,
+      cloudinaryConfig,
+      `${cloudinaryConfig.tasksFolder}/${id}`
+    );
   }
 }
 
@@ -640,8 +687,8 @@ export function getFileUploadSignature(
   return plainToClass(FileUploadSignatureResponseDto, {
     apiKey: cloudinaryConfig.config.api_key,
     uploadUrl: cloudinaryConfig.apiUrl
-      .replace(":cloud_name", cloudinaryConfig.config.cloud_name)
-      .replace(":action", "upload"),
+      .replace(':cloud_name', cloudinaryConfig.config.cloud_name)
+      .replace(':action', 'upload'),
     signature,
     timestamp,
     folder,

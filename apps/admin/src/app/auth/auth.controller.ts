@@ -33,7 +33,7 @@ export class AuthController {
    * Login with a token. Token must be set as authorization header. If the request succeeds, the token is valid.
    */
   @ApiBearerAuth()
-  @Post('loginWithToken')
+  @Post('login-with-token')
   async loginWithToken() {}
 
   /**

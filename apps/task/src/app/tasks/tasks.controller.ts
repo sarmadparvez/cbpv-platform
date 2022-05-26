@@ -36,7 +36,7 @@ export class TasksController {
     // check if user have permission to create Task
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Create,
-      Task,
+      Task
     );
     return this.tasksService.create(createTaskDto);
   }
@@ -77,7 +77,7 @@ export class TasksController {
     // check if user have permission to list Tasks
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Read,
-      new Task(),
+      new Task()
     );
     return this.tasksService.findAll(query);
   }
@@ -96,7 +96,7 @@ export class TasksController {
     // check if user have permission to read Tasks
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Read,
-      Task,
+      Task
     );
     return this.tasksService.findIterations(projectId);
   }
@@ -112,7 +112,7 @@ export class TasksController {
     // Check if user have permission to create feedback
     ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Create,
-      Feedback,
+      Feedback
     );
     return this.tasksService.findOpenTasks();
   }
@@ -132,7 +132,7 @@ export class TasksController {
    * Get statistics for feedbacks e.g, no of each star rating answer, number of thumbs up/down, no of each radio option selections.
    * The user must have Read Permission for the Task.
    */
-  @Get(':id/feedbackStats')
+  @Get(':id/feedback-stats')
   feedbackStats(@Param('id') id: string) {
     return this.tasksService.feedbackStats(id);
   }
@@ -160,7 +160,7 @@ export class TasksController {
    * This endpoint returns that signature which clients can use to upload images.
    */
   @ApiBearerAuth()
-  @Get(':id/imageUploadSignature')
+  @Get(':id/image-upload-signature')
   imageUploadSignature(@Param('id') id: string) {
     return this.tasksService.getImageUploadSignature(id);
   }
@@ -170,10 +170,10 @@ export class TasksController {
    * The user must have Update permission for Task.
    */
   @ApiBearerAuth()
-  @Post(':id/batchCreateImages')
+  @Post(':id/batch-create-images')
   batchCreateImages(
     @Param('id') id: string,
-    @Body() saveImageUrlsDto: BatchCreateImagesDto,
+    @Body() saveImageUrlsDto: BatchCreateImagesDto
   ) {
     return this.tasksService.batchCreateImages(id, saveImageUrlsDto);
   }
@@ -195,7 +195,7 @@ export class TasksController {
   @Get(':id/images')
   findAllImages(
     @Param('id') id: string,
-    @Query('prototypeNumber') prototypeNumber?: number,
+    @Query('prototypeNumber') prototypeNumber?: number
   ) {
     return this.tasksService.findAllImages(id, prototypeNumber);
   }
@@ -207,5 +207,25 @@ export class TasksController {
   @Delete(':id/images/:imageId')
   removeImage(@Param('id') id: string, @Param('imageId') imageId: string) {
     return this.tasksService.removeImage(id, imageId);
+  }
+
+  /**
+   * Get a list of all TaskRequests for a taskId.
+   * The task must belong to the user.
+   */
+  @ApiBearerAuth()
+  @Get(':id/task-requests')
+  findTaskRequests(@Param('id') id: string) {
+    return this.tasksService.findTaskRequests(id);
+  }
+
+  /**
+   * Files are uploaded to cloudinary.com. For uploading a file, a signature is required.
+   * This endpoint returns that signature which clients can use to upload files.
+   */
+  @ApiBearerAuth()
+  @Get(':id/file-upload-signature')
+  fileUploadSignature(@Param('id') id: string) {
+    return this.tasksService.getFileUploadSignature(id);
   }
 }

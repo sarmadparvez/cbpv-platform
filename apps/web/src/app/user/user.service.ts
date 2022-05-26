@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import {BatchGetUserInfoDto, User, UsersService} from "../../gen/api/admin";
+import { BatchGetUserInfoDto, User, UsersService } from '../../gen/api/admin';
 
 export type UserMap = {
   [key: string]: User;
@@ -25,7 +25,7 @@ export class UserService {
     }
     const users = await this.batchGetInfo(ids);
     const userMap: UserMap = {};
-    users.forEach(user => (userMap[user.id] = user));
+    users.forEach((user) => (userMap[user.id] = user));
     return userMap;
   }
 }

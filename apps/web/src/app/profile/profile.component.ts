@@ -58,13 +58,13 @@ export class ProfileComponent extends RegisterComponent implements OnInit {
   constructor(
     protected override readonly route: ActivatedRoute,
     protected override readonly fb: FormBuilder,
-    protected  override readonly translateService: TranslateService,
+    protected override readonly translateService: TranslateService,
     protected override readonly skillService: SkillsService,
     protected override readonly countryService: CountriesService,
-    protected override  readonly userService: UsersService,
+    protected override readonly userService: UsersService,
     protected override readonly snackBar: MatSnackBar,
     protected override readonly router: Router,
-    protected override readonly authService: AuthService,
+    protected override readonly authService: AuthService
   ) {
     super(
       route,
@@ -75,7 +75,7 @@ export class ProfileComponent extends RegisterComponent implements OnInit {
       userService,
       snackBar,
       router,
-      authService,
+      authService
     );
     this.initializeFormWithUserData();
   }
@@ -84,7 +84,7 @@ export class ProfileComponent extends RegisterComponent implements OnInit {
     this.user = this.authService.getCurrentUser();
     const user = await firstValueFrom(this.user);
 
-    user.skills.forEach(skill => this.selectedSkills.push(skill));
+    user.skills.forEach((skill) => this.selectedSkills.push(skill));
     this.form = this.fb.group({
       firstName: [user.firstName, Validators.required],
       lastName: [user.lastName, Validators.required],
@@ -116,11 +116,11 @@ export class ProfileComponent extends RegisterComponent implements OnInit {
     this.fillDataInRequest(request);
     try {
       const updateUser = await firstValueFrom(
-        this.userService.update(user.id, request),
+        this.userService.update(user.id, request)
       );
       if (rolesChanged) {
         message = this.translateService.instant(
-          'notification.rolesChangeReLogin',
+          'notification.rolesChangeReLogin'
         );
         this.authService.logout();
       } else {

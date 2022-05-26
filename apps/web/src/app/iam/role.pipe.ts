@@ -10,9 +10,9 @@ export class RolePipe implements PipeTransform {
 
   transform(roles: RolesEnum[]): Observable<boolean> {
     return this.authService.getCurrentUser().pipe(
-      map(user => {
-        return roles.every(role => user.roles.includes(role));
-      }),
+      map((user) => {
+        return roles.every((role) => user.roles.includes(role));
+      })
     );
   }
 }

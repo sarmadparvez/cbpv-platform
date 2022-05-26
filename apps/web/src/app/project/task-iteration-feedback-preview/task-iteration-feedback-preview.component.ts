@@ -26,7 +26,7 @@ export class TaskIterationFeedbackPreviewComponent {
   @Input() user!: User;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: TaskFeedbackPreviewDialogData,
+    @Inject(MAT_DIALOG_DATA) private data: TaskFeedbackPreviewDialogData
   ) {
     if (this.data) {
       this.task = this.data.task;

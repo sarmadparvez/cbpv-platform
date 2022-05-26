@@ -6,18 +6,18 @@ import {
   Patch,
   Param,
   Delete,
-} from "@nestjs/common";
-import { ProjectsService } from "./projects.service";
-import { CreateProjectDto } from "./dto/create-project.dto";
-import { UpdateProjectDto } from "./dto/update-project.dto";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { ForbiddenError } from "@casl/ability";
-import * as contextService from "request-context";
-import { Action } from "../iam/policy";
-import { Project } from "./entities/project.entity";
+} from '@nestjs/common';
+import { ProjectsService } from './projects.service';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ForbiddenError } from '@casl/ability';
+import * as contextService from 'request-context';
+import { Action } from '../iam/policy';
+import { Project } from './entities/project.entity';
 
-@ApiTags("projects")
-@Controller("projects")
+@ApiTags('projects')
+@Controller('projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
@@ -28,7 +28,7 @@ export class ProjectsController {
   @Post()
   create(@Body() createProjectDto: CreateProjectDto) {
     // check if user have permission to create project
-    ForbiddenError.from(contextService.get("userAbility")).throwUnlessCan(
+    ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Create,
       Project
     );
@@ -42,7 +42,7 @@ export class ProjectsController {
   @Get()
   findAll() {
     // check if user have permission to list projects
-    ForbiddenError.from(contextService.get("userAbility")).throwUnlessCan(
+    ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Read,
       new Project()
     );
@@ -54,10 +54,10 @@ export class ProjectsController {
    * The user must have Read permission on the Projects.
    */
   @ApiBearerAuth()
-  @Get("search")
+  @Get('search')
   searchAll() {
     // check if user have permission to read projects
-    ForbiddenError.from(contextService.get("userAbility")).throwUnlessCan(
+    ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
       Action.Read,
       Project
     );
@@ -68,8 +68,8 @@ export class ProjectsController {
    * Get a Project. The calling user must have Read permission the Project.
    */
   @ApiBearerAuth()
-  @Get(":id")
-  findOne(@Param("id") id: string) {
+  @Get(':id')
+  findOne(@Param('id') id: string) {
     return this.projectsService.findOne(id);
   }
 
@@ -77,8 +77,8 @@ export class ProjectsController {
    * Update a Project. The calling user must have Update permission the Project.
    */
   @ApiBearerAuth()
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateProjectDto: UpdateProjectDto) {
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
     return this.projectsService.update(id, updateProjectDto);
   }
 
@@ -86,18 +86,28 @@ export class ProjectsController {
    * Delete a Project. The calling user must have Delete permission the Project.
    */
   @ApiBearerAuth()
-  @Delete(":id")
-  remove(@Param("id") id: string) {
+  @Delete(':id')
+  remove(@Param('id') id: string) {
     return this.projectsService.remove(id);
   }
 
   /**
-   * Files are uploaded to cloudinary.com. For uploading an file, a signature is required.
+   * Files are uploaded to cloudinary.com. For uploading a file, a signature is required.
    * This endpoint returns that signature which clients can use to upload files.
    */
   @ApiBearerAuth()
-  @Get(":id/fileUploadSignature")
-  fileUploadSignature(@Param("id") id: string) {
+  @Get(':id/file-upload-signature')
+  fileUploadSignature(@Param('id') id: string) {
     return this.projectsService.getFileUploadSignature(id);
+  }
+
+  /**
+   * Get Non Disclosure Agreement URL a Project.
+   * @param id
+   */
+  @ApiBearerAuth()
+  @Get(':id/nda-url')
+  findNdaUrl(@Param('id') id: string) {
+    return this.projectsService.getNdaUrl(id);
   }
 }

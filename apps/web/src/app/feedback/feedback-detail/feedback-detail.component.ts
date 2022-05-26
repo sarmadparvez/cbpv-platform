@@ -32,7 +32,7 @@ export class FeedbackDetailComponent {
     private readonly route: ActivatedRoute,
     private readonly feedbackService: FeedbacksService,
     private readonly taskService: TasksService,
-    private readonly userService: UsersService,
+    private readonly userService: UsersService
   ) {
     const feedbackId = this.route.snapshot.paramMap.get('feedbackId');
     if (feedbackId) {
