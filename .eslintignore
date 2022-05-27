@@ -1,1 +1,3 @@
 apps/web/src/gen
+apps/admin/src/swagger
+apps/task/src/swagger
