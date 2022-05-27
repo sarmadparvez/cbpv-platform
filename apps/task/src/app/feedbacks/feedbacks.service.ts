@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Patch } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { UpdateFeedbackDto } from './dto/update-feedback.dto';
 import { classToPlain, plainToClass } from 'class-transformer';
@@ -9,9 +9,11 @@ import { FindAllFeedbackDto } from './dto/findAll-feedback.dto';
 import { findWithPermissionCheck } from '../iam/utils';
 import { Action, AppAbility } from '../iam/policy';
 import * as contextService from 'request-context';
-import { Task } from '../tasks/entities/task.entity';
+import { Task, TestType } from '../tasks/entities/task.entity';
 import { RateFeedbackDto } from './dto/rate-feedback.dto';
 import { RateTaskDto } from './dto/rate-task.dto';
+import { SplitTestCache } from '../tasks/entities/split-test-cache';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class FeedbacksService {
@@ -19,16 +21,19 @@ export class FeedbacksService {
     @InjectRepository(Feedback)
     private feedbackRepository: Repository<Feedback>,
     @InjectRepository(Task)
-    private taskRepository: Repository<Task>
+    private taskRepository: Repository<Task>,
+    @InjectRepository(SplitTestCache)
+    private splitTestCacheRepository: Repository<SplitTestCache>
   ) {}
 
   async create(createFeedbackDto: CreateFeedbackDto) {
+    const user = contextService.get('user') as User;
     // Check if user have already provided feedback for this task, fail in that case.
     // The feedback for a Task iteration can only be provided once.
     const existingFeedback = await this.feedbackRepository.findOne({
       where: {
         taskId: createFeedbackDto.taskId,
-        userId: contextService.get('user').id,
+        userId: user?.id,
       },
     });
     if (existingFeedback) {
@@ -45,7 +50,7 @@ export class FeedbacksService {
     const task = await this.taskRepository.findOneOrFail(
       createFeedbackDto.taskId,
       {
-        select: ['id'],
+        select: ['id', 'testType'],
         relations: ['questions'],
       }
     );
@@ -67,7 +72,24 @@ export class FeedbacksService {
 
     const feedback = feedbackDtoToEntity(createFeedbackDto);
     feedback.userId = contextService.get('user').id;
-    return this.feedbackRepository.save(feedback);
+    // If it is a split test, save the prototypeNumber which user evaluated.
+    if (task.testType === TestType.Split) {
+      const splitTestCache = await this.splitTestCacheRepository.findOne({
+        userId: user?.id,
+        taskId: task.id,
+      });
+      if (splitTestCache) {
+        feedback.prototypeNumber = splitTestCache.prototypeNumber;
+      }
+    }
+
+    const createdFeedback = await this.feedbackRepository.save(feedback);
+    // Delete from cache.
+    await this.splitTestCacheRepository.delete({
+      taskId: task.id,
+      userId: user?.id,
+    });
+    return createdFeedback;
   }
 
   findAll(query?: FindAllFeedbackDto) {

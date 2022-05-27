@@ -148,12 +148,23 @@
     >
     </app-task-format-selector-card>
     <!--Test type notes-->
-    <div class="text-note mt-15 field-container">
-      <strong>{{ 'name.basicTest' | translate }}: </strong>
-      {{ 'note.basicTest' | translate }}
-      <br />
-      <strong>{{ 'name.comparisonTest' | translate }}: </strong>
-      {{ 'note.comparisonTest' | translate }}
+    <div
+      class="text-note mt-15 field-container"
+      fxLayout="column"
+      fxLayoutGap="5px"
+    >
+      <span>
+        <strong>{{ 'name.basicTest' | translate }}: </strong>
+        {{ 'note.basicTest' | translate }}
+      </span>
+      <span>
+        <strong>{{ 'name.comparisonTest' | translate }}: </strong>
+        {{ 'note.comparisonTest' | translate }}
+      </span>
+      <span>
+        <strong>{{ 'name.splitTest' | translate }}: </strong>
+        {{ 'note.splitTest' | translate }}
+      </span>
     </div>
   </mat-card-content>
 </mat-card>

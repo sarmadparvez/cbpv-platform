@@ -386,7 +386,8 @@
             }
           }
         },
-        "tags": ["tasks"]
+        "tags": ["tasks"],
+        "security": [{ "bearer": [] }]
       },
       "patch": {
         "operationId": "TasksController_update",
@@ -449,6 +450,13 @@
             "required": true,
             "in": "path",
             "schema": { "type": "string" }
+          },
+          {
+            "name": "prototypeNumber",
+            "required": false,
+            "in": "query",
+            "description": "Optional filtering by prototypeNumber",
+            "schema": { "type": "number" }
           }
         ],
         "responses": {
@@ -463,7 +471,8 @@
             }
           }
         },
-        "tags": ["tasks"]
+        "tags": ["tasks"],
+        "security": [{ "bearer": [] }]
       }
     },
     "/tasks/{id}/image-upload-signature": {
@@ -632,6 +641,35 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/FileUploadSignatureResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["tasks"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/tasks/{id}/generate-prototype-number": {
+      "get": {
+        "operationId": "TasksController_generatePrototypeNumber",
+        "summary": "",
+        "description": "For a split test, each half of the crowd-workers work on one of the prototypes.\nBased on number of feedbacks provided and number of crowd-workers accessing the task\ngenerate a number (1 or 2) which determines which prototype the current user will work on.\nThis number is generated to keep a balance i.e, to equally distribute the crowd-workers\namount both prototypes.",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneratePrototypeNumberResponseDto"
                 }
               }
             }
@@ -1185,7 +1223,10 @@
         "properties": {
           "title": { "type": "string" },
           "description": { "type": "string" },
-          "testType": { "type": "string", "enum": ["basic", "comparison"] },
+          "testType": {
+            "type": "string",
+            "enum": ["basic", "comparison", "split"]
+          },
           "prototypeFormat": {
             "type": "string",
             "enum": ["image", "iframe", "text"]
@@ -1268,7 +1309,10 @@
           "title": { "type": "string" },
           "description": { "type": "string" },
           "dateCreated": { "format": "date-time", "type": "string" },
-          "testType": { "enum": ["basic", "comparison"], "type": "string" },
+          "testType": {
+            "enum": ["basic", "comparison", "split"],
+            "type": "string"
+          },
           "prototypeFormat": {
             "enum": ["image", "iframe", "text"],
             "type": "string"
@@ -1372,6 +1416,7 @@
           },
           "feedbackRating": { "type": "number" },
           "feedbackRatingComment": { "type": "string" },
+          "prototypeNumber": { "type": "number", "minimum": 1, "maximum": 2 },
           "taskRating": { "type": "number" },
           "taskRatingComment": { "type": "string" },
           "taskId": { "type": "string" },
@@ -1389,6 +1434,7 @@
           "paymentStatus",
           "feedbackRating",
           "feedbackRatingComment",
+          "prototypeNumber",
           "taskRating",
           "taskRatingComment",
           "taskId",
@@ -1438,7 +1484,10 @@
         "properties": {
           "title": { "type": "string" },
           "description": { "type": "string" },
-          "testType": { "type": "string", "enum": ["basic", "comparison"] },
+          "testType": {
+            "type": "string",
+            "enum": ["basic", "comparison", "split"]
+          },
           "prototypeFormat": {
             "type": "string",
             "enum": ["image", "iframe", "text"]
@@ -1502,6 +1551,13 @@
           "userId",
           "taskId"
         ]
+      },
+      "GeneratePrototypeNumberResponseDto": {
+        "type": "object",
+        "properties": {
+          "prototypeNumber": { "type": "number", "minimum": 1, "maximum": 2 }
+        },
+        "required": ["prototypeNumber"]
       },
       "CreateTaskRequestDto": {
         "type": "object",

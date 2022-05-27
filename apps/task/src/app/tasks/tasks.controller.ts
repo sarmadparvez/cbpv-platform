@@ -123,6 +123,7 @@ export class TasksController {
    * Implicit Permission: The task criteria matches calling user profile, and calling user have permission to create Feedback.
    * Implicit Permission: This user has created Feedback for this Task
    */
+  @ApiBearerAuth()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.tasksService.findOne(id);
@@ -132,9 +133,19 @@ export class TasksController {
    * Get statistics for feedbacks e.g, no of each star rating answer, number of thumbs up/down, no of each radio option selections.
    * The user must have Read Permission for the Task.
    */
+  @ApiQuery({
+    name: 'prototypeNumber',
+    required: false,
+    description: 'Optional filtering by prototypeNumber',
+    type: 'number',
+  })
+  @ApiBearerAuth()
   @Get(':id/feedback-stats')
-  feedbackStats(@Param('id') id: string) {
-    return this.tasksService.feedbackStats(id);
+  feedbackStats(
+    @Param('id') id: string,
+    @Query('prototypeNumber') prototypeNumber?: number
+  ) {
+    return this.tasksService.feedbackStats(id, prototypeNumber);
   }
 
   /**
@@ -227,5 +238,18 @@ export class TasksController {
   @Get(':id/file-upload-signature')
   fileUploadSignature(@Param('id') id: string) {
     return this.tasksService.getFileUploadSignature(id);
+  }
+
+  /**
+   * For a split test, each half of the crowd-workers work on one of the prototypes.
+   * Based on number of feedbacks provided and number of crowd-workers accessing the task
+   * generate a number (1 or 2) which determines which prototype the current user will work on.
+   * This number is generated to keep a balance i.e, to equally distribute the crowd-workers
+   * amount both prototypes.
+   */
+  @ApiBearerAuth()
+  @Get(':id/generate-prototype-number')
+  generatePrototypeNumber(@Param('id') id: string) {
+    return this.tasksService.generatePrototypeNumber(id);
   }
 }

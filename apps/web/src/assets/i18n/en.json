@@ -32,6 +32,7 @@
     "budget": "Total budget (€)",
     "basicTest": "Basic Test",
     "comparisonTest": "Comparison Test",
+    "splitTest": "Split Test",
     "countries": "Countries",
     "deleteUser": "Delete User",
     "dateCreated": "Creation date",
@@ -86,6 +87,7 @@
     "question": "Question",
     "username": "Username",
     "password": "Password",
+    "prototypeNumber": "Prototype Number",
     "confirmPassword": "Confirm Password",
     "birthdate": "Birthdate",
     "gender": "Gender",
@@ -138,7 +140,8 @@
   },
   "testType": {
     "basic": "Basic",
-    "comparison": "Comparison"
+    "comparison": "Comparison",
+    "split": "Split"
   },
   "accessType": {
     "open": "Open to Everyone",
@@ -201,6 +204,7 @@
     "userDeleted": "User deleted",
     "basicTest": "In a basic test, a single prototype is evaluated.",
     "comparisonTest": "In a comparison test, two prototypes of the same Application are evaluated with a comparison.",
+    "splitTest": "In a split test, two prototypes of the same Application are evaluated. Each by one-half of the Crowd-Workers.",
     "skillsHint": "Your Professional skills. You can only evaluate Prototypes which match your skills.",
     "giveFeedback": "To give feedback on Prototypes, go to <em>Evaluate</em> from the side menu and open the Task you want to evaluate.",
     "viewFeedbacks": "To view your given feedbacks, go to <em>Feedbacks</em> from the side menu.",

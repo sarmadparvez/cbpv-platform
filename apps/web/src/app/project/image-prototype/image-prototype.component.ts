@@ -32,6 +32,7 @@ export class ImagePrototypeComponent
 {
   @Input() task!: ReplaySubject<Task>;
   @Input() readonly!: boolean;
+  @Input() prototypeNumberToEvaluate: number | undefined;
   TestTypeEnum = TestTypeEnum;
   TaskStatusEnum = Task.StatusEnum;
   images = new Map<number, ReplaySubject<GalleryImage[]>>();
@@ -80,7 +81,7 @@ export class ImagePrototypeComponent
         (i) => i.prototypeNumber === 2
       );
       const task = await firstValueFrom(this.task);
-      if (task.testType === TestTypeEnum.Comparison) {
+      if (task.testType != TestTypeEnum.Basic) {
         // only set second comparison images if they exist
         this.setImagesInMap(secondPrototypeImages, 2);
       }

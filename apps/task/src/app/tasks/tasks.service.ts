@@ -33,10 +33,10 @@ import {
   FeedbackStatsResponseDto,
   QuestionAnswerStats,
 } from './dto/feedback-stats-response.dto';
-import {
-  TaskRequest,
-  TaskRequestStatus,
-} from '../task-requests/entities/task-request.entity';
+import { TaskRequest } from '../task-requests/entities/task-request.entity';
+import { TaskRequestsService } from '../task-requests/task-requests.service';
+import { SplitTestCache } from './entities/split-test-cache';
+import { GeneratePrototypeNumberResponseDto } from './dto/generate-prototype-number-response.dto';
 
 cloudinary.config(cloudinaryConfig().cloudinary.config);
 
@@ -49,8 +49,13 @@ export class TasksService {
     private taskRepository: Repository<Task>,
     @InjectRepository(Project)
     private projectRepository: Repository<Project>,
+    @InjectRepository(Feedback)
+    private feedbackRepository: Repository<Feedback>,
     @InjectRepository(TaskRequest)
-    private taskRequestRepository: Repository<TaskRequest>
+    private taskRequestRepository: Repository<TaskRequest>,
+    @InjectRepository(SplitTestCache)
+    private splitTestCacheRepository: Repository<SplitTestCache>,
+    private taskRequestService: TaskRequestsService
   ) {}
   async create(createTaskDto: CreateTaskDto) {
     // Check if Project of the Task belongs to user.
@@ -232,18 +237,15 @@ export class TasksService {
       if (taskMatchedCount > 0) {
         if (task.accessType !== AccessType.Open) {
           // check if user's request for this task is accepted.
-          const taskRequest = await this.taskRequestRepository.findOneOrFail({
-            where: {
-              taskId: task.id,
-              userId: contextService.get('user')?.id,
-            },
-          });
-          if (!(taskRequest.requestStatus === TaskRequestStatus.Accepted)) {
+          const accepted = await this.taskRequestService.isTaskRequestAccepted(
+            task.id
+          );
+          if (!accepted) {
             // User does not have access to this Task.
             throw new HttpException(
               {
                 status: HttpStatus.FORBIDDEN,
-                error: 'You do not have permission for this Task.',
+                error: 'You do not have permission to access this Task.',
               },
               HttpStatus.FORBIDDEN
             );
@@ -354,7 +356,7 @@ export class TasksService {
       ) {
         messages.push('Task cannot be activated without a prototype link.');
       } else if (
-        this.isComparisonTest(task) &&
+        (this.isComparisonTest(task) || this.isSplitTest(task)) &&
         (!task.iframeUrl1 ||
           !task.iframeUrl2 ||
           task.iframeUrl1?.trim() === '' ||
@@ -365,7 +367,7 @@ export class TasksService {
     } else if (this.isImageFormat(task)) {
       if (this.isBasicTest(task) && task.images.length === 0) {
         messages.push('At-least one image is required for the basic test.');
-      } else if (this.isComparisonTest(task)) {
+      } else if (this.isComparisonTest(task) || this.isSplitTest(task)) {
         const imageForPrototype1 = task.images.find(
           (t) => t.prototypeNumber === 1
         );
@@ -383,7 +385,7 @@ export class TasksService {
       ) {
         messages.push('Task cannot be activated without textual description.');
       } else if (
-        this.isComparisonTest(task) &&
+        (this.isComparisonTest(task) || this.isSplitTest(task)) &&
         (!task.textualDescription1 ||
           task.textualDescription1?.trim() === '' ||
           !task.textualDescription2 ||
@@ -416,6 +418,10 @@ export class TasksService {
 
   private isComparisonTest(task: Task) {
     return task.testType === TestType.Comparison;
+  }
+
+  private isSplitTest(task: Task) {
+    return task.testType === TestType.Split;
   }
 
   private isImageFormat(task: Task) {
@@ -473,6 +479,23 @@ export class TasksService {
     }
   }
 
+  private async canCreateFeedbackOnTask(taskId: string) {
+    const ability = contextService.get('userAbility') as AppAbility;
+
+    if (ability.can(Action.Create, Feedback)) {
+      const user = await this.userService.getUser(
+        contextService.get('user').id
+      );
+      const query = this.getTaskMatchingQuery(user);
+      query.andWhere('task.id = :taskId', {
+        taskId,
+      });
+      const taskMatchedCount = await query.getCount();
+      return taskMatchedCount > 0;
+    }
+    return false;
+  }
+
   async findAllImages(taskId: string, prototypeNumber: number) {
     let hasPermission = false;
     // check if user have permission to Read Task
@@ -486,18 +509,8 @@ export class TasksService {
     // Check if user implicitly have permission to Read the Task
     // i.e if user have permission to create Feedback for this Task
     // first fetch the user from admin service
-    if (!hasPermission && ability.can(Action.Create, Feedback)) {
-      const user = await this.userService.getUser(
-        contextService.get('user').id
-      );
-      const query = this.getTaskMatchingQuery(user);
-      query.andWhere('task.id = :taskId', {
-        taskId,
-      });
-      const taskMatchedCount = await query.getCount();
-      if (taskMatchedCount > 0) {
-        hasPermission = true;
-      }
+    if (!hasPermission) {
+      hasPermission = await this.canCreateFeedbackOnTask(taskId);
     }
     if (!hasPermission && (await this.hasProvidedFeedbackOnTask(taskId))) {
       // user have access to Task if user have provided feedback on the task
@@ -598,12 +611,12 @@ export class TasksService {
     });
   }
 
-  async feedbackStats(id: string) {
+  async feedbackStats(id: string, prototypeNumber?: number) {
     // check if user has read permission on the Task
     await findWithPermissionCheck(id, Action.Read, this.taskRepository);
 
     const questionRepo = this.taskRepository.manager.getRepository(Question);
-    const records = await questionRepo
+    const query = questionRepo
       .createQueryBuilder('q')
       .select([
         'q.id as "questionId"',
@@ -635,7 +648,18 @@ export class TasksService {
           radio: QuestionType.Radio,
           taskId: id,
         }
-      )
+      );
+    if (prototypeNumber) {
+      query.innerJoin(
+        Feedback,
+        'f',
+        'f.id = a.feedbackId AND f.prototypeNumber = :prototypeNumber',
+        {
+          prototypeNumber,
+        }
+      );
+    }
+    const records = await query
       .groupBy('q.id, a.starRatingAnswer, a.radioAnswer')
       .getRawMany();
 
@@ -663,6 +687,127 @@ export class TasksService {
       cloudinaryConfig,
       `${cloudinaryConfig.tasksFolder}/${id}`
     );
+  }
+
+  async generatePrototypeNumber(taskId: string) {
+    // Check if the task is a split test
+    const task = await this.taskRepository.findOneOrFail(taskId);
+    if (task.testType !== TestType.Split) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'The task does not supports this operation.',
+        },
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    // First check if user have eligibility to create feedback for this task.
+    const canCreateFeedbackOnTask = await this.canCreateFeedbackOnTask(taskId);
+    if (!canCreateFeedbackOnTask) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'You do not have permission to provide feedback on this task',
+        },
+        HttpStatus.FORBIDDEN
+      );
+    }
+    if (task.accessType !== AccessType.Open) {
+      // Check if user's access for the task (NDA or Request) is accepted.
+      const accepted = await this.taskRequestService.isTaskRequestAccepted(
+        task.id
+      );
+      if (!accepted) {
+        // User does not have access to this Task.
+        throw new HttpException(
+          {
+            status: HttpStatus.FORBIDDEN,
+            error: 'You do not have permission to access this Task.',
+          },
+          HttpStatus.FORBIDDEN
+        );
+      }
+    }
+    const response: GeneratePrototypeNumberResponseDto = {
+      prototypeNumber: 1,
+    };
+    const user = contextService.get('user') as User;
+    const splitTestCache = await this.splitTestCacheRepository.findOne({
+      userId: user.id,
+      taskId: taskId,
+    });
+    if (splitTestCache) {
+      // Found in cache. Return from there.
+      response.prototypeNumber = splitTestCache.prototypeNumber;
+      return response;
+    }
+
+    // Check number of feedbacks provided on each prototype.
+    const prototypeFeedbacksCount = await this.getPrototypeFeedbackCount(
+      taskId
+    );
+    // Check potential number from cache.
+    const getPotentialPrototypeFeedbackCount =
+      await this.getPotentialPrototypeFeedbackCount(taskId);
+    // 1st preference, decide on base of number of feedbacks.
+    if (prototypeFeedbacksCount[0] > prototypeFeedbacksCount[1]) {
+      response.prototypeNumber = 2;
+    } else if (prototypeFeedbacksCount[1] > prototypeFeedbacksCount[0]) {
+      response.prototypeNumber = 1;
+    } else if (
+      getPotentialPrototypeFeedbackCount[0] >
+      getPotentialPrototypeFeedbackCount[1]
+    ) {
+      // 2nd preference: both are equal, now decide on base of cache.
+      response.prototypeNumber = 2;
+    } else if (
+      getPotentialPrototypeFeedbackCount[1] >
+      getPotentialPrototypeFeedbackCount[0]
+    ) {
+      // both are equal, now decide on base of cache
+      response.prototypeNumber = 1;
+    }
+    // store in cache as well.
+    await this.splitTestCacheRepository.save({
+      userId: user.id,
+      taskId,
+      prototypeNumber: response.prototypeNumber,
+    });
+    return response;
+  }
+
+  private async getPrototypeFeedbackCount(taskId: string) {
+    return await Promise.all([
+      this.feedbackRepository.count({
+        where: {
+          prototypeNumber: 1,
+          taskId,
+        },
+      }),
+      this.feedbackRepository.count({
+        where: {
+          prototypeNumber: 2,
+          taskId,
+        },
+      }),
+    ]);
+  }
+
+  private async getPotentialPrototypeFeedbackCount(taskId: string) {
+    return await Promise.all([
+      this.splitTestCacheRepository.count({
+        where: {
+          prototypeNumber: 1,
+          taskId,
+        },
+      }),
+      this.splitTestCacheRepository.count({
+        where: {
+          prototypeNumber: 2,
+          taskId,
+        },
+      }),
+    ]);
   }
 }
 

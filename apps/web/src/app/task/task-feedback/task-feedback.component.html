@@ -26,6 +26,7 @@
         *ngIf="taskObj.prototypeFormat === PrototypeFormatEnum.Image"
         [task]="task"
         [readonly]="true"
+        [prototypeNumberToEvaluate]="prototypeNumberToEvaluate"
       >
       </app-image-prototype>
       <!--Iframe Prototype-->
@@ -33,6 +34,7 @@
         *ngIf="taskObj.prototypeFormat === PrototypeFormatEnum.Iframe"
         [task]="task"
         [readonly]="true"
+        [prototypeNumberToEvaluate]="prototypeNumberToEvaluate"
       >
       </app-iframe-prototype>
       <!--Text Prototype-->
@@ -40,6 +42,7 @@
         *ngIf="taskObj.prototypeFormat === PrototypeFormatEnum.Text"
         [task]="task"
         [readonly]="true"
+        [prototypeNumberToEvaluate]="prototypeNumberToEvaluate"
       >
       </app-text-prototype>
     </div>

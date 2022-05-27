@@ -9,12 +9,24 @@ import { ConfigModule } from '@nestjs/config';
 import { Project } from '../projects/entities/project.entity';
 import { UsersModule } from '../users/users.module';
 import { TaskRequest } from '../task-requests/entities/task-request.entity';
+import { SplitTestCache } from './entities/split-test-cache';
+import { TaskRequestsModule } from '../task-requests/task-requests.module';
+import { Feedback } from '../feedbacks/entities/feedback.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Task, Image, Question, Project, TaskRequest]),
+    TypeOrmModule.forFeature([
+      Task,
+      Image,
+      Question,
+      Project,
+      TaskRequest,
+      SplitTestCache,
+      Feedback,
+    ]),
     ConfigModule,
     UsersModule,
+    TaskRequestsModule,
   ],
   controllers: [TasksController],
   providers: [TasksService],

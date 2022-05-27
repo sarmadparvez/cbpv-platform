@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Feedback } from './entities/feedback.entity';
 import { Answer } from './entities/answer.entity';
 import { Task } from '../tasks/entities/task.entity';
+import { SplitTestCache } from '../tasks/entities/split-test-cache';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Feedback, Answer, Task])],
+  imports: [TypeOrmModule.forFeature([Feedback, Answer, Task, SplitTestCache])],
   controllers: [FeedbacksController],
   providers: [FeedbacksService],
 })

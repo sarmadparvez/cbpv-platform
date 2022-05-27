@@ -1,4 +1,4 @@
-import { Component, Input, NgModule } from '@angular/core';
+import { Component, Input, NgModule, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, ReplaySubject } from 'rxjs';
@@ -17,13 +17,14 @@ import { BasicTaskDetailModule } from '../basic-task-detail/basic-task-detail.co
   templateUrl: './task-feedback.component.html',
   styleUrls: ['./task-feedback.component.scss'],
 })
-export class TaskFeedbackComponent {
+export class TaskFeedbackComponent implements OnInit {
   @Input() task = new ReplaySubject<Task>(1);
   @Input() feedback!: Feedback;
   @Input() readonly!: boolean;
   @Input() applyContainerClass = true;
   PrototypeFormatEnum = Task.PrototypeFormatEnum;
   TestTypeEnum = Task.TestTypeEnum;
+  prototypeNumberToEvaluate: number | undefined;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -35,8 +36,22 @@ export class TaskFeedbackComponent {
     }
   }
 
+  ngOnInit() {
+    if (this.feedback?.prototypeNumber) {
+      this.prototypeNumberToEvaluate = this.feedback.prototypeNumber;
+    }
+  }
+
   async getTask(taskId: string) {
     const task = await firstValueFrom(this.taskService.findOne(taskId));
+
+    if (task.testType === Task.TestTypeEnum.Split) {
+      const response = await firstValueFrom(
+        this.taskService.generatePrototypeNumber(taskId)
+      );
+      this.prototypeNumberToEvaluate = response.prototypeNumber;
+    }
+
     this.task.next(task);
   }
 }

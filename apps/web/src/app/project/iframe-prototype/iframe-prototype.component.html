@@ -1,7 +1,10 @@
 <mat-card>
   <mat-card-title>{{ 'name.link' | translate }}</mat-card-title>
   <mat-card-subtitle
-    *ngIf="(task | async)?.testType === TestTypeEnum.Comparison"
+    *ngIf="
+      (task | async)?.testType !== TestTypeEnum.Basic &&
+      !prototypeNumberToEvaluate
+    "
   >
     {{ 'name.prototype1' | translate }}
   </mat-card-subtitle>
@@ -11,12 +14,12 @@
       <ng-container
         *ngIf="
           (task | async)?.testType === TestTypeEnum.Basic;
-          else comparisonIframeUploadNote
+          else multiPrototypeIframeUploadNote
         "
       >
         {{ 'note.basicIframeUpload' | translate }}
       </ng-container>
-      <ng-template #comparisonIframeUploadNote>
+      <ng-template #multiPrototypeIframeUploadNote>
         {{ 'note.comparisonIframeUpload1' | translate }}
       </ng-template>
     </p>
@@ -31,13 +34,28 @@
       <ng-container
         *ngTemplateOutlet="
           iframeViewer;
-          context: { data: { iframeUrl: safeIframeUrl1 | async } }
+          context: {
+            data: {
+              iframeUrl:
+                (!prototypeNumberToEvaluate
+                  ? safeIframeUrl1
+                  : prototypeNumberToEvaluate === 1
+                  ? safeIframeUrl1
+                  : safeIframeUrl2
+                ) | async
+            }
+          }
         "
       ></ng-container>
     </div>
 
     <!--Prototype 2-->
-    <ng-container *ngIf="(task | async)?.testType === TestTypeEnum.Comparison">
+    <ng-container
+      *ngIf="
+        (task | async)?.testType !== TestTypeEnum.Basic &&
+        !prototypeNumberToEvaluate
+      "
+    >
       <mat-divider inset></mat-divider>
       <mat-card-title class="mt-15">{{
         'name.link' | translate

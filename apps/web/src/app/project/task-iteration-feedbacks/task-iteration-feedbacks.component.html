@@ -68,6 +68,18 @@
         </ng-container>
       </td>
     </ng-container>
+    <!-- Task Rating Column -->
+    <ng-container
+      matColumnDef="prototypeNumber"
+      *ngIf="(task | async)?.testType === TestTypeEnum.Split"
+    >
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'name.prototypeNumber' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.prototypeNumber }}
+      </td>
+    </ng-container>
 
     <!-- Comment Column -->
     <ng-container matColumnDef="comment">

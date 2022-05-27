@@ -86,21 +86,27 @@
     <ng-template #readonlyLabel>Test type</ng-template>
     <mat-radio-group
       [disabled]="readonly"
-      fxLayout
-      fxLayoutGap="20px"
-      style="margin-top: 10px"
       [(ngModel)]="testType"
       (change)="testTypeChange($event)"
     >
-      <mat-radio-button value="{{ TestTypeEnum.Basic }}"
+      <div fxLayout fxLayoutGap="20px" style="margin-top: 10px">
+        <mat-radio-button value="{{ TestTypeEnum.Basic }}"
+          >{{
+            'testType.' + TestTypeEnum.Basic | translate
+          }}
+          Test</mat-radio-button
+        >
+        <mat-radio-button value="{{ TestTypeEnum.Comparison }}"
+          >{{
+            'testType.' + TestTypeEnum.Comparison | translate
+          }}
+          Test</mat-radio-button
+        >
+      </div>
+
+      <mat-radio-button class="mt-10" value="{{ TestTypeEnum.Split }}"
         >{{
-          'testType.' + TestTypeEnum.Basic | translate
-        }}
-        Test</mat-radio-button
-      >
-      <mat-radio-button value="{{ TestTypeEnum.Comparison }}"
-        >{{
-          'testType.' + TestTypeEnum.Comparison | translate
+          'testType.' + TestTypeEnum.Split | translate
         }}
         Test</mat-radio-button
       >

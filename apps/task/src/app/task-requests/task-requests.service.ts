@@ -116,6 +116,16 @@ export class TaskRequestsService {
     }
     return taskRequest;
   }
+
+  async isTaskRequestAccepted(taskId: string) {
+    const taskRequest = await this.taskRequestRepository.findOneOrFail({
+      where: {
+        taskId,
+        userId: contextService.get('user')?.id,
+      },
+    });
+    return taskRequest.requestStatus === TaskRequestStatus.Accepted;
+  }
 }
 
 function taskRequestDtoEntity(

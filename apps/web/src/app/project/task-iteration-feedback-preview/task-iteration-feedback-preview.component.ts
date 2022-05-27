@@ -24,6 +24,7 @@ export class TaskIterationFeedbackPreviewComponent {
   @Input() task!: Task;
   @Input() feedback!: Feedback;
   @Input() user!: User;
+  TestTypeEnum = Task.TestTypeEnum;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: TaskFeedbackPreviewDialogData

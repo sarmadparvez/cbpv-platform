@@ -1,7 +1,10 @@
 <mat-card>
   <mat-card-title>{{ 'name.images' | translate }}</mat-card-title>
   <mat-card-subtitle
-    *ngIf="(task | async)?.testType === TestTypeEnum.Comparison"
+    *ngIf="
+      (task | async)?.testType !== TestTypeEnum.Basic &&
+      !prototypeNumberToEvaluate
+    "
   >
     {{ 'name.prototype1' | translate }}
   </mat-card-subtitle>
@@ -11,24 +14,37 @@
       <ng-container
         *ngIf="
           (task | async)?.testType === TestTypeEnum.Basic;
-          else comparisonImageUploadNote
+          else multiPrototypeImageUploadNote
         "
       >
         {{ 'note.basicImageUpload' | translate }}
       </ng-container>
-      <ng-template #comparisonImageUploadNote>
+      <ng-template #multiPrototypeImageUploadNote>
         {{ 'note.comparisonImageUpload1' | translate }}
       </ng-template>
     </p>
     <ng-container
       *ngTemplateOutlet="
         imageUploadViewer;
-        context: { data: { prototypeNumber: 1 } }
+        context: {
+          data: {
+            prototypeNumber: !prototypeNumberToEvaluate
+              ? 1
+              : prototypeNumberToEvaluate === 1
+              ? 1
+              : 2
+          }
+        }
       "
     ></ng-container>
 
     <!--Prototype 2-->
-    <ng-container *ngIf="(task | async)?.testType === TestTypeEnum.Comparison">
+    <ng-container
+      *ngIf="
+        (task | async)?.testType !== TestTypeEnum.Basic &&
+        !prototypeNumberToEvaluate
+      "
+    >
       <mat-divider inset></mat-divider>
       <mat-card-title class="mt-15">{{
         'name.images' | translate

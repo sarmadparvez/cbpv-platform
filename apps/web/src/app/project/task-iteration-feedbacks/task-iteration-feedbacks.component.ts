@@ -66,6 +66,7 @@ export class TaskIterationFeedbacksComponent
   @ViewChild(MatSort) sort!: MatSort;
   userMap: UserMap = {};
   Action = Action.ActionEnum;
+  TestTypeEnum = Task.TestTypeEnum;
 
   constructor(
     private readonly feedbackService: FeedbacksService,
@@ -78,13 +79,13 @@ export class TaskIterationFeedbacksComponent
     private readonly permService: PermissionsService
   ) {
     super();
-    this.setColumns();
   }
 
   ngOnInit(): void {
     this.subscriptions.add(
       this.task.subscribe((task) => {
         if (task) {
+          this.setColumns();
           this.findFeedbacks(task.id);
         }
       })
@@ -93,9 +94,28 @@ export class TaskIterationFeedbacksComponent
 
   async setColumns() {
     const ability = await firstValueFrom(this.permService.userAbility);
-    if (ability.can(Action.ActionEnum.Manage, 'all')) {
+    if (
+      ability.can(Action.ActionEnum.Manage, 'all') &&
+      !this.displayedColumns.includes('username')
+    ) {
       // Insert feedback provider name in the start
       this.displayedColumns.splice(1, 0, 'username');
+    }
+    const task = await firstValueFrom(this.task);
+    const prototypeNumber = 'prototypeNumber';
+    if (
+      task.testType === Task.TestTypeEnum.Split &&
+      !this.displayedColumns.includes(prototypeNumber)
+    ) {
+      this.displayedColumns.splice(2, 0, prototypeNumber);
+    } else if (
+      task.testType != Task.TestTypeEnum.Split &&
+      this.displayedColumns.includes(prototypeNumber)
+    ) {
+      this.displayedColumns.splice(
+        this.displayedColumns.indexOf(prototypeNumber),
+        1
+      );
     }
   }
 

@@ -1,17 +1,22 @@
 import { Component, Input, NgModule, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { firstValueFrom, ReplaySubject } from 'rxjs';
+import { firstValueFrom, Observable, ReplaySubject } from 'rxjs';
 import {
+  FeedbackStatsResponseDto,
   Question,
   QuestionAnswerStats,
   Task,
   TasksService,
+  UpdateTaskDto,
 } from '../../../gen/api/task';
 import QuestionTypeEnum = QuestionAnswerStats.QuestionTypeEnum;
 import { ThumbsRatingVisualizationModule } from '../thumbs-rating-visualization/thumbs-rating-visualization.component';
 import { RadioFeedbackVisualizationModule } from '../radio-feedback-visualization/radio-feedback-visualization.component';
 import { StarRatingVisualizationModule } from '../star-rating-visualization/star-rating-visualization.component';
 import { SubscriptionComponent } from '../../common/subscription.component';
+import TestTypeEnum = UpdateTaskDto.TestTypeEnum;
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 
 export interface QuestionStats {
   question: Question;
@@ -31,6 +36,8 @@ export class FeedbackVisualizationComponent
 
   questionStats: QuestionStats[] = [];
   QuestionTypeEnum = QuestionTypeEnum;
+  TestTypeEnum = Task.TestTypeEnum;
+  prototypeNumber = 1;
 
   constructor(private readonly taskService: TasksService) {
     super();
@@ -38,16 +45,26 @@ export class FeedbackVisualizationComponent
 
   async ngOnInit() {
     this.subscriptions.add(
-      this.task.subscribe((task) => {
-        this.getFeedbackStats(task);
+      this.task.subscribe(() => {
+        this.getFeedbackStats();
       })
     );
   }
 
-  private async getFeedbackStats(task: Task) {
-    const response = await firstValueFrom(
-      this.taskService.feedbackStats(task.id)
-    );
+  async loadPrototypeStats(event: MatSelectChange) {
+    this.prototypeNumber = event.value;
+    this.getFeedbackStats();
+  }
+
+  private async getFeedbackStats() {
+    const task = await firstValueFrom(this.task);
+    let request: Observable<FeedbackStatsResponseDto>;
+    if (task.testType === TestTypeEnum.Split) {
+      request = this.taskService.feedbackStats(task.id, this.prototypeNumber);
+    } else {
+      request = this.taskService.feedbackStats(task.id);
+    }
+    const response = await firstValueFrom(request);
     this.processStats(task, response.stats);
   }
 
@@ -70,6 +87,8 @@ export class FeedbackVisualizationComponent
     ThumbsRatingVisualizationModule,
     RadioFeedbackVisualizationModule,
     StarRatingVisualizationModule,
+    MatFormFieldModule,
+    MatSelectModule,
   ],
   declarations: [FeedbackVisualizationComponent],
   exports: [FeedbackVisualizationComponent],

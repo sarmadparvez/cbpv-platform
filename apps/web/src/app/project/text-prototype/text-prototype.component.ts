@@ -21,7 +21,7 @@ import {
 export class TextPrototypeComponent {
   @Input() task!: ReplaySubject<Task>;
   @Input() readonly!: boolean;
-
+  @Input() prototypeNumberToEvaluate: number | undefined;
   TestTypeEnum = CreateTaskDto.TestTypeEnum;
   TaskStatusEnum = Task.StatusEnum;
   constructor(private readonly dialog: MatDialog) {}

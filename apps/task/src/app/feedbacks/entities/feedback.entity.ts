@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Task } from '../../tasks/entities/task.entity';
 import { Answer } from './answer.entity';
+import { Max, Min } from 'class-validator';
 
 export enum PaymentStatus {
   Pending = 'pending',
@@ -34,6 +35,11 @@ export class Feedback {
 
   @Column({ type: 'text', nullable: true })
   feedbackRatingComment: string;
+
+  @Min(1)
+  @Max(2)
+  @Column({ nullable: true })
+  prototypeNumber: number; // In case of split test, which prototype number feedback was given on.
 
   @Column({ nullable: true })
   taskRating: number;

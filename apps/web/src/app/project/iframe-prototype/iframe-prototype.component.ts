@@ -27,6 +27,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class IframePrototypeComponent implements OnInit {
   @Input() task!: ReplaySubject<Task>;
   @Input() readonly!: boolean;
+  @Input() prototypeNumberToEvaluate: number | undefined;
   TaskStatusEnum = Task.StatusEnum;
   TestTypeEnum = TestTypeEnum;
   figmaEmbedUrl = 'https://www.figma.com/embed?embed_host=share&url=';

@@ -1,7 +1,10 @@
 <mat-card>
   <mat-card-title>{{ 'name.text' | translate }}</mat-card-title>
   <mat-card-subtitle
-    *ngIf="(task | async)?.testType === TestTypeEnum.Comparison"
+    *ngIf="
+      (task | async)?.testType !== TestTypeEnum.Basic &&
+      !prototypeNumberToEvaluate
+    "
   >
     {{ 'name.prototype1' | translate }}
   </mat-card-subtitle>
@@ -11,12 +14,12 @@
       <ng-container
         *ngIf="
           (task | async)?.testType === TestTypeEnum.Basic;
-          else comparisonTextNote
+          else multiPrototypeNote
         "
       >
         {{ 'note.basicTextAdd' | translate }}
       </ng-container>
-      <ng-template #comparisonTextNote>
+      <ng-template #multiPrototypeNote>
         {{ 'note.comparisonText1' | translate }}
       </ng-template>
     </p>
@@ -32,14 +35,25 @@
         *ngTemplateOutlet="
           textViewer;
           context: {
-            data: { textualDescription: (task | async)?.textualDescription1 }
+            data: {
+              textualDescription: !prototypeNumberToEvaluate
+                ? (task | async)?.textualDescription1
+                : prototypeNumberToEvaluate === 1
+                ? (task | async)?.textualDescription1
+                : (task | async)?.textualDescription2
+            }
           }
         "
       ></ng-container>
     </div>
 
     <!--Prototype 2-->
-    <ng-container *ngIf="(task | async)?.testType === TestTypeEnum.Comparison">
+    <ng-container
+      *ngIf="
+        (task | async)?.testType !== TestTypeEnum.Basic &&
+        !prototypeNumberToEvaluate
+      "
+    >
       <mat-divider inset></mat-divider>
       <mat-card-title class="mt-15">{{
         'name.text' | translate

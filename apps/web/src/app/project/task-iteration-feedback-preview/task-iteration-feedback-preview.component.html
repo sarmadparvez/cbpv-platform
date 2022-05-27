@@ -1,17 +1,28 @@
 <h2 mat-dialog-title>Task Feedback</h2>
 <mat-dialog-content class="mat-typography">
-  <!-- Feedback Provider -->
-  <div>
-    <div class="field-label field-name">
-      {{ 'name.feedbackProvider' | translate }}
+  <div fxLayout fxLayoutAlign="start start">
+    <!-- Feedback Provider -->
+    <div fxFlex="50%">
+      <div class="field-label field-name">
+        {{ 'name.feedbackProvider' | translate }}
+      </div>
+      <div>
+        <span *ngIf="user; else userDeleted">{{
+          user?.firstName + ' ' + user?.lastName
+        }}</span>
+        <ng-template #userDeleted>
+          {{ 'note.userDeleted' | translate }}
+        </ng-template>
+      </div>
     </div>
-    <div>
-      <span *ngIf="user; else userDeleted">{{
-        user?.firstName + ' ' + user?.lastName
-      }}</span>
-      <ng-template #userDeleted>
-        {{ 'note.userDeleted' | translate }}
-      </ng-template>
+    <!--Prototype Number-->
+    <div *ngIf="task?.testType === TestTypeEnum.Split" fxFlex="50%">
+      <div class="field-label field-name">
+        {{ 'name.prototypeNumber' | translate }}
+      </div>
+      <div>
+        <span>{{ feedback?.prototypeNumber }}</span>
+      </div>
     </div>
   </div>
 
