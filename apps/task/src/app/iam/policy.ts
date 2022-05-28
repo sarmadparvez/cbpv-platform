@@ -52,8 +52,7 @@ const rolePermissions: Record<Role, DefinePermissions> = {
     can(Action.Create, Feedback);
     can(Action.Read, Feedback, { userId: user.id });
     can(Action.Create, TaskRequest);
-    can(Action.Update, TaskRequest);
-    can(Action.Read, TaskRequest, { userId: user.id });
+    can([Action.Read, Action.Update], TaskRequest, { userId: user.id });
   },
 };
 

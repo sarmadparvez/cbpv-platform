@@ -16,7 +16,7 @@ export async function findWithPermissionCheck<T>(
   findOneOptions?: FindOneOptions<T>
 ): Promise<T> {
   const entity: T = await repository.findOneOrFail(id, findOneOptions);
-  // check if user have permission to remove this project
+  // check if user have permission
   ForbiddenError.from(contextService.get('userAbility')).throwUnlessCan(
     action,
     entity

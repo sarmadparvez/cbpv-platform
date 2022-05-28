@@ -1,0 +1,191 @@
+<div class="page-content">
+  <div>Here you can see all the reported users.</div>
+  <div [hidden]="dataSource.data.length < 1">
+    <!--Users table-->
+    <h2>Reported Users</h2>
+    <ul>
+      <li class="list-item">
+        You can enable or disable feedback provision for the reported user. If
+        feedback is disabled, user will no longer be able to provide feedback on
+        any task.
+      </li>
+      <li class="list-item">
+        You can mark the issue as resolved if it does not require action
+        anymore.
+      </li>
+    </ul>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+      <!-- Reported By Column -->
+      <ng-container matColumnDef="reporter">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'name.reportedBy' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="userMap[element.reporterId]; else userNotFound">
+            {{
+              userMap[element.reporterId]?.firstName +
+                ' ' +
+                userMap[element.reporterId]?.lastName
+            }}
+          </ng-container>
+          <ng-template #userNotFound>
+            {{ 'note.userNotFound' | translate }}
+          </ng-template>
+        </td>
+      </ng-container>
+      <!-- Reported User Column -->
+      <ng-container matColumnDef="reportedUser">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ 'name.reportedUser' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container
+            *ngIf="userMap[element.reportedUserId]; else userNotFound"
+          >
+            {{
+              userMap[element.reportedUserId]?.firstName +
+                ' ' +
+                userMap[element.reportedUserId]?.lastName
+            }}
+          </ng-container>
+          <ng-template #userNotFound>
+            {{ 'note.userNotFound' | translate }}
+          </ng-template>
+        </td>
+      </ng-container>
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'name.description' | translate }}
+        </th>
+        <td
+          mat-cell
+          [matTooltip]="element.description"
+          [matTooltipPosition]="'above'"
+          *matCellDef="let element"
+          class="description-column"
+        >
+          <span>
+            {{ element.description }}
+          </span>
+        </td>
+      </ng-container>
+      <!-- Creation date Column -->
+      <ng-container matColumnDef="dateCreated">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'name.dateCreated' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.dateCreated | date: 'dd.MM.y HH:mm:ss' }}
+        </td>
+      </ng-container>
+      <!-- Report Status -->
+      <ng-container matColumnDef="reportStatus">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'name.status' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ 'reportStatus.' + element.reportStatus | translate }}
+        </td>
+      </ng-container>
+      <!-- Report Action -->
+      <ng-container matColumnDef="reportAction">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'name.reportAction' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ 'reportAction.' + element.reportAction | translate }}
+        </td>
+      </ng-container>
+      <!-- Feedback -->
+      <ng-container matColumnDef="feedback">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'name.feedback' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <a
+            href="javascript:void(0)"
+            (click)="routeToFeedback($event, element.feedbackId)"
+          >
+            {{ 'name.feedback' | translate }}
+          </a>
+        </td>
+      </ng-container>
+      <!-- Task -->
+      <ng-container matColumnDef="task">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ 'name.task' | translate }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <a
+            href="javascript:void(0)"
+            (click)="routeToTask($event, element.projectId, element.feedbackId)"
+          >
+            {{ 'name.task' | translate }}
+          </a>
+        </td>
+      </ng-container>
+      <!-- Options Column -->
+      <ng-container matColumnDef="options">
+        <th mat-header-cell *matHeaderCellDef>
+          <span class="float-right">Options</span>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <button
+            class="float-right"
+            (click)="$event.stopPropagation()"
+            [matMenuTriggerFor]="menu"
+            mat-icon-button
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu>
+            <button
+              mat-menu-item
+              *ngIf="element.reportStatus === ReportStatus.Resolved"
+              (click)="updateStatus(element.id, ReportStatus.Open)"
+            >
+              <span>{{ 'action.reOpen' | translate }}</span>
+            </button>
+
+            <button
+              mat-menu-item
+              *ngIf="element.reportStatus === ReportStatus.Open"
+              (click)="updateStatus(element.id, ReportStatus.Resolved)"
+            >
+              <span>{{ 'action.markAsResolved' | translate }}</span>
+            </button>
+
+            <button
+              mat-menu-item
+              *ngIf="
+                element.reportAction === ReportAction.None ||
+                element.reportAction === ReportAction.FeedbackEnabled
+              "
+              (click)="disableFeedback(element.id)"
+            >
+              <span>{{ 'action.disableFeedbackProvision' | translate }}</span>
+            </button>
+            <button
+              (click)="enableFeedback(element.id)"
+              mat-menu-item
+              *ngIf="element.reportAction === ReportAction.FeedbackDisabled"
+            >
+              <span>{{ 'action.enableFeedbackProvision' | translate }}</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator
+      class="mat-elevation-z8"
+      [pageSize]="25"
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      showFirstLastButtons="true"
+    ></mat-paginator>
+  </div>
+</div>
+<app-no-data *ngIf="dataSource.data.length < 1"></app-no-data>

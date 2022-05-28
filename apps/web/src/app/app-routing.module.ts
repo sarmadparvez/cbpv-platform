@@ -3,7 +3,7 @@ import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { NavComponent } from './navigation/nav.component';
 import { Action } from '../gen/api/admin';
 import ActionEnum = Action.ActionEnum;
-import { RouteGuard } from './auth/route.guard';
+import { EvaluationRouteGuard, RouteGuard } from './auth/route.guard';
 
 const routes: Routes = [
   {
@@ -40,7 +40,7 @@ const routes: Routes = [
       permission: ActionEnum.Create,
       subject: 'Feedback',
     },
-    canActivate: [RouteGuard],
+    canActivate: [RouteGuard, EvaluationRouteGuard],
     loadChildren: () => import('./task/task.module').then((m) => m.TaskModule),
   },
   {
@@ -63,6 +63,19 @@ const routes: Routes = [
     },
     canActivate: [RouteGuard],
     loadChildren: () => import('./user/user.module').then((m) => m.UserModule),
+  },
+  {
+    path: 'user-reports',
+    component: NavComponent,
+    data: {
+      permission: ActionEnum.Manage,
+      subject: 'UserReport',
+    },
+    canActivate: [RouteGuard],
+    loadChildren: () =>
+      import('./user-report/user-report.module').then(
+        (m) => m.UserReportModule
+      ),
   },
   {
     path: '**',

@@ -4,13 +4,17 @@
     "activate": "Activate",
     "save": "Save",
     "delete": "Delete",
+    "disableFeedbackProvision": "Disable Feedback Provision",
     "downloadNDA": "Download NDA",
+    "enableFeedbackProvision": "Enable Feedback Provision",
     "edit": "Edit",
     "cancel": "Cancel",
     "closeIteration": "Close Iteration",
     "deleteFeedback": "Delete Feedback",
+    "markAsResolved": "Mark As Resolved",
     "prototypeLink": "Prototype Link",
     "rateFeedback": "Rate Feedback",
+    "reOpen": "Re-open",
     "upload": "Upload",
     "uploadNDA": "Upload NDA",
     "uploadSignedNDA": "Upload Signed NDA",
@@ -37,6 +41,7 @@
     "deleteUser": "Delete User",
     "dateCreated": "Creation date",
     "firstName": "First Name",
+    "feedback": "Feedback",
     "feedbacks": "Feedbacks",
     "feedbackProvider": "Feedback Provider",
     "feedbackUsername": "Feedback Username",
@@ -55,6 +60,9 @@
     "questionType": "Question Type",
     "requester": "Requester",
     "requesterComment": "Requester Comment",
+    "reportedBy": "Reported by",
+    "reportedUser": "Reported User",
+    "reportAction": "Action",
     "title": "Title",
     "taskAccess": "Prototype Access",
     "description": "Description",
@@ -112,6 +120,7 @@
     "reportMisuseSuccess": "Your report is submitted",
     "requestSubmitted": "Your request was successfully submitted.",
     "submitFeedback": "Your feedback is submitted successfully.",
+    "success": "Action successful",
     "paymentReleased": "Payment successfully released"
   },
   "error": {
@@ -127,10 +136,11 @@
     "update": "Unable to update",
     "save": "Unable to save",
     "imageSignature": "Failed to get signature for Image upload",
-    "uploadImage": "Failed uploading file to cloud storage.",
+    "uploadImage": "Failed uploading file to cloud storage",
     "saveImageUrls": "Unable to store image urls",
     "submitFeedback": "Unable to submit feedback",
     "paymentRelease": "Unable to release payment for the feedback",
+    "tryAgainLater": "An error occurred, please try again later!",
     "uploadSignedNDA": "Please upload the signed NDA for requesting access to this Task."
   },
   "role": {
@@ -157,6 +167,15 @@
   "paymentStatus": {
     "pending": "Pending",
     "completed": "Completed"
+  },
+  "reportStatus": {
+    "open": "Open",
+    "resolved": "Resolved"
+  },
+  "reportAction": {
+    "none": "None",
+    "feedbackDisabled": "Feedback Disabled",
+    "feedbackEnabled": "Feedback Enabled"
   },
   "requestStatus": {
     "accepted": "Accepted",
@@ -201,7 +220,7 @@
     "textTask": "The Prototype will be added as Text. You can provide textual description of your Application idea.",
     "taskAccess": "Control access to your prototype by Crowd-Workers. This is the access control for your prototype, the crowd matching criteria specified above will still be respected for all the options given below. Please select one option.",
     "textTaskSubtitle": "Textual description",
-    "userDeleted": "User deleted",
+    "userNotFound": "User not found",
     "basicTest": "In a basic test, a single prototype is evaluated.",
     "comparisonTest": "In a comparison test, two prototypes of the same Application are evaluated with a comparison.",
     "splitTest": "In a split test, two prototypes of the same Application are evaluated. Each by one-half of the Crowd-Workers.",

@@ -26,7 +26,10 @@ import {
   TaskFeedbackPreviewDialogData,
 } from '../task-iteration-feedback-preview/task-iteration-feedback-preview.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ReportMisuseComponent } from '../report-misuse/report-misuse.component';
+import {
+  ReportMisuseComponent,
+  ReportMisuseData,
+} from '../report-misuse/report-misuse.component';
 import {
   RatingDialogComponent,
   RatingDialogData,
@@ -172,10 +175,15 @@ export class TaskIterationFeedbacksComponent
     }
   }
 
-  report(feedbackId: string) {
+  async report(feedback: Feedback) {
+    const task = await firstValueFrom(this.task);
     this.dialog.open(ReportMisuseComponent, {
       width: '50vw',
       disableClose: true,
+      data: <ReportMisuseData>{
+        feedback,
+        projectId: task.projectId,
+      },
     });
   }
 

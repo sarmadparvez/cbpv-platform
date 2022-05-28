@@ -42,15 +42,15 @@
         {{ 'name.feedbackProvider' | translate }}
       </th>
       <td mat-cell *matCellDef="let element">
-        <ng-container *ngIf="userMap[element.userId]; else userDeleted">
+        <ng-container *ngIf="userMap[element.userId]; else userNotFound">
           {{
             userMap[element.userId]?.firstName +
               ' ' +
               userMap[element.userId]?.lastName
           }}
         </ng-container>
-        <ng-template #userDeleted>
-          {{ 'note.userDeleted' | translate }}
+        <ng-template #userNotFound>
+          {{ 'note.userNotFound' | translate }}
         </ng-template>
       </td>
     </ng-container>
@@ -166,7 +166,7 @@
             {{ 'action.rateFeedback' | translate }}
           </a>
           <!--Report misuse-->
-          <a mat-menu-item (click)="report(element.id)">
+          <a mat-menu-item (click)="report(element)">
             {{ 'action.reportMisuse' | translate }}
           </a>
         </mat-menu>

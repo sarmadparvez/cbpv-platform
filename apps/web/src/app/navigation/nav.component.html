@@ -9,7 +9,11 @@
       />
     </div>
     <!--Items in the main sidebar-->
-    <mat-nav-list fxLayout="column" fxLayoutAlign="start center">
+    <mat-nav-list
+      fxLayout="column"
+      fxLayoutAlign="start center"
+      *ngIf="currentUser | async as user"
+    >
       <!--Projects-->
       <app-nav-menu-item
         *ngIf="Action.Read | permission: 'Project' | async"
@@ -20,7 +24,10 @@
       </app-nav-menu-item>
       <!--Evaluate-->
       <app-nav-menu-item
-        *ngIf="Action.Create | permission: 'Feedback' | async"
+        *ngIf="
+          (Action.Create | permission: 'Feedback' | async) &&
+          !user.feedbackDisabled
+        "
         text="Evaluate"
         routerLink="/tasks"
         selectionRoute="tasks"
@@ -42,6 +49,16 @@
           text="Users"
           routerLink="/users"
           selectionRoute="users"
+        >
+        </app-nav-menu-item>
+      </div>
+      <!-- Issues -->
+      <div class="full-width">
+        <app-nav-menu-item
+          *ngIf="Action.Manage | permission: 'UserReport' | async"
+          text="Issues"
+          routerLink="/user-reports"
+          selectionRoute="user-reports"
         >
         </app-nav-menu-item>
       </div>

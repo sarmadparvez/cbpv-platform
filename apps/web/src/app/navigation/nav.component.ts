@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
 import { PermissionsService } from '../iam/permission.service';
-import { Action } from '../../gen/api/admin';
+import { Action, User } from '../../gen/api/admin';
 import ActionEnum = Action.ActionEnum;
+import { ReplaySubject } from 'rxjs';
 
 @Component({
   selector: 'app-nav',
@@ -13,6 +14,7 @@ import ActionEnum = Action.ActionEnum;
 export class NavComponent {
   isOpen = true;
   Action = ActionEnum;
+  currentUser: ReplaySubject<User>;
 
   constructor(
     private authService: AuthService,
@@ -20,6 +22,7 @@ export class NavComponent {
     private readonly permService: PermissionsService
   ) {
     this.permService.fetchPermissions();
+    this.currentUser = this.authService.getCurrentUser();
   }
 
   public toggleSideNav() {

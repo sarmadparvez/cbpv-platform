@@ -1,6 +1,7 @@
 import {
   ArrayNotEmpty,
   IsArray,
+  IsBoolean,
   IsDateString,
   IsEnum,
   IsInt,
@@ -54,6 +55,10 @@ export class CreateUserDto {
   @IsOptional()
   @Min(0)
   experience?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  feedbackDisabled: boolean;
 
   @IsArray()
   @IsEnum(Role, { each: true })

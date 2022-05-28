@@ -64,6 +64,9 @@ export class User {
   @Column({ nullable: true })
   experience: number;
 
+  @Column({ type: 'boolean', default: false })
+  feedbackDisabled: boolean;
+
   @Column({
     type: 'enum',
     enum: Role,

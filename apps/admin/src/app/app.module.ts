@@ -10,6 +10,7 @@ import { GlobalExceptionFilter } from './common/global-exception-filter';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { IamModule } from './iam/iam.module';
+import { UserReportsModule } from './user-reports/user-reports.module';
 
 /**
  * To solve single file build artifact issue for nx, for running Typeorm migrations.
@@ -52,6 +53,7 @@ const migrations = contexts
     AuthModule,
     UsersModule,
     IamModule,
+    UserReportsModule,
   ],
   providers: [
     {

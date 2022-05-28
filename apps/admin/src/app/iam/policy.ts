@@ -6,6 +6,7 @@ import {
   ExtractSubjectType,
 } from '@casl/ability';
 import { Role, User } from '../users/entities/user.entity';
+import { UserReport } from '../user-reports/entities/user-report.entity';
 
 /**
  * Defines the policy for a User.
@@ -19,7 +20,7 @@ export enum Action {
   Delete = 'delete',
 }
 
-type Subjects = InferSubjects<typeof User> | 'all';
+type Subjects = InferSubjects<typeof User | typeof UserReport> | 'all';
 
 type AppAbilities = [Action, Subjects];
 export type AppAbility = Ability<AppAbilities>;
@@ -37,6 +38,7 @@ const rolePermissions: Record<Role, DefinePermissions> = {
   },
   developer(user, { can }) {
     can([Action.Update, Action.Read], User, { id: user.id });
+    can(Action.Create, UserReport);
   },
   crowdworker(user, { can }) {
     can([Action.Update, Action.Read], User, { id: user.id });

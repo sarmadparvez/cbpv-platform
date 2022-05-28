@@ -21,7 +21,7 @@ export class ProjectsService {
   ) {}
 
   create(createProjectDto: CreateProjectDto) {
-    const project = projectDtoEntity(createProjectDto);
+    const project = projectDtoToEntity(createProjectDto);
     project.userId = contextService.get('user').id;
     return this.projectRepository.save(project);
   }
@@ -44,7 +44,7 @@ export class ProjectsService {
 
   async update(id: string, updateProjectDto: UpdateProjectDto) {
     await findWithPermissionCheck(id, Action.Update, this.projectRepository);
-    const project = projectDtoEntity(updateProjectDto);
+    const project = projectDtoToEntity(updateProjectDto);
     await this.projectRepository.update(id, project);
     return this.projectRepository.findOne(id);
   }
@@ -81,7 +81,7 @@ export class ProjectsService {
     return response;
   }
 }
-function projectDtoEntity(dto: CreateProjectDto | UpdateProjectDto): Project {
+function projectDtoToEntity(dto: CreateProjectDto | UpdateProjectDto): Project {
   const data = classToPlain(dto);
   return plainToClass(Project, data);
 }
