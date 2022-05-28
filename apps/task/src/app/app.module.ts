@@ -34,6 +34,7 @@ import { TaskRequestsModule } from './task-requests/task-requests.module';
         }
         return Object.assign(await getConnectionOptions(), {
           autoLoadEntities: true,
+          // extra: { ssl: { rejectUnauthorized: false } },
         });
       },
     }),
