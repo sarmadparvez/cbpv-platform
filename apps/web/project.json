@@ -8,6 +8,7 @@
       "executor": "@angular-devkit/build-angular:browser",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "generatePackageJson": true,
         "outputPath": "dist/apps/web",
         "index": "apps/web/src/index.html",
         "main": "apps/web/src/main.ts",
