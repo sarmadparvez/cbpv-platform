@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   adminServiceUrl: 'http://localhost:3001',
   taskServiceUrl: 'http://localhost:3000',
+  googleSSORedirect: 'http://localhost:3001',
 };
 
 /*

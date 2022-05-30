@@ -28,7 +28,7 @@ export class IamService {
   }
 
   /**
-   * Get a user from admin service
+   * Get a user from task service
    * @param id the uuid for the user
    */
   async getUserPermissionsFromTaskService() {

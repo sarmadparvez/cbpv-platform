@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
   }
 
   googleSSORedirect(): void {
-    window.location.href = `${environment.adminServiceUrl}/auth/google`;
+    window.location.href = `${environment.googleSSORedirect}/auth/google`;
   }
 
   public async login() {
