@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  adminServiceUrl: 'https://upb-cbpv-admin.herokuapp.com',
-  taskServiceUrl: 'https://upb-cbpv-task.herokuapp.com',
+  adminServiceUrl: 'https://upb-admin.herokuapp.com',
+  taskServiceUrl: 'https://upb-task.herokuapp.com',
 };
