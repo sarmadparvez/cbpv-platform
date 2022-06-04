@@ -1,0 +1,71 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav mode="side" [opened]="isOpen" class="app-sidenav">
+    <div class="sidenav-logo-container">
+      <img
+        class="logo clickable"
+        src="assets/images/logo.png"
+        alt="logo"
+        routerLink="/home"
+      />
+    </div>
+    <!--Items in the main sidebar-->
+    <mat-nav-list
+      fxLayout="column"
+      fxLayoutAlign="start center"
+      *ngIf="currentUser | async as user"
+    >
+      <!--Projects-->
+      <app-nav-menu-item
+        *ngIf="Action.Read | permission: 'Project' | async"
+        text="Projects"
+        routerLink="/projects"
+        selectionRoute="projects"
+      >
+      </app-nav-menu-item>
+      <!--Evaluate-->
+      <app-nav-menu-item
+        *ngIf="
+          (Action.Create | permission: 'Feedback' | async) &&
+          !user.feedbackDisabled
+        "
+        text="Evaluate"
+        routerLink="/tasks"
+        selectionRoute="tasks"
+      >
+      </app-nav-menu-item>
+      <!--Feedbacks-->
+      <app-nav-menu-item
+        *ngIf="Action.Create | permission: 'Feedback' | async"
+        text="Feedbacks"
+        routerLink="/feedbacks"
+        selectionRoute="feedbacks"
+        [selectorStyle]="{ transform: 'translateX(-14px)' }"
+      >
+      </app-nav-menu-item>
+      <!--Users-->
+      <div class="full-width">
+        <app-nav-menu-item
+          *ngIf="Action.Manage | permission: 'User' | async"
+          text="Users"
+          routerLink="/users"
+          selectionRoute="users"
+        >
+        </app-nav-menu-item>
+      </div>
+      <!-- Issues -->
+      <div class="full-width">
+        <app-nav-menu-item
+          *ngIf="Action.Manage | permission: 'UserReport' | async"
+          text="Issues"
+          routerLink="/user-reports"
+          selectionRoute="user-reports"
+        >
+        </app-nav-menu-item>
+      </div>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="main-sidenav-content">
+    <app-nav-toolbar (toggleSideNav)="toggleSideNav()"></app-nav-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

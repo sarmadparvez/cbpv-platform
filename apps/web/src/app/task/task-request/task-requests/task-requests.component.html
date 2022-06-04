@@ -1,0 +1,129 @@
+<div>
+  Here you can see all requests for this Prototype iteration. If there are any
+  requests, crowd-workers can only provide feedback on your prototype if you
+  accept these requets.
+</div>
+<ul>
+  <li class="list-item">
+    To see requests for a different iteration, please change the iteration from
+    the dropdown.
+  </li>
+  <ng-container *ngIf="dataSource.data.length > 0">
+    <li class="list-item">
+      To review and accept/reject a request please click on it or open it from
+      <em>Options</em> column menu in the table.
+    </li>
+  </ng-container>
+</ul>
+
+<div [hidden]="dataSource.data.length < 1">
+  <!--Tasks table-->
+  <h2>Requests by Crowd-Workers</h2>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+    <!-- User Column -->
+    <ng-container matColumnDef="user">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'name.requester' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <ng-container *ngIf="userMap[element.userId]; else userNotFound">
+          {{
+            userMap[element.userId]?.firstName +
+              ' ' +
+              userMap[element.userId]?.lastName
+          }}
+        </ng-container>
+        <ng-template #userNotFound>
+          {{ 'note.userNotFound' | translate }}
+        </ng-template>
+      </td>
+    </ng-container>
+    <!-- Request Comment Column -->
+    <ng-container matColumnDef="requestComment">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'name.requesterComment' | translate }}
+      </th>
+      <td
+        mat-cell
+        [matTooltip]="element.requestComment"
+        [matTooltipPosition]="'before'"
+        *matCellDef="let element"
+        class="comment-column"
+      >
+        <span>
+          {{ element.requestComment }}
+        </span>
+      </td>
+    </ng-container>
+
+    <!-- Creation date Column -->
+    <ng-container matColumnDef="dateCreated">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'name.dateCreated' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.dateCreated | date: 'dd.MM.y HH:mm:ss' }}
+      </td>
+    </ng-container>
+
+    <!-- Request Status -->
+    <ng-container matColumnDef="requestStatus">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'name.status' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ 'requestStatus.' + element.requestStatus | translate }}
+      </td>
+    </ng-container>
+    <!--NDA Url-->
+    <ng-container matColumnDef="ndaUrl">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>NDA</th>
+      <td mat-cell *matCellDef="let element">
+        <a
+          mat-button
+          *ngIf="element.ndaUrl"
+          target="_blank"
+          (click)="download($event, element.ndaUrl)"
+        >
+          <mat-icon>file_download</mat-icon>
+          {{ 'action.signedDownloadNDA' | translate }}
+        </a>
+      </td>
+    </ng-container>
+
+    <!-- Options Column -->
+    <ng-container matColumnDef="options">
+      <th mat-header-cell *matHeaderCellDef>
+        <span class="float-right">Options</span>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <button
+          class="float-right"
+          (click)="$event.stopPropagation()"
+          [matMenuTriggerFor]="menu"
+          mat-icon-button
+        >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu>
+          <!--Open-->
+          <a mat-menu-item (click)="openTaskRequest(element)"> Open </a>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (click)="openTaskRequest(row)"
+    ></tr>
+  </table>
+  <mat-paginator
+    class="mat-elevation-z8"
+    [pageSizeOptions]="[10, 25, 50, 100]"
+    showFirstLastButtons="true"
+  ></mat-paginator>
+</div>
+
+<app-no-data *ngIf="dataSource.data.length < 1"></app-no-data>

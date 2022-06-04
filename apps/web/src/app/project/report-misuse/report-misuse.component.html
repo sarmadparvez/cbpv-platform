@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>{{ 'action.reportMisuse' | translate }}</h2>
+<mat-dialog-content class="mat-typography">
+  <p class="text-note">
+    Please provide details about the misuse. We will review your report and take
+    action accordingly.
+  </p>
+
+  <form [formGroup]="form">
+    <!--Comment -->
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>{{ 'name.comment' | translate }}</mat-label>
+      <textarea formControlName="description" matInput> </textarea>
+      <mat-error *ngIf="form.controls.description.errors?.required">
+        {{ 'error.required' | translate }}
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-dialog-close mat-button>Cancel</button>
+  <button mat-button color="black" (click)="report()">Report</button>
+</mat-dialog-actions>

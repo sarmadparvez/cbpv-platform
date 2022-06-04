@@ -1,0 +1,11 @@
+table {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.description-column {
+  max-width: 400px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

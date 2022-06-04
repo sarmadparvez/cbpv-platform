@@ -1,0 +1,25 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@cbpv-platform/common": ["libs/common/src/index.ts"],
+      "@cbpv-platform/countries": ["libs/countries/src/index.ts"],
+      "@cbpv-platform/roles": ["libs/roles/src/index.ts"],
+      "@cbpv-platform/skills": ["libs/skills/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

@@ -1,0 +1,133 @@
+<h2 mat-dialog-title>
+  <ng-container ngSwitch="{{ task.accessType }}">
+    <ng-container *ngSwitchCase="AccessType.Nda">
+      {{ 'name.nda' | translate }}
+    </ng-container>
+    <ng-container *ngSwitchCase="AccessType.Request">
+      Request Access
+    </ng-container>
+  </ng-container>
+</h2>
+
+<mat-dialog-content class="mat-typography">
+  <ng-container ngSwitch="{{ task.accessType }}">
+    <ng-container *ngSwitchCase="AccessType.Nda">
+      <p
+        class="text-note"
+        *ngIf="
+          !(taskRequest?.requestStatus === TaskRequestStatus.Requested);
+          else requestedMessage
+        "
+      >
+        You are required to sign a Non-Disclosure agreement (NDA) to access this
+        Task. Please download the NDA, sign it, and upload it back. Then click
+        on the Request button. Your request will be then reviewed by the Task
+        Owner. If the request is approved, you will be able to access this Task.
+        Please wait until then.
+      </p>
+    </ng-container>
+    <ng-container *ngSwitchCase="AccessType.Request">
+      <p
+        class="text-note"
+        *ngIf="
+          !(taskRequest?.requestStatus === TaskRequestStatus.Requested);
+          else requestedMessage
+        "
+      >
+        You are required to request access to this Task. Your request will be
+        then reviewed by the Task Owner. If the request is approved, you will be
+        able to access this Task. Please wait until then.
+      </p>
+    </ng-container>
+    <ng-template #requestedMessage>
+      <p class="text-note">
+        Your request is already submitted and is being reviewed by the Task
+        Owner. Please wait until your request is accepted.
+      </p>
+    </ng-template>
+    <ng-container
+      *ngIf="!(taskRequest?.requestStatus === TaskRequestStatus.Requested)"
+    >
+      <!--NDA Download-->
+      <ng-container *ngIf="ndaUrl">
+        <a mat-button href="{{ ndaUrl }}" target="_blank">
+          <mat-icon>file_download</mat-icon>
+          {{ 'action.downloadNDA' | translate }}
+        </a>
+        <span class="text-note"
+          >This is the NDA provided by Task Owner which you need to sign.</span
+        >
+        <!-- NDA Upload -->
+        <div class="mt-20" fxLayout fxLayoutGap="20px">
+          <app-file-upload
+            [uploadSignature]="uploadSignature"
+            buttonLabel="action.uploadSignedNDA"
+            (fileUploadClick)="getUploadSignature()"
+            (completeEvent)="saveNDAUrl($event)"
+          >
+          </app-file-upload>
+          <span class="text-note mt-10"
+            >Here you need to upload the signed NDA.</span
+          >
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <!--Signed NDA Download-->
+    <ng-container *ngIf="taskRequest?.ndaUrl">
+      <a
+        class="mt-20"
+        mat-button
+        href="{{ taskRequest?.ndaUrl }}"
+        target="_blank"
+      >
+        <mat-icon>file_download</mat-icon>
+        {{ 'action.signedDownloadNDA' | translate }}
+      </a>
+      <span class="text-note">This is the signed NDA which you uploaded.</span>
+    </ng-container>
+  </ng-container>
+
+  <!--Request Comment -->
+  <mat-form-field class="full-width mt-20" appearance="outline">
+    <mat-label>Optional Comments</mat-label>
+    <textarea rows="5" [formControl]="requestComment" matInput> </textarea>
+  </mat-form-field>
+
+  <!--Rejection Comment-->
+  <ng-container
+    *ngIf="taskRequest?.requestStatus === TaskRequestStatus.Rejected"
+  >
+    <p
+      class="text-note"
+      *ngIf="!taskRequest?.rejectionComment; else rejectionComment"
+    >
+      <b>Note: Your previous request was rejected.</b>
+    </p>
+  </ng-container>
+  <ng-container
+    *ngIf="
+      !(taskRequest?.requestStatus === TaskRequestStatus.Rejected) &&
+      taskRequest?.rejectionComment
+    "
+  >
+    <ng-container *ngTemplateOutlet="rejectionComment"></ng-container>
+  </ng-container>
+  <ng-template #rejectionComment>
+    <p class="text-note">
+      <b>Note: Your previous request was rejected with following comment:</b>
+    </p>
+    <P class="text-note multiline">{{ taskRequest?.rejectionComment }}</P>
+  </ng-template>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-dialog-close mat-button>Cancel</button>
+  <button
+    mat-button
+    color="black"
+    (click)="request()"
+    *ngIf="!(taskRequest?.requestStatus === TaskRequestStatus.Requested)"
+  >
+    Request
+  </button>
+</mat-dialog-actions>

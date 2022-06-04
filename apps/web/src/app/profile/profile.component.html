@@ -1,0 +1,188 @@
+<div class="page-content">
+  <h2>Profile</h2>
+  <p>
+    Here you can update your User profile. Changing your role(s) will require
+    you to re-login to the system.
+  </p>
+  <div fxLayout fxLayoutAlign="start start">
+    <form [formGroup]="form" fxFlex="70%">
+      <div fxLayout fxLayoutGap="10px">
+        <!--First name-->
+        <mat-form-field class="full-width" appearance="fill">
+          <mat-label>{{ 'name.firstName' | translate }}</mat-label>
+          <input formControlName="firstName" matInput />
+          <mat-error *ngIf="form.get('firstName')?.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+        </mat-form-field>
+        <!--Last Name-->
+        <mat-form-field class="full-width" appearance="fill">
+          <mat-label>{{ 'name.lastName' | translate }}</mat-label>
+          <input formControlName="lastName" matInput />
+          <mat-error *ngIf="form.get('lastName')?.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout fxLayoutGap="10px" *ngIf="(user | async)?.username">
+        <!--Username -->
+        <mat-form-field class="full-width" appearance="fill">
+          <mat-label>{{ 'name.username' | translate }}</mat-label>
+          <input formControlName="username" matInput />
+          <mat-error *ngIf="form.get('username')?.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxLayout fxLayoutGap="10px" class="mb-20">
+        <!--Birthdate-->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>{{ 'name.birthdate' | translate }}</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="birthDate"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="form.get('birthDate')?.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+          <mat-hint class="hint-text">{{
+            'note.birthdayHint' | translate
+          }}</mat-hint>
+        </mat-form-field>
+        <!--Experience-->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label> {{ 'name.experience' | translate }} </mat-label>
+          <input type="number" min="0" formControlName="experience" matInput />
+          <mat-error *ngIf="form.controls.experience.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+          <mat-hint class="hint-text">{{
+            'note.experienceHint' | translate
+          }}</mat-hint>
+        </mat-form-field>
+        <!--Gender-->
+        <!--        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>{{'name.gender' | translate}}</mat-label>
+          <mat-select formControlName="gender" >
+            <mat-option [value]="GenderEnum.Male">
+              {{GenderEnum.Male}}
+            </mat-option>
+            <mat-option [value]="GenderEnum.Female">
+              {{GenderEnum.Female}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('gender').hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+        </mat-form-field>-->
+      </div>
+      <div fxLayout fxLayoutGap="10px" class="mb-20">
+        <!--Roles-->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>{{ 'name.roles' | translate }}</mat-label>
+          <mat-select formControlName="roles" multiple>
+            <mat-option
+              [value]="RolesEnum.Admin"
+              *ngIf="[RolesEnum.Admin] | hasRoles | async"
+            >
+              {{ 'role.' + RolesEnum.Admin | translate }}
+            </mat-option>
+            <mat-option [value]="RolesEnum.Developer">
+              {{ 'role.' + RolesEnum.Developer | translate }}
+            </mat-option>
+            <mat-option [value]="RolesEnum.Crowdworker">
+              {{ 'role.' + RolesEnum.Crowdworker | translate }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('roles')?.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+        </mat-form-field>
+        <!-- Country -->
+        <mat-form-field class="full-width" appearance="fill">
+          <mat-label>{{ 'name.country' | translate }}</mat-label>
+          <input
+            type="text"
+            placeholder="Select one"
+            matInput
+            formControlName="country"
+            [matAutocomplete]="autoCountry"
+          />
+          <mat-autocomplete
+            #autoCountry="matAutocomplete"
+            [displayWith]="displayFn"
+          >
+            <mat-option
+              *ngFor="let option of filteredCountries | async"
+              [value]="option"
+            >
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="form.controls.country.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+          <mat-hint class="hint-text">{{
+            'note.countryHint' | translate
+          }}</mat-hint>
+        </mat-form-field>
+      </div>
+      <div fxLayout fxLayoutGap="10px">
+        <!--Skills-->
+        <mat-form-field class="full-width" appearance="fill">
+          <mat-label>{{ 'name.skills' | translate }} *</mat-label>
+          <mat-chip-list #chipList formControlName="skills">
+            <mat-chip
+              *ngFor="let skill of selectedSkills"
+              (removed)="remove(skill)"
+            >
+              {{ skill.name }}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+            <input
+              placeholder="New Skill..."
+              #skillsInput
+              formControlName="skills"
+              [matAutocomplete]="autoSkill"
+              [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addSkill($event)"
+            />
+          </mat-chip-list>
+          <mat-autocomplete
+            #autoSkill="matAutocomplete"
+            (optionSelected)="selectedSkill($event)"
+            [displayWith]="displayFn"
+          >
+            <mat-option
+              *ngFor="let skill of filteredSkills | async"
+              [value]="skill"
+            >
+              {{ skill.name }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="skillsControl.hasError('required')">
+            {{ 'error.required' | translate }}
+          </mat-error>
+          <mat-hint class="hint-text">{{
+            'note.skillsHint' | translate
+          }}</mat-hint>
+        </mat-form-field>
+      </div>
+      <!--Save button-->
+      <div fxLayout fxLayoutAlign="end center">
+        <button mat-raised-button color="black" (click)="save(form)">
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

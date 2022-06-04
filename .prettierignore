@@ -1,0 +1,8 @@
+# Add files here to ignore them from prettier formatting
+
+/dist
+/coverage
+.angular
+/apps/web/src/gen
+/apps/admin/src/swagger
+/apps/task/src/swagger

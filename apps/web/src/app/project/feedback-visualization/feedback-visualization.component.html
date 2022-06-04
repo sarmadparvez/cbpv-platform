@@ -1,0 +1,41 @@
+<div>Here you can visualize feedback graphically.</div>
+<p>
+  To see feedback visualization for a different iteration, please change the
+  iteration from the dropdown.
+</p>
+<ng-container *ngIf="(task | async)?.testType === TestTypeEnum.Split">
+  <div class="text-note">
+    Select the prototype number to see feedback for (Split Test):
+  </div>
+  <mat-form-field appearance="standard">
+    <mat-label>Prototype Number</mat-label>
+    <mat-select
+      [(value)]="prototypeNumber"
+      (selectionChange)="loadPrototypeStats($event)"
+    >
+      <mat-option [value]="1">Protototype 1</mat-option>
+      <mat-option [value]="2">Protototype 2</mat-option>
+    </mat-select>
+  </mat-form-field>
+</ng-container>
+
+<div *ngFor="let qStats of questionStats">
+  <ng-container [ngSwitch]="qStats.question.type">
+    <div *ngSwitchCase="QuestionTypeEnum.ThumbsRating" class="mb-30">
+      <app-thumbs-rating-visualization
+        [question]="qStats.question"
+        [thumbsUpCount]="qStats.stats[0].thumbsUpCount"
+        [thumbsDownCount]="qStats.stats[0].thumbsDownCount"
+      >
+      </app-thumbs-rating-visualization>
+    </div>
+    <div *ngSwitchCase="QuestionTypeEnum.Radio" class="mb-30">
+      <app-radio-feedback-visualization [questionStats]="qStats">
+      </app-radio-feedback-visualization>
+    </div>
+    <div *ngSwitchCase="QuestionTypeEnum.StarRating" class="mb-30">
+      <app-star-rating-visualization [questionStats]="qStats">
+      </app-star-rating-visualization>
+    </div>
+  </ng-container>
+</div>

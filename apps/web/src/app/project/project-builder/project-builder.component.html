@@ -1,0 +1,259 @@
+<mat-sidenav-container class="second-sidenav-container">
+  <mat-sidenav
+    [disableClose]="true"
+    class="second-sidenav"
+    mode="side"
+    opened="true"
+    position="start"
+  >
+    <!-- Task iterations dropdown -->
+    <mat-select
+      [formControl]="taskControl"
+      class="task-iterations-select"
+      placeholder="Prototype Iterations"
+    >
+      <mat-select-trigger>{{
+        'Iteration ' + (tasks.length - tasks.indexOf(taskControl.value))
+      }}</mat-select-trigger>
+      <mat-option
+        [value]="task"
+        *ngFor="let task of tasks; let i = index"
+        class="dir-revision-select-item"
+      >
+        {{ 'Iteration ' + (tasks.length - i) }}
+      </mat-option>
+    </mat-select>
+    <!--Overview-->
+    <div
+      class="second-sidenav-options clickable"
+      (click)="openView('overview')"
+      [ngClass]="{
+        'second-sidenav-selected': currentView === 'overview'
+      }"
+    >
+      <mat-icon class="second-sidenav-icon"> visibility </mat-icon>
+
+      <span>{{ 'action.overview' | translate }}</span>
+    </div>
+    <!--Task Requests-->
+    <!--Feedbacks-->
+    <div
+      *ngIf="
+        (task | async)?.accessType === AccessType.Nda ||
+        (task | async)?.accessType === AccessType.Request
+      "
+      class="second-sidenav-options clickable mt-15"
+      (click)="openView('request')"
+      [ngClass]="{
+        'second-sidenav-selected': currentView === 'request'
+      }"
+    >
+      <mat-icon class="second-sidenav-icon"> priority_high </mat-icon>
+
+      <span>{{ 'name.requests' | translate }}</span>
+    </div>
+
+    <!--Feedbacks-->
+    <div
+      class="second-sidenav-options clickable mt-15"
+      (click)="openView('feedback')"
+      [ngClass]="{
+        'second-sidenav-selected': currentView === 'feedback'
+      }"
+    >
+      <mat-icon class="second-sidenav-icon"> rate_review </mat-icon>
+
+      <span>{{ 'name.feedbacks' | translate }}</span>
+    </div>
+
+    <!--Visualization-->
+    <div
+      class="second-sidenav-options clickable mt-15"
+      (click)="openView('visualization')"
+      [ngClass]="{
+        'second-sidenav-selected': currentView === 'visualization'
+      }"
+    >
+      <mat-icon class="second-sidenav-icon"> insert_chart_outlined </mat-icon>
+
+      <span>{{ 'name.visualization' | translate }}</span>
+    </div>
+
+    <!--Sample Prototypes-->
+    <div
+      class="second-sidenav-options clickable mt-15"
+      (click)="openView('sample')"
+      [ngClass]="{
+        'second-sidenav-selected': currentView === 'sample'
+      }"
+    >
+      <mat-icon class="second-sidenav-icon"> apps </mat-icon>
+
+      <span>{{ 'action.samplePrototypes' | translate }}</span>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="page-content">
+    <!--Header content-->
+    <div fxLayout fxLayoutAlign="end center" class="mb-20" fxLayoutGap="10px">
+      <h2 class="text-note inline-heading project-name margin-right-auto">
+        {{ project?.title }}
+      </h2>
+      <!--Edit button-->
+      <button
+        mat-raised-button
+        color="black"
+        *ngIf="(task | async)?.status === StatusEnum.Draft"
+        (click)="openTaskForm(true)"
+      >
+        {{ 'action.edit' | translate }}
+      </button>
+      <!--Start new iteration-->
+      <button
+        *ngIf="
+          tasks[0]?.status === StatusEnum.Closed ||
+          ((task | async) === undefined && tasks.length === 0)
+        "
+        mat-raised-button
+        color="black"
+        (click)="openTaskForm()"
+      >
+        Start New Iteration
+      </button>
+      <!--Activate button-->
+      <button
+        mat-raised-button
+        color="black"
+        *ngIf="(task | async)?.status === StatusEnum.Draft"
+        (click)="activateTask()"
+      >
+        {{ 'action.activate' | translate }}
+      </button>
+      <!--Close Task-->
+      <button
+        mat-raised-button
+        color="black"
+        *ngIf="(task | async)?.status === StatusEnum.Open"
+        (click)="closeTask()"
+      >
+        {{ 'action.closeIteration' | translate }}
+      </button>
+
+      <!--Cancel button-->
+      <button mat-button (click)="routeToProjects()">
+        {{ 'action.cancel' | translate }}
+      </button>
+      <!-- Additional options -->
+      <button
+        mat-icon-button
+        [mat-menu-trigger-for]="additionalOptions"
+        *ngIf="(task | async)?.status === StatusEnum.Draft || project?.ndaUrl"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <!--Menu-->
+      <!-- Menu -->
+      <mat-menu #additionalOptions="matMenu">
+        <button mat-menu-item *ngIf="project?.ndaUrl" (click)="downloadNDA()">
+          <span>
+            {{ 'action.downloadNDA' | translate }}
+          </span>
+        </button>
+
+        <button
+          mat-menu-item
+          *ngIf="(task | async)?.status === StatusEnum.Draft"
+          (click)="deleteTask()"
+        >
+          <span>
+            {{ 'action.delete' | translate }}
+          </span>
+        </button>
+      </mat-menu>
+    </div>
+    <ng-container [ngSwitch]="currentView">
+      <!--Overview-->
+      <ng-container *ngSwitchCase="'overview'">
+        <p
+          class="margin-right-auto"
+          *ngIf="tasks[0]?.status === StatusEnum.Closed || tasks.length === 0"
+        >
+          You can create new prototype from <em>Start New Iteration</em> button.
+        </p>
+        <ng-container *ngIf="task | async as t">
+          <p class="margin-right-auto" *ngIf="t.status === StatusEnum.Open">
+            Task is Open for Feedbacks. However you can close it and start a new
+            Iteration.
+          </p>
+          <ul class="margin-right-auto" *ngIf="t.status === StatusEnum.Draft">
+            <li class="list-item">
+              Please add your Prototype and Questionnaire before activating the
+              Task.
+            </li>
+            <li class="list-item">
+              You <strong>must</strong> <em> Activate</em> the task to make it
+              available for evaluation by the Crowdworkers.
+            </li>
+          </ul>
+        </ng-container>
+
+        <!--Task detail component-->
+        <div>
+          <app-task-detail
+            class="full-width"
+            *ngIf="task | async as t"
+            [task]="t"
+          ></app-task-detail>
+        </div>
+
+        <div class="mt-30">
+          <!--Image Prototype-->
+          <app-image-prototype
+            *ngIf="
+              (task | async)?.prototypeFormat === PrototypeFormatEnum.Image
+            "
+            [task]="task"
+          >
+          </app-image-prototype>
+          <!--Iframe Prototype-->
+          <app-iframe-prototype
+            *ngIf="
+              (task | async)?.prototypeFormat === PrototypeFormatEnum.Iframe
+            "
+            [task]="task"
+          >
+          </app-iframe-prototype>
+          <!--Text Prototype-->
+          <app-text-prototype
+            *ngIf="(task | async)?.prototypeFormat === PrototypeFormatEnum.Text"
+            [task]="task"
+          >
+          </app-text-prototype>
+        </div>
+        <!--Questionnaire-->
+        <div class="mt-30" *ngIf="task | async">
+          <app-questionnaire [task]="task"> </app-questionnaire>
+        </div>
+      </ng-container>
+      <!--Requests-->
+      <ng-container *ngSwitchCase="'request'">
+        <app-task-requests [task]="task"></app-task-requests>
+      </ng-container>
+      <!-- Feedbacks -->
+      <ng-container *ngSwitchCase="'feedback'">
+        <app-task-iteration-feedbacks
+          [task]="task"
+        ></app-task-iteration-feedbacks>
+      </ng-container>
+      <!-- Visualization -->
+      <ng-container *ngSwitchCase="'visualization'">
+        <app-feedback-visualization [task]="task"></app-feedback-visualization>
+      </ng-container>
+
+      <!--Sample Prototypes-->
+      <ng-container *ngSwitchCase="'sample'">
+        <app-sample-prototype></app-sample-prototype>
+      </ng-container>
+    </ng-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
