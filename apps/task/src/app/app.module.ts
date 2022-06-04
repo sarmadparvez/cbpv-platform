@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ProjectsModule } from './projects/projects.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
-import { GlobalExceptionFilter } from './common/global-exception-filter';
+import { GlobalExceptionFilter } from '@cbpv-platform/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TasksModule } from './tasks/tasks.module';
 import { SkillsModule } from './skills/skills.module';

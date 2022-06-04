@@ -14,7 +14,12 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@cbpv-platform/common": ["libs/common/src/index.ts"],
+      "@cbpv-platform/countries": ["libs/countries/src/index.ts"],
+      "@cbpv-platform/roles": ["libs/roles/src/index.ts"],
+      "@cbpv-platform/skills": ["libs/skills/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

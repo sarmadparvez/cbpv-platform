@@ -11,8 +11,6 @@ import {
 } from './entities/task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, In, Repository } from 'typeorm';
-import { Skill } from '../skills/entities/skill.entity';
-import { Country } from '../countries/entities/country.entity';
 import { FindAllTasksDto } from './dto/find-all-tasks.dto';
 import { v2 as cloudinary } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
@@ -37,6 +35,8 @@ import { TaskRequest } from '../task-requests/entities/task-request.entity';
 import { TaskRequestsService } from '../task-requests/task-requests.service';
 import { SplitTestCache } from './entities/split-test-cache';
 import { GeneratePrototypeNumberResponseDto } from './dto/generate-prototype-number-response.dto';
+import { Skill } from '@cbpv-platform/skills';
+import { Country } from '@cbpv-platform/countries';
 
 cloudinary.config(cloudinaryConfig().cloudinary.config);
 

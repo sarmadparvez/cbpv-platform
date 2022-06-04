@@ -2,6 +2,10 @@
   "version": 2,
   "projects": {
     "admin": "apps/admin",
+    "common": "libs/common",
+    "countries": "libs/countries",
+    "roles": "libs/roles",
+    "skills": "libs/skills",
     "task": "apps/task",
     "web": "apps/web",
     "web-e2e": "apps/web-e2e"

@@ -7,17 +7,12 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Skill } from '../../skills/entities/skill.entity';
-import { Country } from '../../countries/entities/country.entity';
 import { Min } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-
-export enum Role {
-  Admin = 'admin',
-  Developer = 'developer',
-  Crowdworker = 'crowdworker',
-}
+import { Country } from '@cbpv-platform/countries';
+import { Skill } from '@cbpv-platform/skills';
+import { Role } from '@cbpv-platform/roles';
 
 export enum Gender {
   Male = 'male',

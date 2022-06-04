@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Country } from './entities/country.entity';
 import { Timeout } from '@nestjs/schedule';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { Country } from '@cbpv-platform/countries';
 
 @Injectable()
 export class CountriesService {

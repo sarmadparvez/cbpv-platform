@@ -12,7 +12,8 @@ import {
   Matches,
   Min,
 } from 'class-validator';
-import { Gender, Role } from '../entities/user.entity';
+import { Gender } from '../entities/user.entity';
+import { Role } from '@cbpv-platform/roles';
 
 /**
  * Password regex rules:

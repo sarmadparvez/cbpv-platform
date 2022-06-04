@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CountriesModule } from './countries/countries.module';
 import { UsersModule } from './users/users.module';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
-import { GlobalExceptionFilter } from './common/global-exception-filter';
+import { GlobalExceptionFilter } from '@cbpv-platform/common';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { IamModule } from './iam/iam.module';

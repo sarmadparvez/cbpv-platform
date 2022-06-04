@@ -5,8 +5,9 @@ import {
   InferSubjects,
   ExtractSubjectType,
 } from '@casl/ability';
-import { Role, User } from '../users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { UserReport } from '../user-reports/entities/user-report.entity';
+import { Role } from '@cbpv-platform/roles';
 
 /**
  * Defines the policy for a User.

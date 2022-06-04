@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { Skill } from './entities/skill.entity';
+import { Skill } from '@cbpv-platform/skills';
 
 @Injectable()
 export class SkillsService {

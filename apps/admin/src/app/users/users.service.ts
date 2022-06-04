@@ -3,8 +3,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { classToPlain, plainToClass } from 'class-transformer';
 import { User } from './entities/user.entity';
-import { Skill } from '../skills/entities/skill.entity';
-import { Country } from '../countries/entities/country.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -12,6 +10,8 @@ import { CreateWithSSODto, SSOProvider } from './dto/create-with-sso.dto';
 import { BatchGetUserInfoDto } from './dto/batch-get-user-info.dto';
 import * as contextService from 'request-context';
 import { Action, AppAbility } from '../iam/policy';
+import { Country } from '@cbpv-platform/countries';
+import { Skill } from '@cbpv-platform/skills';
 
 @Injectable()
 export class UsersService {

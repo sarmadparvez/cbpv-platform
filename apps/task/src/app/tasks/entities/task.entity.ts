@@ -12,10 +12,10 @@ import {
 import { Max, Min } from 'class-validator';
 import { Project } from '../../projects/entities/project.entity';
 import { Image } from './image.entity';
-import { Skill } from '../../skills/entities/skill.entity';
-import { Country } from '../../countries/entities/country.entity';
 import { Question } from './question.entity';
 import { Feedback } from '../../feedbacks/entities/feedback.entity';
+import { Skill } from '@cbpv-platform/skills';
+import { Country } from '@cbpv-platform/countries';
 
 export enum TestType {
   Basic = 'basic',

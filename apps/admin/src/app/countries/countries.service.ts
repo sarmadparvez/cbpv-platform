@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Country } from './entities/country.entity';
+import { Country } from '@cbpv-platform/countries';
+//import { Country } from './entities/country.entity';
 
 @Injectable()
 export class CountriesService {

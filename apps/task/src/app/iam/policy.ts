@@ -8,8 +8,9 @@ import {
 import { Project } from '../projects/entities/project.entity';
 import { Task } from '../tasks/entities/task.entity';
 import { Feedback } from '../feedbacks/entities/feedback.entity';
-import { Role, User } from '../users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { TaskRequest } from '../task-requests/entities/task-request.entity';
+import { Role } from '@cbpv-platform/roles';
 
 /**
  * Defines the policy for a User.

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Skill } from './entities/skill.entity';
 import { Logger } from '@nestjs/common';
 import { Timeout } from '@nestjs/schedule';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
+import { Skill } from '@cbpv-platform/skills';
 
 @Injectable()
 export class SkillsService {
