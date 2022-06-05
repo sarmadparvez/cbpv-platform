@@ -44,7 +44,6 @@ const migrations = contexts
         return Object.assign(await getConnectionOptions(), {
           autoLoadEntities: true,
           migrationsRun: true,
-          //   extra: { ssl: { rejectUnauthorized: false } },
           migrations: Object.values(migrations),
         });
       },
