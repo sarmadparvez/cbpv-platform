@@ -107,11 +107,12 @@ Libraries are shareable across libraries and applications. They can be imported 
 
 #### Pre-requisites for running the applications on local environment
 
-1. First you need to install dependencies by `npm install`.
-2. To generate client side services (for web) from OpenAPI specification (available in `apps/task/src/swagger` and `apps/admin/src/swagger`) you need to install
+1. Please make sure that you have node version >= 17.7.2 installed. Installation of dependencies may fail in the previous versions.
+2. Install dependencies by `npm install`. If the installation fails due to older node version, try installing with force flag `npm install --force`
+3. To generate client side services (for web) from OpenAPI specification (available in `apps/task/src/swagger` and `apps/admin/src/swagger`) you need to install
    [OpenAPI Generator](https://openapi-generator.tech/docs/installation)
    `npm install @openapitools/openapi-generator-cli -g` .
-3. Generate client side services (for web) by `npm run generate:api`.
+4. Generate client side services (for web) by `npm run generate:api`.
 
 #### Run the Applications on local environment
 

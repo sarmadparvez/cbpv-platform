@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  adminServiceUrl: 'https://upb-admin.herokuapp.com',
-  taskServiceUrl: 'https://upb-task.herokuapp.com',
-  googleSSORedirect: 'https://upb-cbpv-admin.herokuapp.com',
+  adminServiceUrl: 'https://cbpv-admin.herokuapp.com',
+  taskServiceUrl: 'https://cbpv-task.herokuapp.com',
+  googleSSORedirect: 'https://cbpv-admin.herokuapp.com',
 };
