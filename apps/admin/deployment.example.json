@@ -1,0 +1,62 @@
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "admin"
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "matchLabels": {
+        "app": "admin"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "admin"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "admin",
+            "image": "admin:latest",
+            "imagePullPolicy": "Never",
+            "ports": [
+              {
+                "containerPort": 3333
+              }
+            ],
+            "env": [
+              {
+                "name": "GOOGLE_CLIENT_ID",
+                "value": "Google Client ID For SSO"
+              },
+              {
+                "name": "GOOGLE_CLIENT_SECRET",
+                "value": "Google Client Secret For SSO"
+              },
+              {
+                "name": "DATABASE_URL",
+                "value": "Database URL"
+              },
+              {
+                "name": "TASK_API",
+                "value": "http://54.90.111.53:30843"
+              },
+              {
+                "name": "WEB_APP_URL",
+                "value": "https://upb-cbpv-platform.web.app"
+              },
+              {
+                "name": "ADMIN_API_URL",
+                "value": "http://54.90.111.53:31170"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

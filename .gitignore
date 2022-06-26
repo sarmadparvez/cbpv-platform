@@ -45,3 +45,9 @@ apps/web/src/gen
 
 # Firebase
 .firebase
+
+# enviroment files
+apps/admin/.env
+apps/admin/deployment.json
+apps/task/.env
+apps/task/deployment.json

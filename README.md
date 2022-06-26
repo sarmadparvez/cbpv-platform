@@ -19,6 +19,8 @@ Note: The current Heroku plan has a limitation that the services go to sleep whe
 
 ### 2. Amazon EC2
 
+Note: The Amazon EC2 instance may be temporarily stopped. If that is the case, you can use Heroku deployment.
+
 [Here](https://upb-cbpv-platform.web.app) you can access the deployment which points to microservices deployed on [Amazon EC2](https://docs.aws.amazon.com/ec2/index.html).
 
 For this deployment, a [Kubernetes](https://kubernetes.io) cluster is created using [minikube](https://minikube.sigs.k8s.io/docs)

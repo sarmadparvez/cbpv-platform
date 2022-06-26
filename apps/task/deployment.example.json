@@ -1,0 +1,46 @@
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "task"
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "matchLabels": {
+        "app": "task"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "task"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "task",
+            "image": "task:latest",
+            "imagePullPolicy": "Never",
+            "ports": [
+              {
+                "containerPort": 3333
+              }
+            ],
+            "env": [
+              {
+                "name": "DATABASE_URL",
+                "value": "Database URL"
+              },
+              {
+                "name": "ADMIN_API",
+                "value": "http://54.90.111.53:31170"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
