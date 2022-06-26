@@ -1,11 +1,22 @@
 # Crowd-Based Prototype Validation Platform
 
-This platform allows iterative validation of software prototypes using Crowdsourcing. There are two roles involved
-in this process. The Developer role, who creates and owns the prototype, and a Crowd-Worker
-role who evaluates and provides feedback on the prototype.
+This platform supports iterative validation of software prototypes using [crowdsourcing](https://www.investopedia.com/terms/c/crowdsourcing.asp). There are two roles involved
+in this process. The developer role who creates and owns the prototype, and a crowd-worker role who evaluates and provides feedback on the prototype. Based on the feedback, the prototype can be further refined and a new iteration can be started.
 
 To learn more about the related research and the platform, please refer to [this](https://www.researchgate.net/publication/355445295_Design_Principles_for_a_Crowd-based_Prototype_Validation_Platform) publication. The platform
 is developed using the design principles from that research.
+
+## Solution Design
+
+The overall solution design representing different components and their interaction with actors/roles.
+
+<p style="text-align: center;"><img src="https://user-images.githubusercontent.com/19534452/175829954-6e0dd8fb-7b46-4d9f-9ecd-06f1ab161eaa.svg" width="700"></p>
+
+## Architecture
+
+The technical architecture for the platform.
+
+<p style="text-align: center;"><img src="https://user-images.githubusercontent.com/19534452/175830006-063ea7fd-f70b-4fc9-b0cf-bfd78c00fc96.svg"  height="600"></p>
 
 ## Live Access
 
